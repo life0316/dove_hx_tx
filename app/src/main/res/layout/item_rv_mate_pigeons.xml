@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+
+              android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x20"
+        >
+
+    <TextView
+        android:id="@+id/item_mate_pigeons_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="信鸽脚环"
+        android:layout_marginLeft="@dimen/x50"
+        android:layout_centerVertical="true"
+        android:textSize="@dimen/SIZE_18_SP"
+        />
+
+    <TextView
+        android:id="@+id/item_mate_rings_tv"
+        android:layout_width="@dimen/x180"
+        android:layout_height="@dimen/x80"
+        android:text="信鸽"
+        android:layout_marginRight="@dimen/x50"
+        android:layout_alignParentRight="true"
+        android:background="@mipmap/icon_cbb_1"
+        android:padding="@dimen/x20"
+        android:textSize="@dimen/SIZE_18_SP"
+        />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="@color/view_line"
+        />
+
+</LinearLayout>

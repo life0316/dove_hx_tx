@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval"
+       android:useLevel="false"
+    >
+    <padding
+        android:top="5dp"
+        android:bottom="5dp" />
+
+    <solid
+        android:color="@color/colorBlue"/><!-- 填充的颜色 -->
+
+    <size android:width="40dp"
+          android:height="40dp" />
+
+</shape>

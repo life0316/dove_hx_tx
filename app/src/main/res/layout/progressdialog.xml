@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="@dimen/x250"
+        android:layout_height="@dimen/x250"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:paddingLeft="@dimen/x30"
+        android:paddingRight="@dimen/x30"
+        android:paddingTop="@dimen/x30"
+        android:paddingBottom="@dimen/x30"
+        android:id="@+id/activity_login_ll"
+        android:gravity="center"
+        android:focusable="true"
+        android:layout_gravity="center"
+        android:background="@drawable/dialog_bg"
+        >
+        <ProgressBar
+            android:id="@+id/activity_login_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/loading"
+            />
+
+        <TextView
+            android:layout_marginTop="@dimen/x30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请稍候..."
+            android:layout_gravity="center_horizontal"
+            android:textColor="#fff"
+            />
+
+    </LinearLayout>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/show_marker_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:background="@drawable/add_popup_bg"
+        android:paddingBottom="@dimen/x20"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:padding="@dimen/x30"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x15"
+                android:text="总飞行 "
+                android:textSize="@dimen/SIZE_16_SP" />
+
+            <TextView
+                android:id="@+id/show_marker_mileage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20.0"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/SIZE_24_SP" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x15"
+                android:text="公里"
+                android:textSize="@dimen/SIZE_16_SP" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            >
+
+            <View
+                android:layout_width="@dimen/DIP_30_DP"
+                android:layout_height="1dp"
+                android:background="@color/darkgray"
+                android:layout_gravity="center_vertical"
+                />
+
+            <TextView
+                android:id="@+id/show_marker_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2017-05-23 10:12:00"
+
+                />
+            <TextView
+                android:id="@+id/show_marker_latlng"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="东经30、北纬40"
+                android:drawableLeft="@mipmap/icon_location"
+                />
+
+            <View
+                android:layout_width="@dimen/DIP_30_DP"
+                android:layout_height="1dp"
+                android:background="@color/darkgray"
+                android:layout_gravity="center_vertical"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/show_marker_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/x15"
+            android:text="东南西南方向"
+            android:textSize="@dimen/SIZE_18_SP" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="76dp"
+            android:padding="@dimen/x5">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/x50"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/x10"
+                    android:layout_marginTop="@dimen/x10"
+                    android:text="飞行速度(米/分钟)"
+                    android:textSize="@dimen/SIZE_14_SP" />
+
+                <TextView
+                    android:id="@+id/show_marker_speed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="480"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/SIZE_28_SP" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/tab_indicator_line"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@color/colorPrimary" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/x50"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/x10"
+                    android:layout_marginTop="@dimen/x10"
+                    android:text="虚拟高度(米)"
+                    android:textSize="@dimen/SIZE_14_SP" />
+
+                <TextView
+                    android:id="@+id/show_marker_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="35.O"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/SIZE_28_SP" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/transparent"
+        android:layout_marginTop="@dimen/x30"
+        >
+
+        <ImageView
+            android:id="@+id/show_marker_dismiss"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/icon_delete" />
+
+    </FrameLayout>
+</LinearLayout>

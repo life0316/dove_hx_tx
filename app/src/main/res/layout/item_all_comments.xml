@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/x10"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/item_all_icon"
+        android:layout_width="@dimen/DIP_50_DP"
+        android:layout_height="@dimen/DIP_50_DP"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginRight="@dimen/x10"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x20"
+                android:id="@+id/friend_name"
+                android:text="地瓜"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/SIZE_16_SP"
+                android:layout_marginTop="@dimen/x10"
+                 />
+
+            <TextView
+                android:id="@+id/friend_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/friend_name"
+                android:layout_alignStart="@+id/friend_name"
+                android:layout_below="@+id/friend_name"
+                android:text="8月20日 7:30"
+                android:textSize="@dimen/SIZE_14_SP"
+                android:layout_marginTop="@dimen/x10"
+                 />
+
+            <ImageView
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/add"
+                android:src="@mipmap/dislike"
+                android:layout_alignTop="@+id/de_icon"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/x40"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/comment"
+            android:layout_marginTop="@dimen/x5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="fasdfafafafafafafaffafafafafafafafafafafafafa"
+            android:textSize="@dimen/SIZE_18_SP"
+            android:layout_marginBottom="@dimen/x10"
+            />
+
+
+        <ImageView
+            android:id="@+id/itme_all_nei_img"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/DIP_60_DP"
+            android:src="@mipmap/ic_launcher"
+            android:visibility="gone"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/item_all_nei_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
+
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/DIP_40_DP"
+            android:background="@color/darkgray"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/DIP_20_DP"
+            android:id="@+id/other_rl"
+            >
+
+            <TextView
+                android:id="@+id/other_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我了个去"
+                android:textColor="@color/share"
+                android:layout_marginRight="@dimen/x10"
+                />
+            <TextView
+                android:id="@+id/other_name_num"
+                android:layout_toRightOf="@+id/other_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="等人共10条回复 >>"
+                android:layout_marginRight="@dimen/x10"
+                />
+
+
+        </RelativeLayout>
+        <View
+            android:layout_marginTop="@dimen/x10"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tab_indicator_line"
+            android:background="@color/view_line"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

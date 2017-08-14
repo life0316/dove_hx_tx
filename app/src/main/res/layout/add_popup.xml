@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/add_popup_bg"
+        >
+
+    <LinearLayout
+        android:id="@+id/add_pigeon_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@drawable/pop_item_press"
+        android:clickable="true"
+        >
+
+        <TextView
+            android:layout_margin="@dimen/x24"
+            android:drawableLeft="@mipmap/icon_add_pigeon"
+            android:id="@+id/add_pigeon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加鸽子"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:drawablePadding="@dimen/x20"
+            android:textSize="@dimen/SIZE_16_SP"
+            />
+
+
+    </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:background="@color/view_line"/>
+
+    <LinearLayout
+        android:id="@+id/add_circle_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@drawable/pop_item_press"
+        android:clickable="true"
+        >
+
+        <TextView
+            android:layout_margin="@dimen/x24"
+            android:drawableLeft="@mipmap/icon_add_pigeons_ring"
+            android:drawablePadding="@dimen/x20"
+            android:id="@+id/add_circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加鸽环"
+            android:gravity="center"
+            android:textSize="@dimen/SIZE_16_SP"
+            />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="@color/view_line"/>
+
+
+    <LinearLayout
+        android:id="@+id/add_mate_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@drawable/pop_item_press"
+        android:clickable="true"
+        >
+
+        <TextView
+            android:layout_margin="@dimen/x24"
+            android:drawableLeft="@mipmap/icon_batch_match"
+            android:drawablePadding="@dimen/x20"
+            android:id="@+id/add_mate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="批量匹配"
+            android:gravity="center"
+            android:textSize="@dimen/SIZE_16_SP"
+            />
+
+    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

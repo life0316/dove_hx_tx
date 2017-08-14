@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#fff"
+    >
+    <TextView
+        android:id="@+id/pigeon_name_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="鸽子名称"
+        android:gravity="center"
+        android:padding="@dimen/x40"
+        android:textSize="@dimen/SIZE_18_SP"
+        />
+
+    <EditText
+        android:id="@+id/pigeon_name_dialog_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/x20"
+        android:padding="@dimen/DIP_10_DP"
+        android:background="@drawable/editview_shape"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:maxLength="10"
+        />
+
+    <LinearLayout
+        android:layout_width="@dimen/x600"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/x16"
+        android:layout_marginBottom="@dimen/x30"
+        >
+
+        <TextView
+            android:id="@+id/name_dialog_cancle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/x20"
+            android:text="取消"
+            android:textSize="@dimen/SIZE_18_SP"
+            android:background="@drawable/textview_cancle_shape"
+            />
+
+        <TextView
+            android:id="@+id/name_dialog_confirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="保存"
+            android:padding="@dimen/x20"
+            android:textSize="@dimen/SIZE_18_SP"
+            android:background="@drawable/textview_confirm_shape"
+            />
+    </LinearLayout>
+
+</LinearLayout>

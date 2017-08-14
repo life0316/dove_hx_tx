@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="#fff"
+              android:gravity="center"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="选择性别"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/x40"
+        android:textSize="@dimen/SIZE_18_SP"
+        android:layout_marginTop="@dimen/x20"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/dialog_sex_ll_male"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:gravity="center"
+        android:background="@drawable/dialog_set_top_selector"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/x30"
+            android:layout_height="@dimen/x30"
+            android:src="@mipmap/icon_male"
+            />
+
+        <TextView
+            android:id="@+id/dialog_sex_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x20"
+            android:text="公"
+            android:textColor="#b8b8b8"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="#dad9db"/>
+
+    <LinearLayout
+        android:id="@+id/dialog_sex_ll_female"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:gravity="center"
+        android:background="@drawable/dialog_set_bottom_selector"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/x30"
+            android:layout_height="@dimen/x30"
+            android:src="@mipmap/icon_female"
+            />
+        <TextView
+            android:id="@+id/dialog_sex_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x20"
+            android:text="母"
+            android:textColor="#b8b8b8"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+    </LinearLayout>
+</LinearLayout>

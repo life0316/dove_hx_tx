@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <FrameLayout
+        android:id="@+id/act_main_cvp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/view_line"
+        />
+
+    <RadioGroup
+        android:id="@+id/act_main_rg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorWhite"
+        >
+        <RadioButton
+            android:id="@+id/act_main_rb_tab1"
+            android:text="信鸽"
+            style="@style/style_RadioButton"
+            android:drawableTop="@drawable/tab_icon_pigeon"
+            android:checked="true"
+
+            />
+        <RadioButton
+            android:id="@+id/act_main_rb_tab2"
+            android:text="轨迹"
+            style="@style/style_RadioButton"
+            android:drawableTop="@drawable/tab_icon_trajectory"
+            />
+        <RadioButton
+            android:id="@+id/act_main_rb_tab3"
+            android:text="鸽圈"
+            style="@style/style_RadioButton"
+            android:drawableTop="@drawable/tab_icon_pigeon_circle"
+            />
+        <RadioButton
+            android:id="@+id/act_main_rb_tab4"
+            android:text="我的"
+            style="@style/style_RadioButton"
+            android:drawableTop="@drawable/tab_icon_home"
+            />
+    </RadioGroup>
+</LinearLayout>

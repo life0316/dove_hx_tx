@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:background="#d7d5d5"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/headciv_dialog_takephoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="拍照"
+        android:padding="@dimen/x20"
+        android:textSize="@dimen/SIZE_20_SP"
+        android:gravity="center"
+        android:background="#fff"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+    <TextView
+        android:id="@+id/headciv_dialog_fromphoto"
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="从相册选择"
+        android:padding="@dimen/x20"
+        android:textSize="@dimen/SIZE_20_SP"
+        android:gravity="center"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+
+    <TextView
+        android:id="@+id/headciv_dialog_cancle"
+        android:layout_marginTop="@dimen/x40"
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="取消"
+        android:padding="@dimen/x20"
+        android:textSize="@dimen/SIZE_20_SP"
+        android:gravity="center"
+        />
+</LinearLayout>

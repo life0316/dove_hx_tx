@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <include layout="@layout/custom_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/x30"
+        android:paddingLeft="@dimen/x55"
+        android:paddingRight="@dimen/x55"
+        android:paddingTop="@dimen/x30">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/act_regist_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x10"
+                android:layout_weight="10"
+                android:background="@drawable/line_et_bg"
+                android:drawableLeft="@mipmap/icon_phone_1"
+                android:drawablePadding="@dimen/x10"
+                android:hint="@string/user_phone"
+                android:inputType="number"
+                android:padding="@dimen/x6"
+                android:singleLine="true"
+                android:textColorHint="@color/regist_text"
+                android:textCursorDrawable="@drawable/editcursor"
+                android:textSize="@dimen/SIZE_18_SP" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_weight="1"
+                android:padding="@dimen/x10"
+                android:src="@mipmap/icon_tab_news" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/act_regist_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x10"
+                android:layout_weight="10"
+                android:background="@drawable/line_et_bg"
+                android:drawableLeft="@mipmap/icon_password_1"
+                android:drawablePadding="@dimen/x10"
+                android:hint="@string/user_pwd"
+                android:inputType="textPassword"
+                android:maxLength="13"
+                android:padding="@dimen/x6"
+                android:singleLine="true"
+                android:textColorHint="@color/regist_text"
+                android:textCursorDrawable="@drawable/editcursor"
+                android:textSize="@dimen/SIZE_18_SP" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_weight="1"
+                android:padding="@dimen/x10"
+                android:src="@mipmap/icon_tab_news" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/act_regist_repassword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x10"
+                android:layout_weight="10"
+                android:background="@drawable/line_et_bg"
+                android:drawableLeft="@mipmap/icon_password_1"
+                android:drawablePadding="@dimen/x10"
+                android:hint="@string/user_pwd_re"
+                android:inputType="textPassword"
+                android:maxLength="13"
+                android:padding="@dimen/x6"
+                android:singleLine="true"
+                android:textColorHint="@color/regist_text"
+                android:textCursorDrawable="@drawable/editcursor"
+                android:textSize="@dimen/SIZE_18_SP" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_weight="1"
+                android:padding="@dimen/x10"
+                android:src="@mipmap/icon_tab_news" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/act_regist_one_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/DIP_200_DP"
+            android:background="@drawable/btn_pigeon_bg2"
+            android:enabled="false"
+            android:textColor="#fff"
+            android:text="下一步" />
+    </LinearLayout>
+
+
+</LinearLayout>

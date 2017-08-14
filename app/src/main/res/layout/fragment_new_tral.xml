@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/custom_toolbar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.amap.api.maps.TextureMapView
+            android:id="@+id/new_tral_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/x30"
+            android:layout_alignParentRight="true"
+            >
+            <ImageView
+                android:id="@+id/new_icon"
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x60"
+                android:src="@mipmap/icon_map_2"
+                android:layout_marginTop="@dimen/x110"
+                />
+            <ImageView
+                android:id="@+id/new_icon_wei"
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x60"
+                android:src="@mipmap/icon_1"
+                android:layout_alignBottom="@+id/new_icon"
+                android:layout_marginTop="@dimen/x20"
+                />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" >
+
+
+    <!-- 整体透明画布 -->
+    <SurfaceView
+        android:id="@+id/preview_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <!-- 扫描取景框 -->
+    <com.haoxi.dove.zxing.view.ViewfinderView
+        android:id="@+id/viewfinder_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true"
+        />
+
+
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="top"
+        android:background="@color/colorPrimary">
+        
+        <ImageButton
+            android:id="@+id/capture_imageview_back"
+            android:layout_width="@dimen/DIP_40_DP"
+            android:layout_height="@dimen/DIP_40_DP"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_capture_back"/>
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffffff"
+            android:textSize="@dimen/DIP_20_DP"
+            android:text="扫一扫"/>
+
+
+
+        <TextView
+            android:id="@+id/button_function"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/DIP_20_DP"
+            android:text="相册"
+            android:visibility="gone"
+            />
+        
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal|bottom"
+        android:gravity="center"
+        android:padding="@dimen/DIP_10_DP"
+        android:background="@color/colorBlack"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请扫描二维码进行添加"
+            android:textColor="@color/colorWhite"
+
+            />
+
+
+    <Button
+        android:visibility="gone"
+        android:layout_width="@dimen/DIP_300_DP"
+        android:layout_height="wrap_content"
+        android:text="暂停"
+        android:layout_marginTop="@dimen/DIP_30_DP"
+        android:layout_centerHorizontal="true"
+        />
+
+    </LinearLayout>
+
+
+</merge>

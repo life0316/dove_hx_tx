@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical" android:layout_width="match_parent"
+              android:id="@+id/ll"
+              android:layout_height="wrap_content"
+            android:background="#fff"
+    >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <CheckBox
+                android:id="@+id/item_rv_mypigeon_cb"
+                android:layout_width="@dimen/x40"
+                android:layout_height="@dimen/x40"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_check"
+                android:layout_margin="@dimen/x40"
+                android:button="@null"
+                android:visibility="gone"
+                />
+
+            <ImageView
+                android:id="@+id/item_rv_mypigeon_iv"
+                android:layout_width="@dimen/x80"
+                android:layout_height="@dimen/x80"
+                android:src="@mipmap/icon_img_2"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/x20"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/x20"
+                    android:layout_marginTop="@dimen/x20"
+                    android:layout_marginBottom="@dimen/x10"
+                    android:layout_marginLeft="@dimen/x10"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000"
+                        android:textSize="@dimen/SIZE_16_SP"
+                        android:text="脚环："/>
+                    <TextView
+                        android:id="@+id/item_rv_mypigeon_circleid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/SIZE_16_SP"
+                        android:singleLine="true"
+                        android:textColor="#000"
+                        android:maxEms="12"
+                        android:ellipsize="end"
+                        android:text="0.01"/>
+
+                    <TextView
+                        android:id="@+id/item_rv_mypigeon_ismate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/x40"
+                        android:textSize="@dimen/SIZE_16_SP"
+                        android:text="未匹配"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/x30"
+                    android:layout_marginBottom="@dimen/x20"
+                    android:layout_marginTop="@dimen/x10"
+                    >
+
+                    <ImageView
+                        android:id="@+id/item_rv_mypigeon_pigeonsex"
+                        android:layout_width="@dimen/x30"
+                        android:layout_height="@dimen/x30"
+                        android:src="@mipmap/list_male"/>
+                    <TextView
+                        android:id="@+id/item_rv_mypigeon_pigeonold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1个月"
+                        android:textSize="@dimen/SIZE_16_SP"
+                        android:paddingLeft="@dimen/x32"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        />
+                    <TextView
+                        android:id="@+id/item_rv_mypigeon_pigeoncolor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/SIZE_16_SP"
+                        android:paddingLeft="@dimen/x30"
+                        android:singleLine="true"
+                        android:maxEms="12"
+                        android:ellipsize="end"
+                        android:text="羽色"/>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+
+</LinearLayout>

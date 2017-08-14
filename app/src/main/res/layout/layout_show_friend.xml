@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/transparent"
+        android:layout_marginTop="@dimen/x30"
+        android:id="@+id/fl"
+        />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/show_marker_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:background="@drawable/add_popup_bg"
+        android:paddingBottom="@dimen/x20"
+        >
+
+        <TextView
+            android:id="@+id/show_nickname_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x90"
+            android:text="老王"
+            android:textSize="@dimen/SIZE_18_SP" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="@dimen/x7"
+            >
+
+            <TextView
+                android:id="@+id/age_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30岁"
+                android:layout_marginRight="@dimen/x30"
+                android:textSize="@dimen/SIZE_18_SP"
+                />
+            <TextView
+                android:id="@+id/sex_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="女"
+                android:textSize="@dimen/SIZE_18_SP"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/user_code_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="手机号:"
+            android:gravity="center"
+            android:padding="@dimen/x7"
+            android:textSize="@dimen/SIZE_18_SP"
+
+            />
+        <TextView
+            android:id="@+id/loftname_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="鸽舍:"
+            android:gravity="center"
+            android:padding="@dimen/x7"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+        <TextView
+            android:id="@+id/user_exper_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="养鸽年限:"
+            android:gravity="center"
+            android:padding="@dimen/x7"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+        <Button
+            android:id="@+id/remove_attention"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/x55"
+            android:background="@drawable/btn_pigeon_bg"
+            android:text="取消关注"
+            android:textColor="@android:color/white"
+            android:padding="@dimen/x7"
+            android:layout_margin="@dimen/x10"
+            />
+
+    </LinearLayout>
+        </ScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/transparent"
+        android:layout_marginTop="@dimen/x30"
+        android:layout_alignBottom="@+id/show_marker_ll"
+        >
+
+        <ImageView
+            android:id="@+id/show_marker_dismiss"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/icon_delete" />
+
+    </FrameLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/de_icon"
+            android:layout_width="@dimen/x150"
+            android:layout_height="@dimen/x150"
+            android:src="@mipmap/btn_img_photo_default"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="@dimen/x1"
+            android:layout_margin="@dimen/x30"
+            android:layout_alignParentStart="true"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

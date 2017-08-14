@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/de_icon"
+            android:layout_width="@dimen/x100"
+            android:layout_height="@dimen/x100"
+            android:src="@mipmap/btn_img_photo_default"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="@dimen/x1"
+            android:layout_margin="@dimen/x20"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="红薯"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_marginTop="@dimen/x20"
+            android:layout_toEndOf="@+id/de_icon"/>
+
+        <TextView
+            android:id="@+id/friend_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/friend_name"
+            android:layout_alignStart="@+id/friend_name"
+            android:text="电话:"
+            android:textSize="@dimen/SIZE_14_SP"
+            android:layout_alignBottom="@+id/de_icon"
+            />
+
+        <TextView
+            android:id="@+id/friend_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/friend_date"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_toRightOf="@+id/friend_date"
+            android:text="110"
+            android:textSize="@dimen/SIZE_14_SP"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="@color/share_button_line">
+    </View>
+
+</LinearLayout>

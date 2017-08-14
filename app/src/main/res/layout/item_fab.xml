@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:padding="@dimen/x15"
+    android:gravity="center_vertical"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/item_fab_civ"
+        android:layout_width="@dimen/x60"
+        android:layout_height="@dimen/x60"
+        android:src="@mipmap/image_1"
+        android:layout_marginLeft="@dimen/x30"
+        />
+
+    <TextView
+        android:id="@+id/item_fab_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="隔壁老王"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_toRightOf="@+id/item_fab_civ"
+        android:layout_centerVertical="true"
+        />
+
+</RelativeLayout>

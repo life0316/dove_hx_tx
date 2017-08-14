@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/dWhite"
+    >
+
+        <TextView
+            android:id="@+id/tran_circle_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="红薯"
+            android:textColor="@color/colorBlue"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_marginTop="@dimen/x20"
+            android:layout_toEndOf="@+id/de_icon"
+
+            />
+
+    <TextView
+        android:id="@+id/tran_circle_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_marginBottom="@dimen/x20"
+        android:padding="@dimen/x10"
+        android:text="人生的奔跑，不是瞬间的爆发，而是一路的坚持，纵有千百个理由放弃，也要找一个理由坚持下去。能激励你，温暖你，感动你的，不是励志语录和心灵鸡汤，而是身边比你优秀的人比你还努力……"
+        android:textSize="@dimen/SIZE_16_SP"
+        />
+
+    <ImageView
+        android:id="@+id/tran_circle_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/DIP_150_DP"
+        android:maxHeight="@dimen/DIP_150_DP"
+        android:src="@mipmap/ic_launcher"
+        android:visibility="gone"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tran_circle_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/x20"
+        android:padding="@dimen/x10"
+        android:visibility="gone"
+        />
+
+</LinearLayout>

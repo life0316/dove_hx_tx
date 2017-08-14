@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#fff"
+    >
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="眼砂"
+        android:gravity="center"
+        android:textSize="@dimen/SIZE_18_SP"
+        android:padding="@dimen/x40"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x400"
+        android:gravity="center"
+        android:background="#C7C7C7"
+        >
+
+        <com.haoxi.dove.widget.wheelview.WheelView
+            android:id="@+id/addpigeon_wv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+    <LinearLayout
+        android:layout_width="@dimen/x600"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/x40"
+        android:layout_marginTop="@dimen/x20"
+        >
+
+        <TextView
+            android:id="@+id/addpigeon_cancle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="取消"
+            android:gravity="center"
+            android:padding="@dimen/x20"
+            android:background="@drawable/textview_cancle_shape"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+        <TextView
+            android:id="@+id/addpigeon_confirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="确定"
+            android:gravity="center"
+            android:padding="@dimen/x20"
+            android:background="@drawable/textview_confirm_shape"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

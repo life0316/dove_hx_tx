@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/add_popup_bg"
+    android:id="@+id/ll"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="信鸽"
+        android:textSize="@dimen/SIZE_16_SP"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/x18"
+        />
+
+    <ExpandableListView
+        android:visibility="gone"
+        android:id="@+id/trail_epl_el"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:groupIndicator="@null"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/trail_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

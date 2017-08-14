@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E6E6E6"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/colorPrimary"
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/fragment_home_civ_icon"
+                    android:layout_width="@dimen/x200"
+                    android:layout_height="@dimen/x200"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/x30"
+                    android:src="@mipmap/btn_img_photo_default"
+                    app:civ_border_color="#000000"
+                    app:civ_border_width="0dp" />
+
+                <TextView
+                    android:id="@+id/fragment_home_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/civ_icon"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/x20"
+                    android:text="@string/username"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/SIZE_20_SP" />
+
+                <TextView
+                    android:id="@+id/fragment_home_userid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/fragment_home_username"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/x10"
+                    android:layout_marginTop="@dimen/x10"
+                    android:text="@string/userid"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/SIZE_18_SP" />
+            </LinearLayout>
+
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:background="@color/view_line"/>
+            <TextView
+            android:id="@+id/fragment_home_route"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffffff"
+            android:drawableLeft="@mipmap/icon_friends_list"
+            android:drawablePadding="@dimen/x20"
+            android:drawableRight="@mipmap/ic_black"
+            android:gravity="center_vertical"
+            android:padding="@dimen/x20"
+            android:text="@string/pigeon_route"
+            android:textSize="@dimen/SIZE_18_SP" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:background="@color/view_line"/>
+
+            <TextView
+                android:id="@+id/fragment_home_mypigeons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffffff"
+                android:drawableLeft="@mipmap/icon_my_pigeon"
+                android:drawablePadding="@dimen/x20"
+                android:drawableRight="@mipmap/ic_black"
+                android:gravity="center_vertical"
+                android:padding="@dimen/x20"
+                android:text="@string/my_pigeon"
+                android:textSize="@dimen/SIZE_18_SP" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:background="@color/view_line"></View>
+
+            <TextView
+                android:id="@+id/fragment_home_ring"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffffff"
+                android:drawableLeft="@mipmap/icon_my_verel"
+                android:drawablePadding="@dimen/x20"
+                android:drawableRight="@mipmap/ic_black"
+                android:gravity="center_vertical"
+                android:padding="@dimen/x20"
+                android:text="@string/my_circle"
+                android:textSize="@dimen/SIZE_18_SP"></TextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:layout_marginTop="@dimen/DIP_15_DP"
+                android:background="@null"></View>
+
+            <TextView
+                android:id="@+id/fragment_home_optimised"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffffff"
+                android:drawableLeft="@mipmap/icon_settings"
+                android:drawablePadding="@dimen/x20"
+                android:drawableRight="@mipmap/ic_black"
+                android:gravity="center_vertical"
+                android:padding="@dimen/x20"
+                android:text="@string/setting"
+                android:textSize="@dimen/SIZE_18_SP" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

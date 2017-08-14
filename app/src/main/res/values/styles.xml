@@ -1,0 +1,129 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <!--<item name="android:windowIsTranslucent">true</item>-->
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+
+    </style>
+
+    <style name="take_photo_anim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/pop_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/pop_exit_anim</item>
+    </style>
+
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
+    <style name="Animation.Activity.Style" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/left_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/right_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/left_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/right_out</item>
+    </style>
+
+    <style name="actionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@android:color/primary_text_light</item>
+        <item name="actionBarSize">@dimen/actionBarSize</item>
+    </style>
+
+    <style name="customTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="actionBarTheme">@style/actionBarTheme</item>
+        <item name="colorPrimary">#FFA500</item>
+        <item name="actionBarSize">@dimen/actionBarSize</item>
+        <item name="colorPrimaryDark">#CCa500</item>
+    </style>
+
+
+    <style name="style_RadioButton">
+
+        <item name="android:paddingTop">@dimen/x10</item>
+        <item name="android:paddingBottom">@dimen/x10</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:button">@null</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:checked">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:drawablePadding">@dimen/x10</item>
+        <item name="android:textColor">@drawable/selector_tab_text_color</item>
+
+        <item name="android:background">@color/colorWhite</item>
+
+
+    </style>
+
+
+    <!-- 加载滚动条样式 -->
+    <style name="loading">
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_round2</item>
+        <item name="android:indeterminateDuration">2000</item>
+        <item name="android:indeterminateOnly">true</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+
+        <item name="android:maxHeight">40dip</item>
+        <item name="android:maxWidth">40dip</item>
+        <item name="android:minWidth">30dip</item>
+        <item name="android:minHeight">30dip</item>
+
+    </style>
+
+    <style name="DialogTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+    </style>
+
+    <style name="DialogTheme2" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <!--<item name="android:windowContentOverlay">@null</item>-->
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
+    <style name="item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/x20</item>
+        <item name="android:paddingTop">@dimen/x20</item>
+        <item name="android:paddingRight">@dimen/x20</item>
+        <item name="android:paddingBottom">@dimen/x20</item>
+        <item name="android:textSize">@dimen/x35</item>
+    </style>
+
+    <style name="TabLayoutTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">@dimen/SIZE_18_SP</item>
+    </style>
+
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/regist_text</item>
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="cb_test">
+        <!--选中的颜色-->
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+</resources>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="@dimen/x158">
+
+    <com.haoxi.dove.widget.SwipeMenu
+        android:id="@+id/sm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <LinearLayout
+            android:layout_width="@dimen/x320"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/item_test_share"
+                android:layout_width="@dimen/x160"
+                android:layout_height="match_parent"
+                android:text="分享"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:background="#f00"
+                />
+
+            <TextView
+                android:id="@+id/item_test_delete"
+                android:layout_width="@dimen/x160"
+                android:layout_height="match_parent"
+                android:text="删除"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:background="#f00"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x20"
+            android:gravity="center_vertical"
+            >
+
+            <CheckBox
+                android:id="@+id/ch"
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x60"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
+
+            <ImageView
+                android:id="@+id/item_rv_mycircle_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_img1"
+                android:layout_gravity="center_vertical"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/x40"
+                >
+                <TextView
+                    android:id="@+id/item_rv_mycircle_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="id:1111111111"
+                    android:layout_marginBottom="@dimen/x20"
+                    android:textSize="@dimen/SIZE_18_SP"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/item_rv_mycircle_activate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="已激活"
+                        android:textColor="#f49836"
+                        android:textSize="@dimen/SIZE_18_SP"
+                        />
+                    <TextView
+                        android:id="@+id/item_rv_mycircle_mate"
+                        android:layout_marginLeft="@dimen/x100"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="未匹配"
+                        android:textColor="#f49836"
+                        android:textSize="@dimen/SIZE_18_SP"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:maxEms="12"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.haoxi.dove.widget.SwipeMenu>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+</LinearLayout>

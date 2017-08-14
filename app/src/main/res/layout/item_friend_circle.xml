@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:background="#fff"
+    android:minHeight="@dimen/DIP_100_DP"
+    >
+
+    <RelativeLayout
+        android:id="@+id/item_friend_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/de_icon"
+            android:layout_width="@dimen/x100"
+            android:layout_height="@dimen/x100"
+            android:src="@mipmap/btn_img_photo_default"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="@dimen/x1"
+            android:layout_margin="@dimen/x20"
+            android:layout_alignParentStart="true"
+
+            />
+
+        <ImageView
+            android:id="@+id/de_icon1"
+            android:layout_width="@dimen/x100"
+            android:layout_height="@dimen/x100"
+            android:src="@mipmap/btn_img_photo_default"
+            android:layout_margin="@dimen/x20"
+            android:layout_alignParentStart="true"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="红薯"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_marginTop="@dimen/x20"
+            android:layout_toEndOf="@+id/de_icon"/>
+
+        <TextView
+            android:id="@+id/friend_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/friend_name"
+            android:layout_alignStart="@+id/friend_name"
+            android:text="7月19日 7:30"
+            android:textSize="@dimen/SIZE_14_SP"
+            android:layout_alignBottom="@+id/de_icon"
+            />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/friend_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/friend_date"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_toRightOf="@+id/friend_date"
+            android:text="7:30"
+            android:textSize="@dimen/SIZE_14_SP"/>
+
+        <ImageView
+            android:id="@+id/itme_dynamic_down"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:src="@mipmap/icon_down"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/DIP_20_DP"
+            android:visibility="gone"
+            />
+        <Button
+            android:id="@+id/item_dynamic_add_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/DIP_20_DP"
+            android:text="关注好友"
+            android:visibility="gone"
+            />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/friend_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_marginBottom="@dimen/x20"
+        android:padding="@dimen/x10"
+        android:text="人生的奔跑，不是瞬间的爆发，而是一路的坚持，纵有千百个理由放弃，也要找一个理由坚持下去。能激励你，温暖你，感动你的，不是励志语录和心灵鸡汤，而是身边比你优秀的人比你还努力……"
+        android:textSize="@dimen/SIZE_16_SP"
+        />
+
+    <ImageView
+        android:id="@+id/item_isfriend_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/DIP_150_DP"
+        android:maxHeight="@dimen/DIP_150_DP"
+        android:src="@mipmap/ic_launcher"
+        android:visibility="gone"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/item_isfriend_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/x20"
+        android:padding="@dimen/x10"
+        android:visibility="gone"
+        />
+
+    <FrameLayout
+        android:id="@+id/item_tran_fl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/darkgray"
+        android:layout_margin="@dimen/x20"
+        android:visibility="gone"
+        >
+        <include layout="@layout/tran_fl"/>
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="@color/share_button_line">
+    </View>
+
+    <LinearLayout
+        android:id="@+id/item_circle_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        >
+
+        <Button
+            android:id="@+id/friend_share"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/x70"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/x32"
+            android:background="@null"
+            android:drawableLeft="@mipmap/icon_share"
+            android:text="转发"
+            android:inputType="number"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/x70"
+            app:srcCompat="@mipmap/icon_split"
+            android:id="@+id/imageView1"/>
+
+        <Button
+            android:id="@+id/friend_comments"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/x70"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/x32"
+            android:background="@null"
+            android:drawableLeft="@mipmap/comments"
+            android:text="评论"
+            android:inputType="number"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/x70"
+            app:srcCompat="@mipmap/icon_split"
+            android:id="@+id/imageView2"/>
+
+        <Button
+            android:id="@+id/friend_dislike"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/x70"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/x32"
+            android:drawableLeft="@mipmap/dislike"
+            android:background="@null"
+            android:text="赞"
+            android:inputType="number"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="@color/share_button_line">
+    </View>
+
+</LinearLayout>

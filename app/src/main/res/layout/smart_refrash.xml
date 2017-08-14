@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    >
+
+<com.scwang.smartrefresh.layout.SmartRefreshLayout
+
+    android:id="@+id/refreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    app:srlPrimaryColor="@color/app_background"
+    app:srlAccentColor="#868484"
+    app:srlEnablePreviewInEditMode="true"
+    >
+    <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
+    <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
+    <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/fragment_mypigeon_no_network"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="没有网络连接,请稍后重试"
+            android:padding="@dimen/x20"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textSize="@dimen/SIZE_16_SP"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_mypigeon_swiprv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:overScrollMode="never"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+
+
+        <RelativeLayout
+            android:id="@+id/mypigeon_select"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/DIP_50_DP"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_vertical"
+            android:background="#fff"
+            android:visibility="gone"
+            >
+
+            <CheckBox
+                android:id="@+id/mypigeon_select_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="全选"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                android:id="@+id/mypigeon_select_share"
+                android:layout_width="@dimen/x120"
+                android:layout_height="match_parent"
+                android:text="分享"
+                android:background="@color/colorBlue"
+                android:layout_marginRight="@dimen/x10"
+                android:gravity="center"
+                android:layout_alignParentTop="true"
+                android:textColor="#fff"
+                android:layout_toStartOf="@+id/mypigeon_select_delete"/>
+
+            <TextView
+                android:id="@+id/mypigeon_select_delete"
+                android:layout_width="@dimen/x120"
+                android:layout_height="match_parent"
+                android:text="删除"
+                android:gravity="center"
+                android:background="@color/province_line_border"
+                android:layout_alignParentTop="true"
+                android:textColor="#fff"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/myring_select"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x100"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_vertical"
+            android:background="#fff"
+            android:visibility="gone"
+            >
+
+            <CheckBox
+                android:id="@+id/myring_select_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="全选"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                android:id="@+id/myring_select_delete"
+                android:layout_width="@dimen/x120"
+                android:layout_height="match_parent"
+                android:text="删除"
+                android:gravity="center"
+                android:background="@color/province_line_border"
+                android:layout_alignParentTop="true"
+                android:textColor="#fff"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+    <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_mypigeon_show_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/fragment_mypigeon_show_add_tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/need_add_pigeon"
+            android:textSize="@dimen/SIZE_14_SP"
+            android:padding="@dimen/x10"
+            />
+        <TextView
+            android:id="@+id/fragment_mypigeon_show_add_tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_pigeon"
+            android:textSize="@dimen/SIZE_14_SP"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_mypigeon_ll_refrash"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/fragment_mypigeon_tv_refrash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/network_bad"
+            android:textSize="@dimen/x28"
+            android:padding="@dimen/x10"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

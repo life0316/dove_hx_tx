@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/custom_toolbar" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/x20"
+            android:paddingLeft="@dimen/x20"
+            android:paddingRight="@dimen/x30"
+            android:paddingTop="@dimen/x20">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="设备电量"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <ImageView
+                    android:id="@+id/activity_ring_power"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/full_battery" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:layout_marginBottom="@dimen/x20"
+                android:layout_marginTop="@dimen/x20"
+                android:background="@color/view_line" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mate_pigeon_ring"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <TextView
+                    android:id="@+id/activity_ring_footcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawablePadding="@dimen/x10"
+                    android:drawableRight="@mipmap/ic_black"
+                    android:text="未匹配"
+                    android:textSize="@dimen/SIZE_16_SP" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:layout_marginBottom="@dimen/x20"
+                android:layout_marginTop="@dimen/x20"
+                android:background="@color/view_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/circle_code"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <TextView
+                    android:id="@+id/activity_ring_ringcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/x10"
+                    android:text=""
+                    android:textSize="@dimen/SIZE_16_SP" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:layout_marginBottom="@dimen/x20"
+                android:layout_marginTop="@dimen/x20"
+                android:background="@color/view_line" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ring_start_date"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <TextView
+                    android:id="@+id/activity_ring_startdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/x10"
+                    android:text=""
+                    android:textSize="@dimen/SIZE_16_SP" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:layout_marginBottom="@dimen/x20"
+                android:layout_marginTop="@dimen/x20"
+                android:background="@color/view_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ring_status"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <TextView
+                    android:id="@+id/activity_ring_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/x10"
+                    android:text="已激活"
+                    android:textSize="@dimen/SIZE_16_SP" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:layout_marginBottom="@dimen/x20"
+                android:layout_marginTop="@dimen/x20"
+                android:background="@color/view_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_status"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <TextView
+                    android:id="@+id/activity_ring_startstatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/x10"
+                    android:text="开机"
+                    android:textSize="@dimen/SIZE_16_SP" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:layout_marginBottom="@dimen/x20"
+                android:layout_marginTop="@dimen/x20"
+                android:background="@color/view_line" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/position_mode"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <TextView
+                    android:id="@+id/activity_ring_position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawablePadding="@dimen/x10"
+                    android:drawableRight="@mipmap/ic_black"
+                    android:text="1分钟/次"
+                    android:textSize="@dimen/SIZE_16_SP" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:layout_marginBottom="@dimen/x20"
+                android:layout_marginTop="@dimen/x20"
+                android:background="@color/view_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reported_freq"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <TextView
+                    android:id="@+id/activity_ring_reportedfreq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawablePadding="@dimen/x10"
+                    android:drawableRight="@mipmap/ic_black"
+                    android:text="1分钟/次"
+                    android:textSize="@dimen/SIZE_16_SP" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:layout_marginBottom="@dimen/x20"
+                android:layout_marginTop="@dimen/x20"
+                android:background="@color/view_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/schedule_power_on"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <TextView
+                    android:id="@+id/activity_ring_schedule_on"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawablePadding="@dimen/x10"
+                    android:drawableRight="@mipmap/ic_black"
+                    android:text="00:00"
+                    android:textSize="@dimen/SIZE_16_SP" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:layout_marginBottom="@dimen/x20"
+                android:layout_marginTop="@dimen/x20"
+                android:background="@color/view_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/schedule_power_off"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <TextView
+                    android:id="@+id/activity_ring_schedule_off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawablePadding="@dimen/x10"
+                    android:drawableRight="@mipmap/ic_black"
+                    android:text="00:00"
+                    android:textSize="@dimen/SIZE_16_SP" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_indicator_line"
+                android:layout_marginBottom="@dimen/x20"
+                android:layout_marginTop="@dimen/x20"
+                android:background="@color/view_line" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical" android:layout_width="match_parent"
+              android:layout_height="@dimen/x156"
+                android:background="#fff"
+    >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x20"
+        android:gravity="center_vertical"
+        >
+
+        <CheckBox
+            android:id="@+id/ch"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/x40"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_check"
+            android:layout_margin="@dimen/x40"
+            android:button="@null"
+            android:visibility="gone"
+            android:checked="true"
+            />
+
+        <ImageView
+            android:id="@+id/item_rv_mycircle_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/icon_img_1"
+            android:layout_gravity="center_vertical"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/x40"
+
+            >
+            <TextView
+                android:id="@+id/item_rv_mycircle_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="id:1111111111"
+                android:layout_marginBottom="@dimen/x20"
+                android:textSize="@dimen/SIZE_16_SP"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/item_rv_mycircle_activate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已激活"
+                    android:textColor="#0f0"
+                    android:textSize="@dimen/SIZE_16_SP"
+                    />
+                <TextView
+                    android:id="@+id/item_rv_mycircle_mate"
+                    android:layout_marginLeft="@dimen/x100"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="未匹配"
+                    android:textColor="#f49836"
+                    android:textSize="@dimen/SIZE_16_SP"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:maxEms="12"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+</LinearLayout>

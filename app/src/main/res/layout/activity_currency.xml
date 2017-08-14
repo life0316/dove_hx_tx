@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    >
+
+    <include layout="@layout/custom_toolbar"/>
+
+    <TextView
+        android:layout_marginTop="@dimen/x20"
+        android:id="@+id/activity_currency_orbit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="轨迹设置"
+        android:drawablePadding="@dimen/x10"
+        android:padding="@dimen/x20"
+        android:drawableRight="@mipmap/ic_black"
+        android:background="#fff"
+        android:textSize="@dimen/SIZE_18_SP"
+        />
+
+</LinearLayout>

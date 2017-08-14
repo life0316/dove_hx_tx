@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <include layout="@layout/custom_toolbar" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.amap.api.maps.MapView
+                android:id="@+id/activity_pegionfly_mapview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/activity_pigeonfly_power" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/x30"
+                android:layout_alignParentRight="true"
+                >
+                <ImageView
+                    android:id="@+id/new_icon"
+                    android:layout_width="@dimen/x60"
+                    android:layout_height="@dimen/x60"
+                    android:src="@mipmap/icon_map_2"
+                    />
+                <ImageView
+                    android:id="@+id/new_icon_wei"
+                    android:layout_width="@dimen/x60"
+                    android:layout_height="@dimen/x60"
+                    android:src="@mipmap/icon_1"
+                    android:layout_alignBottom="@+id/new_icon"
+                    android:layout_marginTop="@dimen/x20"
+                    />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/activity_newfly_ring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="鸽环编号：1391"
+		        android:background="@drawable/ring_id_bg"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/colorBlue"
+                android:textSize="@dimen/SIZE_14_SP"
+                android:padding="@dimen/x10"
+                android:drawablePadding="@dimen/x10"
+                android:layout_marginTop="@dimen/x10"
+                />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical" android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/custom_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/x20"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x30"
+        android:paddingBottom="@dimen/x20"
+        >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x20">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="足环编号:"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+        <TextView
+            android:id="@+id/activity_pigeon_footringcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:text="无"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="@dimen/x10"
+            android:drawableRight="@mipmap/ic_black"
+            />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x20">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="信鸽血统:"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+        <TextView
+            android:id="@+id/activity_pigeon_pigeonlineage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:text="无"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="@dimen/x10"
+            android:drawableRight="@mipmap/ic_black"
+            />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x20">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="出生时间:"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+        <TextView
+            android:id="@+id/activity_pigeon_birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:text="无"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="@dimen/x10"
+            android:drawableRight="@mipmap/ic_black"
+            />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x20">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="羽色:"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+        <TextView
+            android:id="@+id/activity_pigeon_plumagecolor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:text="无"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="@dimen/x10"
+            android:drawableRight="@mipmap/ic_black"
+            />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x20">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="性别:"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+        <TextView
+            android:id="@+id/activity_pigeon_pigeonsex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:text="母"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="@dimen/x10"
+            android:drawableRight="@mipmap/ic_black"
+            />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x20">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="眼砂:"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+        <TextView
+            android:id="@+id/activity_pigeon_eyesand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:text="无"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="@dimen/x10"
+            android:drawableRight="@mipmap/ic_black"
+            />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"
+        />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/show_marker_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/add_popup_bg"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/x20">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x50"
+                android:orientation="horizontal"
+                android:padding="@dimen/x7"
+                >
+
+                <TextView
+                    android:layout_width="@dimen/x160"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x50"
+                    android:text="信鸽： "
+                    android:textSize="@dimen/SIZE_18_SP"
+                    />
+
+                <TextView
+                    android:id="@+id/show_nickname_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x50"
+                    android:text="老王"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="@dimen/x50"
+                android:padding="@dimen/x7">
+
+                <TextView
+                    android:layout_width="@dimen/x160"
+                    android:layout_height="wrap_content"
+                    android:text="行程id:"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <TextView
+                    android:id="@+id/route_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="fly540381"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="@dimen/x50"
+                android:padding="@dimen/x7">
+
+                <TextView
+                    android:layout_width="@dimen/x160"
+                    android:layout_height="wrap_content"
+                    android:text="飞行状态:"
+                    android:textSize="@dimen/SIZE_18_SP"
+                    android:id="@+id/textView2" />
+
+                <TextView
+                    android:id="@+id/fly_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="飞行结束"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="@dimen/x50"
+                android:padding="@dimen/x7">
+
+                <TextView
+                    android:layout_width="@dimen/x160"
+                    android:layout_height="wrap_content"
+                    android:text="开始时间:"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+                <TextView
+                    android:id="@+id/start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2017-05-22 06:02:43"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="@dimen/x50"
+                android:padding="@dimen/x7">
+
+                <TextView
+                    android:layout_width="@dimen/x160"
+                    android:layout_height="wrap_content"
+                    android:text="结束时间:"
+                    android:textSize="@dimen/SIZE_18_SP"
+                    android:id="@+id/textView3" />
+
+                <TextView
+                    android:id="@+id/stop_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2017-05-22 06:02:43"
+                    android:textSize="@dimen/SIZE_18_SP" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/x40"
+                android:layout_marginLeft="@dimen/x50"
+                android:layout_marginRight="@dimen/x50"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/delete_route"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/x55"
+                    android:layout_marginRight="@dimen/x30"
+                    android:background="@drawable/btn_pigeon_bg"
+                    android:padding="@dimen/x7"
+                    android:text="删除"
+                    android:textColor="@android:color/white"
+                    android:layout_weight="1"
+
+                    />
+
+                <Button
+                    android:id="@+id/detail_route"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="@dimen/x55"
+                    android:background="@drawable/btn_pigeon_bg"
+                    android:padding="@dimen/x7"
+                    android:text="详情"
+                    android:textColor="@android:color/white"
+
+                    />
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@+id/show_marker_ll"
+            android:layout_marginTop="@dimen/x30"
+            android:background="@color/transparent">
+
+            <ImageView
+                android:id="@+id/show_marker_dismiss"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/icon_delete" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+</RelativeLayout>

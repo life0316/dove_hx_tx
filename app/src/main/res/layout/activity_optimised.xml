@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f1eeee"
+    >
+
+    <include layout="@layout/custom_toolbar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffffff"
+        android:padding="@dimen/x20"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自动登录"
+            android:textSize="@dimen/SIZE_18_SP"
+
+            />
+
+        <ImageButton
+            android:id="@+id/auto_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/color_white"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/icon_closed"
+            />
+
+
+
+    </RelativeLayout>
+
+    <me.xiaopan.switchbutton.SwitchButton
+        android:visibility="gone"
+        style="@style/item"
+        android:id="@+id/activity_optimised_sb"
+        android:text="自动登录"
+        android:checked="false"
+        android:textSize="@dimen/SIZE_18_SP"
+        android:textColor="#9000"
+        android:background="#ffffffff"
+        app:frameDrawable="@mipmap/switch_frame"
+        app:stateDrawable="@drawable/selector_switch_state"
+        app:stateMaskDrawable="@mipmap/switch_state_mask"
+        app:sliderDrawable="@drawable/selector_switch_slider"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+
+    <TextView
+        android:id="@+id/activity_optimised_manager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@mipmap/ic_black"
+        android:text="帐号管理"
+        android:visibility="gone"
+        android:textSize="@dimen/SIZE_18_SP"
+        android:padding="@dimen/x20"
+        android:background="#ffffffff"
+        />
+
+    <TextView
+        android:id="@+id/activity_optimised_currency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@mipmap/ic_black"
+        android:text="通用设置"
+        android:visibility="gone"
+        android:textSize="@dimen/SIZE_18_SP"
+        android:padding="@dimen/x20"
+        android:background="#ffffffff"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:visibility="gone"
+        android:background="@color/view_line">
+    </View>
+
+    <TextView
+        android:id="@+id/activity_modify_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@mipmap/ic_black"
+        android:text="密码修改"
+        android:textSize="@dimen/SIZE_18_SP"
+        android:padding="@dimen/x20"
+        android:background="#ffffffff"
+        android:visibility="gone"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"
+        android:visibility="gone">
+    </View>
+    <TextView
+        android:id="@+id/activity_optimised_about"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@mipmap/ic_black"
+        android:text="关于信鸽"
+        android:textSize="@dimen/SIZE_18_SP"
+        android:padding="@dimen/x20"
+        android:background="#ffffffff"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@null">
+    </View>
+
+    <Button
+        android:id="@+id/activity_optimised_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/x20"
+        android:paddingBottom="@dimen/x20"
+        android:text="退出登录"
+        android:textColor="@android:color/holo_red_light"
+        android:textSize="@dimen/SIZE_18_SP"
+        android:background="#ffffffff"
+        style="?android:attr/borderlessButtonStyle"
+        />
+
+</LinearLayout>

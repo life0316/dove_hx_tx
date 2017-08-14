@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <include layout="@layout/custom_toolbar" />
+
+        <TextView
+            android:id="@+id/activity_pegionfly_no_network"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="没有网络连接,请稍后重试"
+            android:padding="@dimen/x20"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:visibility="gone"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.amap.api.maps.MapView
+                android:id="@+id/activity_pegionfly_mapview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/activity_pigeonfly_power"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电量：100%"
+                android:layout_alignParentLeft="true"
+                android:background="#fff"
+                android:visibility="gone"
+                android:textSize="@dimen/SIZE_16_SP"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/activity_pegionfly_start"
+        android:layout_width="@dimen/x110"
+        android:layout_height="@dimen/x110"
+        android:text="开始"
+        android:background="@drawable/btn_start_bg"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/x60"
+        android:layout_marginLeft="@dimen/x20"
+        />
+    <Button
+        android:id="@+id/activity_pegionfly_show"
+        android:layout_width="@dimen/x110"
+        android:layout_height="@dimen/x110"
+        android:text="信息"
+        android:background="@drawable/btn_start_bg"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/x60"
+        android:layout_toRightOf="@+id/activity_pegionfly_start"
+        />
+
+    <LinearLayout
+        android:layout_width="@dimen/x200"
+        android:layout_height="@dimen/x200"
+        android:orientation="vertical"
+        android:background="#50000000"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/x20"
+        android:id="@+id/fragment_mypigeon_ll"
+        android:gravity="center"
+        android:visibility="gone"
+        android:focusable="true"
+        >
+        <ProgressBar
+            android:id="@+id/fragment_mypigeon__progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/loading"
+            />
+
+        <TextView
+            android:layout_marginTop="@dimen/x10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请稍等..."
+            android:layout_gravity="center_horizontal"
+            />
+
+    </LinearLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/activity_pigeonfly_fabmenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_nav_add"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/x50"
+        android:layout_marginRight="@dimen/x20"
+        >
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/activity_pigeonfly_fab_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_img_2"
+            fab:fab_size="mini"
+            fab:fab_label="鸽子位置"
+            />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/activity_pigeonfly_fab_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_img1"
+            fab:fab_size="mini"
+            fab:fab_label="轨迹大小"
+            />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/activity_pigeonfly_fab_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_img3"
+            fab:fab_size="mini"
+            fab:fab_label="轨迹颜色"
+            />
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/activity_pigeonfly_fab_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_choose_pre"
+            fab:fab_size="mini"
+            fab:fab_label="轨迹图片"
+            />
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+</RelativeLayout>

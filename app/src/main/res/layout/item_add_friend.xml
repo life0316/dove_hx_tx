@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/de_icon"
+            android:layout_width="@dimen/x100"
+            android:layout_height="@dimen/x100"
+            android:layout_alignParentStart="true"
+            android:layout_margin="@dimen/x20"
+            android:src="@mipmap/bac"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="@dimen/x1" />
+
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_marginTop="@dimen/x20"
+            android:layout_toEndOf="@+id/de_icon"
+            android:text="红薯"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/SIZE_16_SP" />
+
+        <TextView
+            android:id="@+id/friend_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/de_icon"
+            android:layout_alignLeft="@+id/friend_name"
+            android:layout_alignStart="@+id/friend_name"
+            android:text="7月19日 7:30"
+            android:textSize="@dimen/SIZE_14_SP" />
+
+        <TextView
+            android:id="@+id/itme_add_friend_wait"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/DIP_20_DP"
+            android:visibility="gone"
+            android:text="等待验证" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            >
+            <Button
+                android:id="@+id/item_add_friend"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:text="同意"
+                />
+
+            <Button
+                android:id="@+id/item_add_friend_jj"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:text="拒绝"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+</LinearLayout>

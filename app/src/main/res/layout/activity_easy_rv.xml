@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/custom_toolbar"/>
+
+    <com.zly.www.easyrecyclerview.EasyDefRecyclerView
+        android:id="@+id/base_erv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        app:number_load_more="5"
+        app:emply_layout="@layout/erv_empty" />
+
+
+
+    <LinearLayout
+        android:id="@+id/easy_ll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@color/darkgray"
+        android:padding="@dimen/x10"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/comment_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/editview_shape"
+            android:hint="回复评论"
+            />
+
+        <!--<Button-->
+            <!--android:id="@+id/traspond"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="@dimen/x70"-->
+            <!--android:layout_weight="1"-->
+            <!--android:paddingLeft="@dimen/x32"-->
+            <!--android:background="@null"-->
+            <!--android:drawableLeft="@mipmap/icon_share"-->
+            <!--android:text="200"-->
+            <!--/>-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="@dimen/x70"-->
+            <!--app:srcCompat="@mipmap/icon_split"-->
+            <!--android:id="@+id/imageView1"-->
+            <!--android:background="#fff"-->
+            <!--/>-->
+
+        <!--<Button-->
+            <!--android:id="@+id/comments"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="@dimen/x70"-->
+            <!--android:layout_weight="1"-->
+            <!--android:paddingLeft="@dimen/x32"-->
+            <!--android:background="@null"-->
+            <!--android:drawableLeft="@mipmap/comments"-->
+            <!--android:text="100"-->
+            <!--/>-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="@dimen/x70"-->
+            <!--app:srcCompat="@mipmap/icon_split"-->
+            <!--android:id="@+id/imageView2"-->
+            <!--android:background="#fff"-->
+            <!--/>-->
+
+        <!--<Button-->
+            <!--android:id="@+id/dislike"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="@dimen/x70"-->
+            <!--android:layout_weight="1"-->
+            <!--android:paddingLeft="@dimen/x32"-->
+            <!--android:drawableLeft="@mipmap/dislike"-->
+            <!--android:background="@null"-->
+            <!--android:text="300"-->
+            <!--/>-->
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/custom_toolbar"/>
+
+    <EditText
+        android:id="@+id/tran_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/x200"
+        android:background="@null"
+        android:layout_margin="@dimen/x20"
+        android:hint="说说分享心得..."
+        android:inputType="textMultiLine"
+        android:padding="@dimen/x20"
+        android:gravity="top"
+        android:textSize="@dimen/SIZE_14_SP"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x120"
+        android:background="@color/darkgray"
+        android:layout_margin="@dimen/x20"
+        >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/tran_other_iv"
+            android:layout_width="@dimen/x120"
+            android:layout_height="@dimen/x120"
+            android:src="@mipmap/btn_img_photo_default"
+            android:background="@color/colorWhite"
+            android:scaleType="centerCrop"
+            />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/x20"
+                >
+
+                <TextView
+                    android:id="@+id/tran_other_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="隔壁老王"
+                    android:textSize="@dimen/SIZE_14_SP"
+                    />
+
+                <TextView
+                    android:id="@+id/tran_other_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="隔壁老王"
+                    android:textSize="@dimen/SIZE_12_SP"
+                    android:layout_marginTop="@dimen/x10"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

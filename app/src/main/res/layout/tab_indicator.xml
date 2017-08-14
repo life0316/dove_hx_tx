@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="#FAFAFA"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/tab_line"/>
+    <ImageView
+        android:layout_marginTop="@dimen/x16"
+        android:id="@+id/imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:padding="1dp"
+        >
+    </ImageView>
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/viewpage_selector_slide_title"
+        android:textSize="@dimen/SIZE_14_SP"
+        android:layout_marginBottom="@dimen/x4"
+        >
+    </TextView>
+
+</LinearLayout>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/custom_toolbar"/>
+
+    <TextView
+        android:id="@+id/activity_msg_add_friend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@mipmap/ic_black"
+        android:text="新朋友"
+        android:textSize="@dimen/SIZE_16_SP"
+        android:padding="@dimen/x20"
+        android:background="#ffffffff"
+        android:gravity="center_vertical"
+        android:drawableLeft="@mipmap/new_friend"
+        android:drawablePadding="@dimen/x30"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+    <TextView
+        android:id="@+id/activity_msg_private_letter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@mipmap/ic_black"
+        android:text="我的私信"
+        android:textSize="@dimen/SIZE_16_SP"
+        android:padding="@dimen/x20"
+        android:background="#ffffffff"
+        android:gravity="center_vertical"
+        android:drawableLeft="@mipmap/letter"
+        android:drawablePadding="@dimen/x30"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+    <TextView
+        android:id="@+id/activity_msg_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@mipmap/ic_black"
+        android:text="评论"
+        android:textSize="@dimen/SIZE_16_SP"
+        android:padding="@dimen/x20"
+        android:background="#ffffffff"
+        android:gravity="center_vertical"
+        android:drawableLeft="@mipmap/marker"
+        android:drawablePadding="@dimen/x30"
+        android:visibility="gone"
+        />
+    <View
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/activity_msg_agree"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@mipmap/ic_black"
+        android:text="赞"
+        android:textSize="@dimen/SIZE_16_SP"
+        android:padding="@dimen/x20"
+        android:background="#ffffffff"
+        android:gravity="center_vertical"
+        android:drawableLeft="@mipmap/marker"
+        android:drawablePadding="@dimen/x30"
+        />
+    <View
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+
+</LinearLayout>

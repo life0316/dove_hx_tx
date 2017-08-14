@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/custom_toolbar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="@dimen/x30"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="鸽环"
+            android:layout_marginLeft="@dimen/x40"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="鸽子"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x40"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="@color/view_line"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/act_mate_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <RelativeLayout
+        android:id="@+id/act_mate_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="没有可用的鸽环,请去首页添加"
+            android:textSize="@dimen/SIZE_14_SP"
+            />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

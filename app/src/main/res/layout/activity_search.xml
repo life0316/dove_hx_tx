@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/search_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/search_et_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/search_edittext_shape"
+                    android:drawableLeft="@mipmap/icon_search"
+                    android:drawablePadding="@dimen/x16"
+                    android:hint="输入编号搜索用户"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:padding="@dimen/x16"
+                    android:textCursorDrawable="@color/text_line"
+                    android:textSize="@dimen/SIZE_18_SP"/>
+
+                <ImageView
+                    android:id="@+id/search_iv_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:src="@mipmap/icon_delete"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/search_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_weight="0.08"
+                android:text="取消"
+                android:textSize="@dimen/SIZE_18_SP"/>
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
+</LinearLayout>

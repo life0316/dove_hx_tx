@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp">
+
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/backdrop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:fitsSystemWindows="true"
+                android:src="@mipmap/image_1"
+                app:layout_collapseMode="parallax"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@color/colorBlue"
+                app:layout_collapseMode="parallax"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/x10"
+                android:paddingTop="@dimen/x30"
+                android:gravity="center_vertical"
+
+                >
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="@dimen/x110"
+                    android:layout_height="@dimen/x110"
+                    android:src="@mipmap/image_1"
+                    android:layout_marginRight="@dimen/x20"
+                    android:layout_marginLeft="@dimen/x30"
+                    android:id="@+id/image"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/user_code_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="用户编号:xxxxx"
+                        android:textColor="@color/color_white"
+                        />
+                    <TextView
+                        android:id="@+id/user_name_tv"
+                        android:layout_marginTop="@dimen/x20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="昵称:隔壁老王"
+                        android:textColor="@color/color_white"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_collapseMode="pin" >
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="个人详情"
+                    android:gravity="center"
+                    />
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_background"
+        app:srlPrimaryColor="@color/app_background"
+        app:srlAccentColor="#868484"
+        app:srlEnablePreviewInEditMode="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+        >
+    <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/act_circle_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</android.support.design.widget.CoordinatorLayout>

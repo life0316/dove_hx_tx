@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/custom_toolbar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/add_pigeon_bg"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_marginTop="@dimen/x20"
+        android:padding="@dimen/x20"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="环号:"
+            android:background="@null"
+            android:textSize="@dimen/SIZE_20_SP"
+            android:gravity="center_vertical"
+            />
+
+        <EditText
+            android:id="@+id/act_addpigeon_ringcode"
+            android:layout_width="@dimen/x300"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/editview_shape"
+            android:focusable="true"
+            android:inputType="number"
+            android:maxLength="10"
+            android:gravity="center_vertical|right"
+            android:textSize="@dimen/SIZE_16_SP"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/add_pigeon_bg3"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:padding="@dimen/x20"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+            android:id="@+id/act_addpigeon_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="母"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/ic_black"
+            android:drawablePadding="@dimen/x16"
+            android:textSize="@dimen/SIZE_16_SP"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="性别:"
+            android:textSize="@dimen/SIZE_20_SP"
+            android:background="@null"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/textView" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/add_pigeon_bg3"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:padding="@dimen/x20"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="年龄:"
+            android:textSize="@dimen/SIZE_20_SP"
+            android:background="@null"
+            android:gravity="center_vertical"
+            />
+
+
+        <TextView
+            android:id="@+id/act_addpigeon_old"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="年龄"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/ic_black"
+            android:drawablePadding="@dimen/x16"
+            android:textSize="@dimen/SIZE_16_SP"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/add_pigeon_bg3"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:padding="@dimen/x20"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="羽色:"
+            android:background="@null"
+            android:textSize="@dimen/SIZE_20_SP"
+            />
+
+
+        <TextView
+            android:id="@+id/act_addpigeon_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="白色"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/ic_black"
+            android:drawablePadding="@dimen/x16"
+            android:singleLine="true"
+            android:maxLength="16"
+            android:textSize="@dimen/SIZE_16_SP"
+            />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/add_pigeon_bg3"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:padding="@dimen/x20"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="眼砂:"
+            android:background="@null"
+            android:textSize="@dimen/SIZE_20_SP"
+            />
+
+
+        <TextView
+            android:id="@+id/act_addpigeon_eyes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="桃红砂"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/ic_black"
+            android:drawablePadding="@dimen/x16"
+            android:textSize="@dimen/SIZE_16_SP"
+            />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/add_pigeon_bg2"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:padding="@dimen/x20"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="血统:"
+            android:background="@null"
+            android:textSize="@dimen/SIZE_20_SP"
+
+            />
+
+        <TextView
+            android:id="@+id/act_addpigeon_blood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="血统"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/ic_black"
+            android:drawablePadding="@dimen/x16"
+            android:singleLine="true"
+            android:maxLength="16"
+            android:textSize="@dimen/SIZE_16_SP"
+            />
+
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/act_addpigeon_confirm"
+        android:layout_width="@dimen/x600"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_pigeon_bg"
+        android:text="确定"
+        android:textColor="#fff"
+        android:textSize="@dimen/SIZE_20_SP"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/x100"
+        />
+
+</LinearLayout>

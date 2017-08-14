@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<LinearLayout
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingLeft="@dimen/x40"
+    >
+
+        <ImageView
+            android:id="@+id/item_rv_friend_pigeon_2_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_img_2"
+            android:layout_gravity="center_vertical"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/x20"
+            android:layout_gravity="center_vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="环号:"/>
+
+                <TextView
+                    android:id="@+id/item_rv_friend_pigeon_2_circlenumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x20"
+                    android:text="001"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/x10"
+                android:gravity="center_vertical"
+                >
+
+                <ImageView
+                    android:id="@+id/item_rv_friend_pigeon_2_pigeonsix"
+                    android:layout_width="@dimen/x60"
+                    android:layout_height="@dimen/x60"
+                    android:src="@mipmap/list_male"/>
+                <TextView
+                    android:id="@+id/item_rv_friend_pigeon_2_pigeonold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.5"
+                    android:paddingLeft="@dimen/x20"
+                    />
+                <TextView
+                    android:paddingLeft="@dimen/x20"
+                    android:id="@+id/item_rv_friend_pigeon_2_pigeoncolor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="羽色"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+
+</LinearLayout>

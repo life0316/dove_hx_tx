@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/fragment_base_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        >
+
+        <ImageView
+            android:id="@+id/fragment_base_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x16"
+            android:src="@mipmap/icon_friends_list"
+            android:paddingLeft="@dimen/x20"
+            />
+
+        <TextView
+            android:id="@+id/fragment_base_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="#fff"
+            android:textSize="@dimen/SIZE_20_SP"
+            android:text="鸽圈"/>
+
+        <ImageView
+            android:id="@+id/fragment_base_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_nav_add"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/x30"
+            android:padding="@dimen/x16"
+            android:visibility="gone"
+            />
+        <ImageView
+            android:id="@+id/fragment_base_add2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_nav_add"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/x30"
+            android:padding="@dimen/x16"
+            />
+        <TextView
+            android:id="@+id/fragment_base_cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/x30"
+            android:padding="@dimen/x16"
+            android:text="取消"
+            android:visibility="gone"
+            android:textSize="@dimen/SIZE_18_SP"
+            android:textColor="#fff"
+            />
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/fragment_base_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/colorBlue"
+        app:tabSelectedTextColor="@color/colorBlue"
+        app:tabTextAppearance="@style/TabLayoutTextStyle"
+        android:background="@color/colorWhite"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/view_line"/>
+
+    <com.haoxi.dove.widget.CustomViewPager
+        android:id="@+id/fragment_base_cvp"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:background="@android:color/white" />
+
+</LinearLayout>

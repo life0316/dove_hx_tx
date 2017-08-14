@@ -1,0 +1,32 @@
+<resources>    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16.0dp</dimen>
+    <dimen name="activity_vertical_margin">16.0dp</dimen>
+    <dimen name="regist_width">300.0dp</dimen>
+    <dimen name="tab_indicator_line">1.0dp</dimen>
+    <dimen name="DIP_3_DP">3.0dp</dimen>
+    <dimen name="DIP_5_DP">5.0dp</dimen>
+    <dimen name="DIP_2_DP">2.0dp</dimen>
+    <dimen name="DIP_8_DP">8.0dp</dimen>
+    <dimen name="DIP_10_DP">10.0dp</dimen>
+    <dimen name="DIP_12_DP">12.0dp</dimen>
+    <dimen name="DIP_15_DP">15.0dp</dimen>
+    <dimen name="DIP_16_DP">16.0dp</dimen>
+    <dimen name="DIP_18_DP">18.0dp</dimen>
+    <dimen name="DIP_20_DP">20.0dp</dimen>
+    <dimen name="DIP_25_DP">25.0dp</dimen>
+    <dimen name="DIP_30_DP">30.0dp</dimen>
+    <dimen name="DIP_35_DP">35.0dp</dimen>
+    <dimen name="DIP_40_DP">40.0dp</dimen>
+    <dimen name="DIP_50_DP">50.0dp</dimen>
+    <dimen name="DIP_55_DP">55.0dp</dimen>
+    <dimen name="DIP_60_DP">60.0dp</dimen>
+    <dimen name="DIP_80_DP">80.0dp</dimen>
+    <dimen name="DIP_100_DP">100.0dp</dimen>
+    <dimen name="DIP_130_DP">130.0dp</dimen>
+    <dimen name="DIP_150_DP">150.0dp</dimen>
+    <dimen name="DIP_180_DP">180.0dp</dimen>
+    <dimen name="DIP_200_DP">200.0dp</dimen>
+    <dimen name="DIP_290_DP">290.0dp</dimen>
+    <dimen name="DIP_300_DP">300.0dp</dimen>
+    <dimen name="DIP_330_DP">330.0dp</dimen>
+</resources>

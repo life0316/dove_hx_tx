@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <include layout="@layout/custom_toolbar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/x60"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="鸽环编号"
+            android:id="@+id/act_addring_ringcode"
+            android:layout_margin="@dimen/x40"
+            android:padding="@dimen/x20"
+            android:textSize="@dimen/SIZE_18_SP"
+            android:background="@drawable/editview_shape"
+            android:inputType="number"
+            android:maxLength="15"
+            />
+        <Button
+            android:id="@+id/act_addring_scan"
+            android:layout_marginTop="@dimen/x160"
+            android:layout_marginBottom="@dimen/x300"
+            android:layout_width="@dimen/x500"
+            android:layout_height="wrap_content"
+            android:text="扫描二维码添加"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/btn_pigeon_bg"
+            android:textSize="@dimen/SIZE_18_SP"
+            android:textColor="#fff"
+            />
+
+
+        <Button
+            android:id="@+id/act_addring_btn"
+            android:layout_marginTop="@dimen/x130"
+            android:layout_marginBottom="@dimen/x100"
+            android:layout_width="@dimen/x600"
+            android:layout_height="wrap_content"
+            android:text="确定"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/btn_pigeon_bg"
+            android:textSize="@dimen/SIZE_20_SP"
+            android:textColor="#fff"
+            />
+    </RelativeLayout>
+</LinearLayout>

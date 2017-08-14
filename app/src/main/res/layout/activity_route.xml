@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/custom_toolbar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/activity_srl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/fragment_route_no_network"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="没有网络连接,请稍后重试"
+            android:padding="@dimen/x20"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textSize="@dimen/SIZE_16_SP"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_swiprv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_route_show_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/activity_show_add_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/route_no_record"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_route_ll_refrash"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/activity_tv_refrash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/network_bad"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:padding="@dimen/x10"
+            />
+    </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

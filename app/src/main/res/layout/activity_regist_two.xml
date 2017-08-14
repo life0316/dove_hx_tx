@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/custom_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/x30"
+        android:paddingLeft="@dimen/x55"
+        android:paddingRight="@dimen/x55"
+        android:paddingTop="@dimen/x30">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/act_regist_mail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x10"
+                android:layout_weight="10"
+                android:background="@drawable/line_et_bg"
+                android:drawableLeft="@mipmap/icon_email_1"
+                android:drawablePadding="@dimen/x10"
+                android:hint="@string/user_email"
+                android:padding="@dimen/x6"
+                android:singleLine="true"
+                android:textColorHint="@color/regist_text"
+                android:textCursorDrawable="@drawable/editcursor"
+                android:textSize="@dimen/SIZE_18_SP" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_weight="1"
+                android:padding="@dimen/x10"
+                android:src="@mipmap/icon_tab_news" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <RelativeLayout
+                android:id="@+id/act_regist_rl_sex"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginRight="@dimen/x10"
+                android:layout_marginTop="@dimen/x10"
+                android:layout_weight="10"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/x6"
+                    android:layout_marginLeft="@dimen/x10"
+                    android:layout_marginTop="@dimen/x10"
+                    android:drawableLeft="@mipmap/icon_sex_1"
+                    android:drawablePadding="@dimen/x10"
+                    android:text="@string/user_sex"
+                    android:textColor="@color/regist_text"
+                    android:textSize="@dimen/SIZE_18_SP"
+                    />
+
+                <TextView
+                    android:id="@+id/act_regist_tv_sex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/x10"
+                    android:drawablePadding="@dimen/x10"
+                    android:drawableRight="@mipmap/ic_black"
+                    android:text="男"
+                    android:textColor="@color/regist_text"
+                    android:textSize="@dimen/SIZE_16_SP"
+                    />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_weight="1"
+                android:padding="@dimen/x10"
+                android:src="@mipmap/icon_tab_news"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x2"
+            android:layout_marginBottom="@dimen/x20"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_marginRight="@dimen/x100"
+            android:background="@color/regist_text"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x10"
+            android:orientation="horizontal"
+            >
+
+            <RelativeLayout
+                android:id="@+id/act_regist_rl_data"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginRight="@dimen/x10"
+                android:layout_marginTop="@dimen/x10"
+                android:layout_weight="10"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/x6"
+                    android:layout_marginLeft="@dimen/x10"
+                    android:layout_marginTop="@dimen/x10"
+                    android:drawableLeft="@mipmap/icon_brithday_1"
+                    android:drawablePadding="@dimen/x10"
+                    android:text="@string/user_birthday"
+                    android:textColor="@color/regist_text"
+                    android:textSize="@dimen/SIZE_18_SP"
+                    />
+
+                <TextView
+                    android:id="@+id/act_regist_tv_data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="@dimen/x6"
+                    android:layout_marginLeft="@dimen/x10"
+                    android:layout_marginTop="@dimen/x10"
+                    android:text="2016年01月04日"
+                    android:textColor="@color/regist_text"
+                    android:textSize="@dimen/SIZE_16_SP"
+                    />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_weight="1"
+                android:padding="@dimen/x10"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tab_indicator_line"
+            android:layout_marginBottom="@dimen/x10"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_marginRight="@dimen/x100"
+            android:background="@color/regist_text"/>
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/DIP_200_DP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/act_regist_two_pro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上一步"
+                android:textColor="#fff"
+                android:background="@drawable/btn_pigeon_bg"
+                />
+            <Button
+                android:id="@+id/act_regist_two_next"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下一步"
+                android:textColor="#fff"
+                android:background="@drawable/btn_pigeon_bg"
+                />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:background="#fff"
+    >
+
+    <RelativeLayout
+        android:layout_width="@dimen/x600"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/x30"
+        android:padding="@dimen/x10"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/act_login_phone_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="手机登录"
+            android:textColor="@color/colorBlue"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:layout_alignParentRight="true"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="忘记密码?"
+            android:textColor="@color/colorBlue"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="53dp"
+        android:paddingLeft="@dimen/x75"
+        android:paddingRight="@dimen/x75"
+        android:weightSum="1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <ImageView
+            android:layout_width="@dimen/x200"
+            android:layout_height="@dimen/x200"
+            android:src="@mipmap/icon_logo"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/x80"
+            android:layout_weight="0.15"/>
+
+        <EditText
+            android:id="@+id/act_login_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入手机号"
+            android:singleLine="true"
+            android:drawableLeft="@mipmap/icon_username"
+            android:drawablePadding="@dimen/x20"
+            android:inputType="number"
+            android:maxLength="13"
+            android:textSize="@dimen/SIZE_18_SP"
+            android:background="@drawable/line_et_bg"
+            android:textCursorDrawable="@drawable/editcursor"
+            android:textColorHint="@color/regist_text"
+            android:padding="@dimen/x10"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/act_login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入密码"
+                android:singleLine="true"
+                android:drawableLeft="@mipmap/icon_password"
+                android:drawablePadding="@dimen/x20"
+                android:inputType="textPassword"
+                android:maxLength="13"
+                android:textSize="@dimen/SIZE_18_SP"
+                android:background="@drawable/line_et_bg"
+                android:textCursorDrawable="@drawable/editcursor"
+                android:textColorHint="@color/regist_text"
+                android:padding="@dimen/x10"
+                />
+
+            <CheckBox
+                android:checked="false"
+                android:id="@+id/act_login_cb"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:button="@drawable/selector_password"
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x60"/>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x20"
+            >
+
+            <CheckBox
+                android:id="@+id/act_login_remenber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="记住密码"
+                android:textSize="@dimen/SIZE_14_SP"
+                android:theme="@style/cb_test"
+                />
+
+            <CheckBox
+                android:id="@+id/act_login_auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自动登录"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/SIZE_14_SP"
+                android:theme="@style/cb_test"
+                />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/act_login_loginbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="登录"
+            android:textSize="@dimen/SIZE_20_SP"
+            android:textColor="#fff"
+            android:layout_marginBottom="@dimen/x40"
+            android:layout_marginTop="@dimen/x40"
+            android:background="@drawable/btn_pigeon_bg2"/>
+
+        <TextView
+            android:id="@+id/act_login_regist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="新用户注册"
+            android:textColor="@color/colorBlue"
+            android:layout_gravity="center_horizontal"
+            android:textSize="@dimen/SIZE_20_SP"/>
+
+        <TextView
+            android:id="@+id/act_login_forget_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="忘记密码?"
+            android:textColor="@color/colorBlue"
+            android:textSize="@dimen/SIZE_16_SP"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/x20"
+             />
+    </LinearLayout>
+
+</RelativeLayout>

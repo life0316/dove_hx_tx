@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/x30"
+                android:background="#fff"
+    >
+
+    <TextView
+        android:id="@+id/item_rv_friend_pigeon_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="朋友昵称"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/x20"
+        android:textColor="#00f"
+        android:textSize="@dimen/SIZE_18_SP"
+        />
+
+    <TextView
+        android:id="@+id/item_rv_friend_pigeon_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/item_rv_friend_pigeon_iv"
+        android:layout_centerVertical="true"
+        android:text="2"/>
+    <TextView
+        android:id="@+id/item_rv_friend_pigeon_uni"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="只"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/item_rv_friend_pigeon_number"
+        />
+
+    <ImageView
+        android:id="@+id/item_rv_friend_pigeon_iv"
+        android:layout_width="@dimen/x30"
+        android:layout_height="@dimen/x30"
+        android:src="@mipmap/icon_down"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginRight="@dimen/x40"
+        android:layout_alignParentRight="true"/>
+
+
+</RelativeLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:background="#d7d5d5"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/headciv_dialog_remove_attention"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="取消关注"
+        android:padding="@dimen/x15"
+        android:textSize="@dimen/SIZE_20_SP"
+        android:gravity="center"
+        android:background="#fff"
+        />
+    <View
+        android:id="@+id/view_line1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+    <TextView
+        android:id="@+id/headciv_dialog_shou"
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="收藏"
+        android:padding="@dimen/x15"
+        android:textSize="@dimen/SIZE_20_SP"
+        android:gravity="center"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+
+    <TextView
+        android:id="@+id/headciv_dialog_delete"
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="删除"
+        android:padding="@dimen/x15"
+        android:textSize="@dimen/SIZE_20_SP"
+        android:gravity="center"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line"/>
+
+    <TextView
+        android:id="@+id/headciv_dialog_cancle"
+        android:layout_marginTop="@dimen/x20"
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="取消"
+        android:padding="@dimen/x15"
+        android:textSize="@dimen/SIZE_20_SP"
+        android:gravity="center"
+        />
+</LinearLayout>

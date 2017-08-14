@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:gravity="center_vertical"
+    >
+
+    <EditText
+        android:id="@+id/pigeon_name_dialog_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/x15"
+        android:paddingLeft="@dimen/DIP_10_DP"
+        android:background="@drawable/comment_shape"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:maxLength="25"
+        android:layout_weight="8"
+        android:hint="写评论"
+        android:textSize="@dimen/SIZE_16_SP"
+        />
+
+    <TextView
+        android:id="@+id/comment_submit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="发布"
+        />
+
+</LinearLayout>

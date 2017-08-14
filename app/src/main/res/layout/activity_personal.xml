@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/app_background"
+    >
+
+    <include
+        android:id="@+id/title_bar_layout"
+        layout="@layout/custom_toolbar"
+        />
+
+    <RelativeLayout
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:paddingTop="@dimen/x30"
+        android:paddingBottom="@dimen/x30"
+        android:id="@+id/activity_personal_civ_rv"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:padding="@dimen/x20"
+            android:text="头像"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="@dimen/x120"
+            android:layout_height="@dimen/x120"
+            android:id="@+id/activity_personal_civ"
+            android:src="@mipmap/btn_img_photo_default"
+            app:civ_border_color="#000000"
+            app:civ_border_width="@dimen/x1"
+            android:layout_toLeftOf="@+id/iv_black"
+            android:layout_marginRight="@dimen/x20"
+            />
+
+
+        <ImageView
+            android:id="@+id/iv_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="@dimen/x40"
+            android:background="@mipmap/ic_black"
+            />
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+
+
+    <RelativeLayout
+        android:background="#fff"
+        android:id="@+id/activity_personal_nickname_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x10"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:text="昵称"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+        <TextView
+            android:id="@+id/activity_personal_nick_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x20"
+            android:drawableRight="@mipmap/ic_black"
+            android:padding="@dimen/x10"
+            android:text=""
+            android:singleLine="true"
+            android:drawablePadding="@dimen/x20"
+            android:textSize="@dimen/SIZE_16_SP"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+
+
+    <RelativeLayout
+        android:background="#fff"
+        android:id="@+id/activity_personal_dovname_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x10"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:text="鸽舍名"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+        <TextView
+            android:id="@+id/activity_personal_dovecote_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x20"
+            android:drawableRight="@mipmap/ic_black"
+            android:padding="@dimen/x10"
+            android:text="思思"
+            android:singleLine="true"
+            android:drawablePadding="@dimen/x20"
+            android:textSize="@dimen/SIZE_16_SP"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+
+    <RelativeLayout
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x10"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:text="用户编号"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+        <TextView
+            android:id="@+id/activity_personal_usernumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x20"
+            android:drawablePadding="@dimen/x20"
+            android:padding="@dimen/x10"
+            android:text="sxo158"
+            android:textSize="@dimen/SIZE_16_SP"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+
+    <RelativeLayout
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x10"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:text="手机号"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+        <TextView
+            android:id="@+id/activity_personal_userphone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x20"
+            android:drawablePadding="@dimen/x20"
+            android:padding="@dimen/x10"
+            android:text="17369854236"
+            android:singleLine="true"
+            android:textSize="@dimen/SIZE_16_SP"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+
+    <RelativeLayout
+        android:background="#fff"
+        android:id="@+id/activity_personal_age_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x10"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:text="年龄"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+        <TextView
+            android:id="@+id/activity_personal_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x20"
+            android:drawableRight="@mipmap/ic_black"
+            android:padding="@dimen/x10"
+            android:singleLine="true"
+            android:drawablePadding="@dimen/x20"
+            android:text="24岁"
+            android:textSize="@dimen/SIZE_16_SP"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+
+    <RelativeLayout
+        android:background="#fff"
+        android:id="@+id/activity_personal_sex_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x10"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:text="性别"
+            android:textSize="@dimen/SIZE_18_SP"
+            />
+
+        <TextView
+            android:id="@+id/activity_personal_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x20"
+            android:drawableRight="@mipmap/ic_black"
+            android:padding="@dimen/x10"
+            android:drawablePadding="@dimen/x20"
+            android:text="男"
+            android:textSize="@dimen/SIZE_16_SP"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+
+    <RelativeLayout
+        android:background="#fff"
+        android:id="@+id/activity_personal_year_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x10"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:text="养鸽年限"
+            android:textSize="@dimen/SIZE_18_SP"
+
+            />
+
+        <TextView
+            android:id="@+id/activity_personal_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/x20"
+            android:drawableRight="@mipmap/ic_black"
+            android:padding="@dimen/x10"
+            android:drawablePadding="@dimen/x20"
+            android:text="3年"
+            android:textSize="@dimen/SIZE_16_SP"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_indicator_line"
+        android:background="@color/view_line">
+    </View>
+
+</LinearLayout>

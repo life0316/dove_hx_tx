@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/custom_toolbar"/>
+
+    <EditText
+        android:id="@+id/act_addfriend_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="搜索好友"
+        android:gravity="center"
+        android:layout_margin="@dimen/x20"
+        android:background="@drawable/editview_shape"
+        android:padding="@dimen/x10"
+        android:windowSoftInputMode="stateHidden"
+        android:focusable="false"
+        android:visibility="gone"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/act_addfriend_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <RelativeLayout
+        android:id="@+id/add_friend_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="没有新的好友请求"
+            android:gravity="center"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>
