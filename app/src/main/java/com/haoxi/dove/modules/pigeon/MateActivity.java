@@ -49,12 +49,6 @@ import butterknife.OnClick;
 import rx.Observable;
 import rx.functions.Action1;
 
-/**
- * @创建者 Administrator
- * @创建时间 2017/2/14 11:49
- * @描述
- */
-
 @ActivityFragmentInject(contentViewId = R.layout.activity_mate)
 public class MateActivity extends BaseActivity implements IMateView,IGetPigeonView,IGetRingView {
 
@@ -92,14 +86,10 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
     private String tempPigeonObjId = "";
     private String tempRingObjId   = "";
 
-
-//    private static Handler mHandler = new Handler();
-
     private boolean isMate = false;
 
     @Inject
     MatePigeonAdapter mAdapter;
-
 
     @Inject
     MatePigeonsAdapter mRingsAdapter;
@@ -122,12 +112,10 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
 
     @Override
     protected void initInject() {
-
         DaggerMateComponent.builder()
                 .appComponent(getAppComponent())
                 .mateMoudle(new MateMoudle(this,this))
                 .build().inject(this);
-
     }
 
     private Observable<Boolean> isLoadObservable;
@@ -158,10 +146,6 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
         if (intent != null) {
             mateSize = intent.getIntExtra("matelist_size",0);
         }
-
-
-        //setSupportActionBar(mToolbar);
-
         mBackIv.setVisibility(View.VISIBLE);
         mKeepTv.setVisibility(View.VISIBLE);
         mTitleTv.setText("批量匹配");
@@ -175,10 +159,7 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
     @Override
     protected void onResume() {
         super.onResume();
-
-
         if (isLoad) {
-
             myRingBeen.clear();
             isFirst = true;
             getRingData();
@@ -195,17 +176,13 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
             ringPresenter.getDataFromNets(getParaMap());
         }
     }
-
-
     @OnClick(R.id.custom_toolbar_keep)
-    void keepOnclick(View view) {
+    void keepOnclick() {
 
         ringsArray.clear();
         pigeonsArray.clear();
 
-        Log.e("mateactivity",tempRings.size()+"---s--4");
         for (int i = 0; i < tempRings.size(); i++) {
-
 
             Log.e("mateactivity",(keepMates.get(tempRings.get(i).getRingid()) != null)+"---s--5");
             if (keepMates.get(tempRings.get(i).getRingid()) != null && !"".equals(keepMates.get(tempRings.get(i).getRingid()))){
@@ -238,13 +215,7 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
             ApiUtils.showToast(this,"超过最大匹配数");
             return;
         }
-
-        Log.e("mateactivity",getPigeonObjId().toString()+"-----4");
-        Log.e("mateactivity",getRingObjId().toString()+"-----5");
-
         methodType = MethodType.METHOD_TYPE_RING_MATCH;
-        Log.e("mateactivity",getParaMap()+"-----6");
-
         ourCodePresenter.ringMatchDove(getParaMap());
     }
 
@@ -253,9 +224,9 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
 
 
     @OnClick(R.id.custom_toolbar_iv)
-    void backOnclick(View view) {
+    void backOnclick() {
         if (!isMate) {
-            myCancleObservable.setRefrash(5);
+            mRxBus.post("isLoad",false);
         }
         this.finish();
     }

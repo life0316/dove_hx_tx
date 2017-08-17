@@ -52,44 +52,33 @@ public class PigeonFragment extends MyBaseFragment {
         super.onResume();
         mViewPager.setCurrentItem(viewpagerTagNum);
 
-        cancleObservable.subscribe(new Action1<Integer>() {
+        cancleObservable.subscribe(new Action1<Boolean>() {
             @Override
-            public void call(Integer integer) {
-                switch (integer) {
-
-                    case 100:
-                        mCancleTv.setVisibility(View.VISIBLE);
-                        mTabAddIv.setVisibility(View.GONE);
-
-                        break;
-                    case 200:
-
-                        mCancleTv.setVisibility(View.GONE);
-                        mTabAddIv.setVisibility(View.VISIBLE);
-                        break;
+            public void call(Boolean integer) {
+                if (integer){
+                    mCancleTv.setVisibility(View.GONE);
+                    mTabAddIv.setVisibility(View.VISIBLE);
+                }else {
+                    mCancleTv.setVisibility(View.VISIBLE);
+                    mTabAddIv.setVisibility(View.GONE);
                 }
             }
         });
-
     }
 
     @Override
     protected void initToolbar(View view) {
-
         mToolbar.setTitle("");
         mTabTitleTv.setText("信鸽");
         mTabSearchIv.setVisibility(View.GONE);
         mTabAdd2Iv.setVisibility(View.GONE);
         mTabAddIv.setVisibility(View.VISIBLE);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-
     }
 
     @Override
     public void setupAdapter(MyBaseAdapter adapter) {
-
         adapter.clearFragment();
-
         adapter.addFragment(MyRingFragment.class, "我的鸽环", getBundle("我的鸽环"));
         adapter.addFragment(MyPigeonFragment.class, "我的信鸽", getBundle("我的信鸽"));
         //        adapter.addFragment(MyFriendFragment.class,"好友信鸽",getBundle("好友信鸽"));
@@ -111,9 +100,7 @@ public class PigeonFragment extends MyBaseFragment {
             LinearLayout addCirle = (LinearLayout) view.findViewById(R.id.add_circle_ll);
             LinearLayout addMate = (LinearLayout) view.findViewById(R.id.add_mate_ll);
 
-//            mPopupWindow = new PopupWindow(view, (int) getResources().getDimension(R.dimen.x300), (int) getResources().getDimension(R.dimen.x360));
             mPopupWindow = new PopupWindow(view, (int) getResources().getDimension(R.dimen.DIP_150_DP), (int) getResources().getDimension(R.dimen.DIP_180_DP));
-
 
             addPigeon.setOnClickListener(new View.OnClickListener() {
                 @Override

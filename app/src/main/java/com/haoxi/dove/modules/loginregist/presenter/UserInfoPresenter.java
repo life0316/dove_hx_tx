@@ -2,6 +2,7 @@ package com.haoxi.dove.modules.loginregist.presenter;
 
 
 import com.haoxi.dove.base.BasePresenter;
+import com.haoxi.dove.modules.loginregist.ui.IGetInfo;
 import com.haoxi.dove.modules.loginregist.ui.ILoginView;
 import com.haoxi.dove.modules.loginregist.model.ILoginModel;
 import com.haoxi.dove.newin.bean.OurUserInfo;
@@ -12,7 +13,7 @@ import java.util.Map;
  * Created by lifei on 2016/12/26.
  */
 
-public class UserInfoPresenter extends BasePresenter<ILoginView, OurUserInfo> implements ILoginPresenter {
+public class UserInfoPresenter extends BasePresenter<IGetInfo, OurUserInfo> implements ILoginPresenter {
 
     private static final String TAG = "LoginPresenter";
     private ILoginModel loginModel;
@@ -27,7 +28,7 @@ public class UserInfoPresenter extends BasePresenter<ILoginView, OurUserInfo> im
 
         if (isViewAttached()) {
             getMvpView().hideProgress();
-            getMvpView().toMainActivity(data);
+            getMvpView().getUserInfo(data);
         }
     }
     @Override

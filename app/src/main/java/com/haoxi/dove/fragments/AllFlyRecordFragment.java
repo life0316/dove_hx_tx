@@ -51,14 +51,7 @@ import butterknife.OnClick;
 import rx.Observable;
 import rx.functions.Action1;
 
-/**
- * Created by Administrator on 2017\7\7 0007.
- */
-
 public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRouteView,MyItemClickListener, FlyStringAdapter.MyItemCheckListener, FlyStringAdapter.RecyclerViewOnItemClickListener, OnRefreshListener {
-
-//    @BindView(R.id.fragment_mypigeon_srl)
-//    SwipeRefreshLayout mSrl;
 
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
@@ -84,9 +77,6 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
 
     @Inject
     OurCodePresenter ourCodePresenter;
-
-//    @Inject
-//    RouteTitleAdapter titleAdapter;
 
     @Inject
     FlyStringAdapter titleAdapter;
@@ -165,9 +155,6 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
         mRecyclerView.setAdapter(titleAdapter);
 
         mShowAddTv2.setVisibility(View.GONE);
-
-//        mSrl.setOnRefreshListener(this);
-//        mSrl.setColorSchemeColors(getResources().getColor(android.R.color.holo_blue_bright), getResources().getColor(android.R.color.holo_green_light), getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
 
         refreshLayout.setEnableLoadmore(false);
 
@@ -258,7 +245,6 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
             this.longClickTag = false;
 
         } else {
-//            mSrl.setEnabled(false);
 //            refreshLayout.setEnableRefresh(false);
 
             mShowAddLv.setVisibility(View.VISIBLE);
@@ -277,7 +263,6 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
 
     @Override
     public void setRefrash(boolean isRefrash) {
-//        mSrl.setRefreshing(isRefrash);
         refreshLayout.finishRefresh(isRefrash);
     }
 

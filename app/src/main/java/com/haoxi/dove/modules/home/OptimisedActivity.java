@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.haoxi.dove.R;
 import com.haoxi.dove.base.BaseActivity;
-import com.haoxi.dove.bean.User;
 import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.inject.DaggerMyOptComponent;
 import com.haoxi.dove.inject.OptMoudle;
@@ -22,6 +21,8 @@ import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.widget.CustomDialog;
 
 import java.util.HashMap;
@@ -33,13 +34,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import me.xiaopan.switchbutton.SwitchButton;
 
-/**
- * Created by lifei on 2017/1/10.
- */
 @ActivityFragmentInject(contentViewId = R.layout.activity_optimised)
 public class OptimisedActivity extends BaseActivity implements IOptView{
-
-    private static final String TAG = "OptimisedActivity";
 
     @BindView(R.id.activity_optimised_sb)
     SwitchButton mSwitchButton;
@@ -48,12 +44,6 @@ public class OptimisedActivity extends BaseActivity implements IOptView{
     @BindView(R.id.custom_toolbar_iv) ImageView mBackIv;
     @BindView(R.id.custom_toolbar_tv) TextView mTitleTv;
     @BindView(R.id.activity_modify_password) TextView mModifyPassword;
-
-    private User user;
-    private SharedPreferences loginsp = null;
-    private SharedPreferences.Editor loginEditor;
-
-    private Handler mHandler = new Handler();
 
     @Inject
     OurCodePresenter ourCodePresenter;
@@ -75,26 +65,18 @@ public class OptimisedActivity extends BaseActivity implements IOptView{
     @Override
     protected void init() {
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            user = (User) intent.getSerializableExtra("userobject");
-        }
-
         mBackIv.setVisibility(View.VISIBLE);
         mTitleTv.setText("设置");
         
-        loginsp = getSharedPreferences(ConstantUtils.LOGINSP, Context.MODE_PRIVATE);
-        loginEditor = loginsp.edit();
-        mSwitchButton.setChecked(loginsp.getBoolean("autocb",false));
+        mSwitchButton.setChecked(SpUtils.getBoolean(this, SpConstant.IS_AUTO));
         mSwitchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                loginEditor.putBoolean("autocb", mSwitchButton.isChecked());
-                loginEditor.commit();
+                SpUtils.putBoolean(OptimisedActivity.this, SpConstant.IS_AUTO, mSwitchButton.isChecked());
             }
         });
 
-        isAuto = loginsp.getBoolean("autocb",false);
+        isAuto = SpUtils.getBoolean(this, SpConstant.IS_AUTO);
 
         if (isAuto) {
             mLoginButton.setImageResource(R.mipmap.icon_open);
@@ -106,20 +88,17 @@ public class OptimisedActivity extends BaseActivity implements IOptView{
             @Override
             public void onClick(View v) {
 
-                isAuto = loginsp.getBoolean("autocb",false);
+                isAuto = SpUtils.getBoolean(OptimisedActivity.this, SpConstant.IS_AUTO);
 
                 if (isAuto) {
                     mLoginButton.setImageResource(R.mipmap.icon_closed);
-                    loginEditor.putBoolean("autocb", false);
+                    SpUtils.putBoolean(OptimisedActivity.this, SpConstant.IS_AUTO, false);
                 }else {
                     mLoginButton.setImageResource(R.mipmap.icon_open);
-                    loginEditor.putBoolean("autocb", true);
+                    SpUtils.putBoolean(OptimisedActivity.this, SpConstant.IS_AUTO, true);
                 }
-
-                loginEditor.commit();
             }
         });
-
     }
 
 
@@ -128,15 +107,6 @@ public class OptimisedActivity extends BaseActivity implements IOptView{
         mRxBus.post("isLoad",false);
 
         this.finish();
-    }
-
-    @OnClick(R.id.activity_optimised_manager)
-    void managerOnCli(){
-//
-//        Intent intent = new Intent(OptimisedActivity.this,PersonalActivity.class);
-//        intent.putExtra("userobject",user);
-//        startActivity(intent);
-
     }
 
     @OnClick(R.id.activity_optimised_currency)
@@ -150,12 +120,6 @@ public class OptimisedActivity extends BaseActivity implements IOptView{
     void aboutOnCli(){
         Intent intent = new Intent(OptimisedActivity.this,AboutActivity.class);
         startActivity(intent);
-    }
-
-    @OnClick(R.id.activity_modify_password)
-    void passwordOnCli(){
-//        Intent intent = new Intent(OptimisedActivity.this,ModifyPasswordActivity.class);
-//        startActivity(intent);
     }
 
     @OnClick(R.id.activity_optimised_exit)
@@ -218,16 +182,15 @@ public class OptimisedActivity extends BaseActivity implements IOptView{
     @Override
     public void toDo() {
 
-        String pwdsp = loginsp.getString("password", "");
-        Boolean isRemCb = loginsp.getBoolean("remebercb", false);
-        Boolean isAutoCb = loginsp.getBoolean("autocb", false);
-        String phone = loginsp.getString("username","");
+        String pwdsp = SpUtils.getString(this,SpConstant.USER_PWD);
+        Boolean isRemCb = SpUtils.getBoolean(this,SpConstant.IS_REM);
+        Boolean isAutoCb = SpUtils.getBoolean(this,SpConstant.IS_AUTO);
+        String phone = SpUtils.getString(this,SpConstant.USER_TELEPHONE);
 
-        loginEditor.putString("username",phone);
-        loginEditor.putString("password",pwdsp);
-        loginEditor.putBoolean("remebercb",isRemCb);
-        loginEditor.putBoolean("autocb",isAutoCb);
-        loginEditor.commit();
+        SpUtils.putString(this,SpConstant.USER_TELEPHONE,phone);
+        SpUtils.putString(this,SpConstant.USER_PWD,pwdsp);
+        SpUtils.putBoolean(this,SpConstant.IS_REM,isRemCb);
+        SpUtils.putBoolean(this,SpConstant.IS_AUTO,isAutoCb);
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

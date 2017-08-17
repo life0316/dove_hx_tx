@@ -38,9 +38,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-/**
- * Created by lifei on 2017/1/10.
- */
 @ActivityFragmentInject(contentViewId = R.layout.activity_mycircle)
 public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
 
@@ -75,17 +72,13 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
     @Inject
     RxBus mRxBus;
 
-    private static Handler mHandler = new Handler();
-
     @Override
     protected void initInject() {
-
         DaggerMyPigeon2Component.builder()
                 .appComponent(getAppComponent())
                 .myPigeon2Moudle(new MyPigeon2Moudle(this, this))
                 .build()
                 .inject(this);
-
     }
 
     @Override
@@ -120,11 +113,11 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
     @Override
     protected void onResume() {
         super.onResume();
-        getDatas(false);
+        getDatas();
     }
 
     @OnClick(R.id.custom_toolbar_iv)
-    void backOnCli(View v) {
+    void backOnCli() {
         mRxBus.post("isLoad", false);
         finish();
     }
@@ -170,7 +163,7 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
 
     }
 
-    public void getDatas(boolean tag) {
+    public void getDatas() {
 
         if (!ApiUtils.isNetworkConnected(this)) {
             presenter.getDatas();
@@ -229,43 +222,10 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
                 pigeonObjId_out = pigeonObjId;
 
                 if (!"true".equals(doveData.getFly_status()) || doveData.getFly_status()) {
-
-//                    codePresenter.unbind(object);
-
-                ourCodePresenter.ringDematchDove(getParaMap());
-
-
+                    ourCodePresenter.ringDematchDove(getParaMap());
                 }else {
                     ApiUtils.showToast(MyPigeonActivity.this,"该信鸽正在飞行,不可解绑");
                 }
-
-
-//                daoSession.getSetTriBeanDao().queryBuilder()
-//                        .where(SetTriBeanDao.Properties.USER_OBJ_ID.eq(getUserObjId())
-//                                , SetTriBeanDao.Properties.OBJ_ID.eq(pigeonObjId))
-//                        .rx().list()
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe(new Action1<List<SetTriBean>>() {
-//                            @Override
-//                            public void call(List<SetTriBean> setTriBeen) {
-//
-//                                Log.e("expandItemClickListener", setTriBeen.size() + "-----s");
-//                                if (setTriBeen.size() == 0 || setTriBeen.get(0).getIsFlying() == 0) {
-//
-//                                    JSONObject object = new JSONObject();
-//
-//                                    JSONArray array = new JSONArray();
-//                                    array.add(pigeonObjId);
-//                                    object.put("TOKEN",getToken());
-//                                    object.put("PIGEON_OBJ_ID",array);
-//                                    codePresenter.unbind(object);
-//                                }else {
-//                                    ApiUtils.showToast(MyPigeonActivity.this,"该信鸽正在飞行,不可解绑");
-//                                }
-//                            }
-//                        });
-
                 dialog.dismiss();
             }
 
@@ -278,10 +238,8 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
 
     @Override
     public void toDo() {
-
-        getDatas(false);
+        getDatas();
         mRxBus.post("refrash",0);
-
     }
 
     @Override

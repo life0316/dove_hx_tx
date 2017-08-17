@@ -36,7 +36,6 @@ public class CommentHolder extends BasicRvHolder implements View.OnClickListener
             mTextContentTv = (TextView) itemView.findViewById(R.id.our_comments_content);
             mTimeTv = (TextView) itemView.findViewById(R.id.our_comments_time);
 
-
         }
 
         @Override

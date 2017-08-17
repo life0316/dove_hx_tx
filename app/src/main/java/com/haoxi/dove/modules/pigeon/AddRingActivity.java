@@ -51,7 +51,6 @@ public class AddRingActivity extends BaseActivity implements IAddRingView {
     @Inject
     RxBus mRxBus;
 
-    private Handler mHandler = new Handler();
 
     private boolean isAdd = false;
 
@@ -139,10 +138,8 @@ public class AddRingActivity extends BaseActivity implements IAddRingView {
     private boolean isNeedCheck = true;
 
     @OnClick(R.id.act_addring_scan)
-    void scan(View view){
-
+    void scan(){
         if (isNeedCheck) {
-//
             if (!ApiUtils.checkPermissions(this, ConstantUtils.PERMISSION_REQUESTCODE_1, needPermissions)) {
                 tiaoz();
             }
@@ -215,9 +212,7 @@ public class AddRingActivity extends BaseActivity implements IAddRingView {
 
     @Override
     public String getRingCode() {
-
-        String ringCode = mRingCodeEt.getText().toString().trim();
-        return ringCode;
+        return mRingCodeEt.getText().toString().trim();
     }
 
     @Override

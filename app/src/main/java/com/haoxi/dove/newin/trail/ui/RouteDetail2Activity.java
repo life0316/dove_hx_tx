@@ -68,7 +68,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 @ActivityFragmentInject(contentViewId = R.layout.activity_history)
 public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteView, LocationSource,EasyPermissions.PermissionCallbacks, ToSetHolderListener<InnerRouteBean>, MyItemClickListener {
 
-
     private static final int REQUEST_CODE_HISTORY = 0x0000;
 
     @BindView(R.id.activity_pegionfly_mapview)

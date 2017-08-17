@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class LoginPresenter extends BasePresenter<ILoginView, OurUser> implements ILoginPresenter {
 
-    private static final String TAG = "LoginPresenter";
     private ILoginModel loginModel;
 
     public LoginPresenter(ILoginModel loginModel) {
@@ -19,7 +18,6 @@ public class LoginPresenter extends BasePresenter<ILoginView, OurUser> implement
     public void getDataFromNets(Map<String,String> map) {
         checkViewAttached();
         getMvpView().showProgress();
-
         loginModel.getDatasFromNets(map,this);
     }
 
@@ -36,6 +34,10 @@ public class LoginPresenter extends BasePresenter<ILoginView, OurUser> implement
     @Override
     public void requestError(String msg) {
         super.requestError("600");
-        getMvpView().loginFail(msg);
+        if ("".equals(msg)){
+            getMvpView().showErrorMsg("网络连接异常");
+        }else {
+            getMvpView().loginFail(msg);
+        }
     }
 }

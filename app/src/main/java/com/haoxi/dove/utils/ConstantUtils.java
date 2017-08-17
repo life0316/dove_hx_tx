@@ -29,12 +29,9 @@ public class ConstantUtils {
     //判断是否有最新版本
     public static final String UPDATEVER = "http://139.224.41.67:"+test+"/pigeonAppServer/service/getAppVersion?params=";
 
-
     public static String BRIEF_URL = "http://news.qq.com/a/20160907/043358.htm";
-
 
 //    public static String APP_INTRO_URL = "http://118.178.227.194/app/html/app_intro";
     public static String APP_INTRO_URL = "http://111.231.54.111/app/html/app_intro";
-
 
 }

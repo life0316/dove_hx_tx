@@ -1,8 +1,6 @@
 package com.haoxi.dove.base;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,49 +14,37 @@ import android.view.WindowManager;
 
 import com.haoxi.dove.R;
 import com.haoxi.dove.inject.AppComponent;
-import com.haoxi.dove.observable.MyCancleObservable;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.MD5Tools;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.utils.StringUtils;
 
 import butterknife.ButterKnife;
 
-/**
- * Created by lifei on 2017/1/17.
- */
+public abstract class BaseFragment extends Fragment implements MvpView {
 
-public abstract class BaseFragment<T extends Presenter<MvpView>> extends Fragment implements MvpView {
-
-    //protected T presenter;
     protected boolean netTag = false;
 
     protected Dialog mDialog;
-    protected SharedPreferences preferences;
-    protected SharedPreferences.Editor editor;
-
-    protected SharedPreferences        mPreferences;
     protected String token;
     protected String userObjId;
-
-    protected MyCancleObservable mCancleObservable;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         initInject();
-
-        preferences = getActivity().getSharedPreferences(ConstantUtils.USERINFO, Context.MODE_PRIVATE);
-        mPreferences = getActivity().getSharedPreferences(ConstantUtils.TRAIL, Context.MODE_PRIVATE);
-        editor = preferences.edit();
-        token = preferences.getString("user_token","");
-        userObjId = preferences.getString("user_objid","");
+        token = SpUtils.getString(getActivity(), SpConstant.USER_TOKEN);
+        userObjId = SpUtils.getString(getActivity(), SpConstant.USER_OBJ_ID);
 
         initDialog();
     }
 
-    protected abstract void initInject();
+    protected void initInject(){
+
+    }
 
     private void initDialog() {
         mDialog = new Dialog(getActivity(), R.style.DialogTheme);
@@ -70,10 +56,11 @@ public abstract class BaseFragment<T extends Presenter<MvpView>> extends Fragmen
 
     private void setDialogWindow(Dialog mDialog) {
         Window window = mDialog.getWindow();
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.gravity = Gravity.CENTER;
-        //   params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        window.setAttributes(params);
+        if (window != null) {
+            WindowManager.LayoutParams params = window.getAttributes();
+            params.gravity = Gravity.CENTER;
+            window.setAttributes(params);
+        }
     }
 
     public AppComponent getAppComponent(){
@@ -83,7 +70,6 @@ public abstract class BaseFragment<T extends Presenter<MvpView>> extends Fragmen
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view  = inflater.inflate(getLayout(),container, false);
         ButterKnife.bind(this,view);
         return view;
@@ -91,27 +77,19 @@ public abstract class BaseFragment<T extends Presenter<MvpView>> extends Fragmen
 
     protected abstract int getLayout();
 
-
     public String getUserObjId() {
-
         if ("".equals(userObjId)){
             return "";
         }
-
         return userObjId;
     }
 
     public String getToken() {
-
         if ("".equals(token)){
             return "";
         }
-
         return token;
     }
-
-
-    //protected abstract T initPresenter();
 
     @Override
     public void showProgress() {
@@ -135,9 +113,7 @@ public abstract class BaseFragment<T extends Presenter<MvpView>> extends Fragmen
 
     @Override
     public String getTime() {
-
         long time = StringUtils.tsToString(StringUtils.getNowTimestamp());
-
         return String.valueOf(time);
     }
 
@@ -147,18 +123,20 @@ public abstract class BaseFragment<T extends Presenter<MvpView>> extends Fragmen
         if (getMethod() != null) {
             sign = MD5Tools.MD5(getMethod()+getTime()+getVersion()+ ConstantUtils.APP_SECRET);
         }
-
         return sign;
     }
 
     @Override
     public String getVersion() {
-
-        String appName = ApiUtils.getAppName(getContext());
         String versionName = ApiUtils.getVersionName(getContext());
         if (versionName != null) {
             return "1.0";
         }
         return "1.0";
+    }
+
+    @Override
+    public void toDo() {
+
     }
 }

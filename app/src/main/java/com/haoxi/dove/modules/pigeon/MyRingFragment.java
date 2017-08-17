@@ -29,6 +29,8 @@ import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.RxBus;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.widget.CustomDialog;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -64,8 +66,6 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
     LinearLayout mShowAddLv;
     @BindView(R.id.fragment_mypigeon_show_add_tv1)
     TextView mShowAddTv;
-//    @BindView(R.id.fragment_mypigeon_srl)
-//    SwipeRefreshLayout mSrl;
 
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
@@ -80,7 +80,6 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
     @BindView(R.id.fragment_mypigeon_no_network)
     TextView mNetworkTv;
 
-    private Handler mHandler = new Handler();
 
     private List<InnerRing> ringBeans = new ArrayList<>();
     private List<InnerRing> ringTemps = new ArrayList<>();
@@ -114,13 +113,33 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
     private List<String> mateList;
     private CustomDialog dialog;
 
+    private Observable<String> exitObservable;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mateList = mApplication.getMateList();
-
         isLoadObservable = mRxBus.register("isLoad", Boolean.class);
+        exitObservable = mRxBus.register("exit",String.class);
+
+        exitObservable.subscribe(new Action1<String>() {
+            @Override
+            public void call(String s) {
+                if ("ring".equals(s)){
+                    mShowAddLv.setVisibility(View.GONE);
+                    mRxBus.post("cancle", true);
+                    mSelectRv.setVisibility(View.GONE);
+                    mSelectCb.setChecked(false);
+                    ringAdapter.setIsShow(false);
+                    ringAdapter.setLongClickTag(false);
+                    ringAdapter.notifyDataSetChanged();
+                    MyRingFragment.this.longClickTag = false;
+                    SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,true);
+                    SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,"");
+                }
+            }
+        });
     }
 
     @Override
@@ -141,7 +160,6 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
                 .myRingMoudle(new MyRingMoudle(mContext, this))
                 .build()
                 .inject(this);
-
     }
 
     @Override
@@ -150,18 +168,10 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
-
         mRecyclerView.setAdapter(ringAdapter);
-
         mShowAddTv.setText(getString(R.string.need_add_ring));
-
-//        mSrl.setOnRefreshListener(this);
-//        mSrl.setColorSchemeColors(getResources().getColor(android.R.color.holo_blue_bright), getResources().getColor(android.R.color.holo_green_light), getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
-
         refreshLayout.setEnableLoadmore(false);
-
         refreshLayout.setOnRefreshListener(this);
-
         mSelectCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -199,19 +209,6 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
         });
     }
 
-//    @Override
-//    public void onRefresh() {
-//
-//        if (!ApiUtils.isNetworkConnected(getActivity())) {
-//            mRingPresenter.getDatas();
-//            setRefrash(false);
-//        } else {
-//
-//            methodType = MethodType.METHOD_TYPE_RING_SEARCH;
-//            mRingPresenter.getDatasRefrash(getParaMap());
-//        }
-//    }
-
 
     public Map<String,String> getParaMap(){
 
@@ -239,49 +236,60 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
     public void onResume() {
         super.onResume();
 
-
         mTagNumObservable = mRxBus.register("tagnum", Integer.class);
-        dataObservable = mRxBus.register("isLoadData", Boolean.class);
-        clickObservable = mRxBus.register("clickRadio", Integer.class);
-        unbindObservable = mRxBus.register("refrash", Integer.class);
+//        dataObservable = mRxBus.register("isLoadData", Boolean.class);
+//        clickObservable = mRxBus.register("clickRadio", Integer.class);
+//        unbindObservable = mRxBus.register("refrash", Integer.class);
 
         setObservable();
 
-        Log.e(TAG, isLoad + "-------isload");
-
         if (isLoad) {
-            Log.e(TAG, longClickTag + "-------longClickTag");
-            if (longClickTag) {
-                mRxBus.post("tagnum", 6);
-                if (dialog != null) {
-                    if (dialog.isShowing()) {
-
-                        dialog.dismiss();
-                    }
-                }
-            }
             getDatas();
-        } else {
-            Log.e(TAG, unbindTag + "-------unbindTag");
-            Log.e(TAG, clickRadio + "-------clickRadio");
-
-            if (unbindTag == clickRadio) {
-                if (longClickTag) {
-                    mRxBus.post("tagnum", 6);
-                    if (dialog != null) {
-                        if (dialog.isShowing()) {
-
-                            dialog.dismiss();
-                        }
-                    }
-                }
-                getDatas();
-                unbindTag = 1;
-            }
+            isLoad = false;
         }
-
-        isLoad = true;
     }
+
+    //    @Override
+//    public void onResume() {
+//        super.onResume();
+//        dataObservable = mRxBus.register("isLoadData", Boolean.class);
+//        clickObservable = mRxBus.register("clickRadio", Integer.class);
+//        unbindObservable = mRxBus.register("refrash", Integer.class);
+//
+//        setObservable();
+//
+//        if (isLoad) {
+//            if (longClickTag) {
+//                mRxBus.post("tagnum", 6);
+//                if (dialog != null) {
+//                    if (dialog.isShowing()) {
+//
+//                        dialog.dismiss();
+//                    }
+//                }
+//            }
+//            getDatas();
+//        } else {
+//            Log.e(TAG, unbindTag + "-------unbindTag");
+//            Log.e(TAG, clickRadio + "-------clickRadio");
+//
+//            if (unbindTag == clickRadio) {
+//                if (longClickTag) {
+//                    mRxBus.post("tagnum", 6);
+//                    if (dialog != null) {
+//                        if (dialog.isShowing()) {
+//
+//                            dialog.dismiss();
+//                        }
+//                    }
+//                }
+//                getDatas();
+//                unbindTag = 1;
+//            }
+//        }
+//
+//        isLoad = true;
+//    }
 
     public void getDatas() {
         if (!ApiUtils.isNetworkConnected(getActivity())) {
@@ -296,110 +304,69 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
     private int clickRadio = 0;
 
     public void setObservable() {
-
-        isLoadObservable.subscribe(new Action1<Boolean>() {
+//
+//        isLoadObservable.subscribe(new Action1<Boolean>() {
+//            @Override
+//            public void call(Boolean aIsLoad) {
+//                isLoad = aIsLoad;
+//            }
+//        });
+//
+//        dataObservable.subscribe(new Action1<Boolean>() {
+//            @Override
+//            public void call(Boolean aBoolean) {
+//                getDatas();
+//            }
+//        });
+//
+//        unbindObservable.subscribe(new Action1<Integer>() {
+//            @Override
+//            public void call(Integer integer) {
+//                unbindTag = integer;
+//            }
+//        });
+//
+//        clickObservable.subscribe(new Action1<Integer>() {
+//
+//            @Override
+//            public void call(Integer integer) {
+//                clickRadio = integer;
+//
+//                if (unbindTag == clickRadio) {
+//                    getDatas();
+//                    unbindTag = 5;
+//                }
+//            }
+//        });
+//
+        mTagNumObservable.subscribe(new Action1<Integer>() {
             @Override
-            public void call(Boolean aIsLoad) {
-                isLoad = aIsLoad;
-            }
-        });
-
-        dataObservable.subscribe(new Action1<Boolean>() {
-            @Override
-            public void call(Boolean aBoolean) {
-                getDatas();
-            }
-        });
-
-        unbindObservable.subscribe(new Subscriber<Integer>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-                Log.e(TAG, e.getMessage() + "--unbindObservable--" + TAG);
-            }
-
-            @Override
-            public void onNext(Integer integer) {
-                unbindTag = integer;
-            }
-        });
-
-        clickObservable.subscribe(new Subscriber<Integer>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage() + "--clickObservable--" + TAG);
-            }
-
-            @Override
-            public void onNext(Integer integer) {
-                clickRadio = integer;
-
-                Log.e(TAG, unbindTag + "-------unbindTag---");
-                Log.e(TAG, clickRadio + "-------clickRadio---");
-
-                if (unbindTag == clickRadio) {
-                    getDatas();
-                    unbindTag = 5;
-                }
-            }
-        });
-
-        mTagNumObservable.subscribe(new Subscriber<Integer>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage() + "--mTagNumObservable--" + TAG);
-            }
-
-            @Override
-            public void onNext(Integer integer) {
+            public void call(Integer integer) {
                 if (integer == 0) {
-                    if (ringAdapter != null) {
-                        ringAdapter.setIsShow(false);
-                        ringAdapter.setLongClickTag(false);
-                        longClickTag = false;
-                        ringAdapter.notifyDataSetChanged();
-                    }
+                    chang();
 
-                    mSelectRv.setVisibility(View.GONE);
-                    mSelectCb.setChecked(false);
-//                    mSrl.setEnabled(true);
-                    refreshLayout.setEnableRefresh(true);
-                    mRxBus.post("exit", 30);
-                    mRxBus.post("cancle", 200);
                 } else if (integer == 6) {
-                    if (ringAdapter != null) {
-                        ringAdapter.setIsShow(false);
-                        ringAdapter.setLongClickTag(false);
-                        ringAdapter.notifyDataSetChanged();
-                        longClickTag = false;
-                    }
-                    mSelectRv.setVisibility(View.GONE);
-                    mSelectCb.setChecked(false);
-//                    mSrl.setEnabled(true);
-                    refreshLayout.setEnableRefresh(true);
-                    mRxBus.post("exit", 30);
-                    mRxBus.post("cancle", 200);
-                    isLoad = true;
+                    chang();
+//                    isLoad = true;
                 }
             }
         });
     }
 
+    private void chang(){
+        if (ringAdapter != null) {
+            ringAdapter.setIsShow(false);
+            ringAdapter.setLongClickTag(false);
+            longClickTag = false;
+            ringAdapter.notifyDataSetChanged();
+        }
+        mSelectRv.setVisibility(View.GONE);
+        mSelectCb.setChecked(false);
+        refreshLayout.setEnableRefresh(true);
+        mRxBus.post("cancle", true);
+        SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,true);
+        SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,"");
+    }
 
     @Override
     public void setRingData(List<InnerRing> ringData) {
@@ -425,12 +392,11 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
             ringBeans.clear();
             ringBeans.addAll(ringData);
             ringAdapter.addData(ringData);
-//            mSrl.setEnabled(true);
             refreshLayout.setEnableRefresh(true);
             mShowAddLv.setVisibility(View.GONE);
 
 
-            mRxBus.post("cancle", 200);
+            mRxBus.post("cancle", true);
             mSelectRv.setVisibility(View.GONE);
             mSelectCb.setChecked(false);
             ringAdapter.setIsShow(false);
@@ -438,13 +404,12 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
             this.longClickTag = false;
 
         } else {
-//            mSrl.setEnabled(false);
             refreshLayout.setEnableRefresh(false);
             mShowAddLv.setVisibility(View.VISIBLE);
 
             ringAdapter.addData(ringBeans);
             mShowAddLv.setVisibility(View.VISIBLE);
-            mRxBus.post("cancle", 200);
+            mRxBus.post("cancle", true);
             mSelectRv.setVisibility(View.GONE);
 //            daoSession.getMyRingBeanDao().deleteAll();
             mPigeonCodes.clear();
@@ -458,7 +423,6 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
 
     @Override
     public void setRefrash(boolean isRefrash) {
-//        mSrl.setRefreshing(isRefrash);
         refreshLayout.finishRefresh(isRefrash);
     }
 
@@ -474,16 +438,13 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
                 sb.append(ringTemps.get(i).getRingid()).append(",");
             }
         }
-
         return sb.toString();
     }
 
 
     @OnClick(R.id.myring_select_delete)
-    void deleteOnCli(View view) {
-
+    void deleteOnCli() {
         ringTemps.clear();
-
         //获取你选中的item
         Map<Integer, Boolean> map = ringAdapter.getMap();
         for (int i = 0; i < map.size(); i++) {
@@ -491,7 +452,6 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
                 ringTemps.add(ringBeans.get(i));
             }
         }
-
         if (ringTemps.size() > 0) {
 
             dialog = new CustomDialog(getActivity(), "删除鸽环", "确定要删除所选鸽环?", "确定", "取消");
@@ -502,13 +462,10 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
                 public void doConfirm() {
 
                     if (!ApiUtils.isNetworkConnected(getActivity())) {
-
                         ApiUtils.showToast(getContext(), getString(R.string.net_conn_2));
                         return;
                     }
-
                     for (int i = 0; i < ringTemps.size(); i++) {
-
                         if (ringTemps.get(i).getDoveid() != null && !"".equals(ringTemps.get(i).getDoveid()) && !"-1".equals(ringTemps.get(i).getDoveid())) {
                             ApiUtils.showToast(getActivity(), "当前存在鸽环处于匹配状态，不可删除");
                             return;
@@ -536,9 +493,7 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
 
     @Override
     public void itemChecked(View view, int count) {
-
         countTemp = count;
-
         if (count >= ringBeans.size()) {
             mSelectCb.setChecked(true);
             countTemp = count;
@@ -546,7 +501,6 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
             mSelectCb.setChecked(false);
         }
     }
-
     @Override
     public void onItemClickListener(View view, int position, boolean longClickTag) {
 
@@ -571,7 +525,7 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
 
         if (!longClickTag) {
 
-            mRxBus.post("cancle", 100);
+            mRxBus.post("cancle", false);
 
             //长按事件
             ringAdapter.setShowBox();
@@ -579,10 +533,11 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
             ringAdapter.setSelectItem(position);
             ringAdapter.notifyDataSetChanged();
             mSelectRv.setVisibility(View.VISIBLE);
-//            mSrl.setEnabled(false);
             refreshLayout.setEnableRefresh(false);
             ringAdapter.setLongClickTag(true);
-            mRxBus.post("exit", 10);
+
+            SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,false);
+            SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,"ring");
 
         }
         return true;
@@ -598,12 +553,10 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         mRxBus.unregister("isLoad", isLoadObservable);
         mRxBus.unregister("tagnum", mTagNumObservable);
         mRxBus.unregister("isLoadData", dataObservable);
         mRxBus.unregister("refrash", unbindObservable);
-
     }
 
     @Override
@@ -632,23 +585,23 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
         return method;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            isLoad = savedInstanceState.getBoolean("isLoad",true);
-            longClickTag = savedInstanceState.getBoolean("longClickTag",false);
-        }
-    }
-
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("longClickTag",longClickTag);
-        outState.putBoolean("isLoad",isLoad);
-    }
+//    @Override
+//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//
+//        if (savedInstanceState != null) {
+//            isLoad = savedInstanceState.getBoolean("isLoad",true);
+//            longClickTag = savedInstanceState.getBoolean("longClickTag",false);
+//        }
+//    }
+//
+//
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putBoolean("longClickTag",longClickTag);
+//        outState.putBoolean("isLoad",isLoad);
+//    }
 
     @Override
     public void onRefresh(RefreshLayout refreshLayout) {
@@ -660,5 +613,11 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
             methodType = MethodType.METHOD_TYPE_RING_SEARCH;
             mRingPresenter.getDatasRefrash(getParaMap());
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mRxBus.unregister("exit",exitObservable);
     }
 }

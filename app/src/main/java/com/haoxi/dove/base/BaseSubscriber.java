@@ -71,9 +71,9 @@ public class BaseSubscriber<T> extends Subscriber<T> {
                 Log.e("errorMsg", e.toString());
                 errorMsg = "";
             }
-            if (!TextUtils.equals(errorMsg, "")) {
+//            if (!TextUtils.equals(errorMsg, "")) {
                 mRequestCallBack.requestError(errorMsg);
-            }
+//            }
         }
     }
 

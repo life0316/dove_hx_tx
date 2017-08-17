@@ -15,7 +15,7 @@ public class SpUtils {
     }
 
     public static String getString(Context context,String key){
-        return getString(context,key,null);
+        return getString(context,key,"");
     }
 
     public static String getString(Context context,String key,String defaultValue){
@@ -23,14 +23,14 @@ public class SpUtils {
     }
 
     public static int getInt(Context context,String key){
-        return getInt(context,key,-1);
+        return getInt(context,key,0);
     }
 
     public static int getInt(Context context,String key,int defaultValue){
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(key,defaultValue);
     }
     public static long getLong(Context context,String key){
-        return getLong(context,key,-1);
+        return getLong(context,key,0);
     }
 
     public static long getLong(Context context,String key,long defaultValue){

@@ -103,6 +103,13 @@
     <string name="username">用户名</string>
     <string name="userid">用户编号：12345</string>
 
+
+    <!--鸽圈-->
+    <string name="share_circle">转发</string>
+    <string name="fab_circle">赞</string>
+    <string name="comment_circle">评论</string>
+
+
     <!--行程界面-->
     <string name="route">行程记录</string>
     <string name="route_tri">行程轨迹</string>

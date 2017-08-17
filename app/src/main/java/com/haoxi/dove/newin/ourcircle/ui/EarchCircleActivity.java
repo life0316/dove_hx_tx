@@ -80,10 +80,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
 
     @BindView(R.id.test_rv)
     MyRecyclerview recyclerView;
-
-//    @BindView(R.id.custom_top_view)
-//    TopView topView;
-
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
 
@@ -108,9 +104,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     @BindView(R.id.friend_name)
     TextView userNameTv;
 
-
-//    public Button mAddFriendBtn;
-
     @BindView(R.id.friend_text)
     TextView mContentTv;
 
@@ -122,16 +115,15 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
 
     @BindView(R.id.item_tran_fl)
     FrameLayout transpondFl;
-//    public ImageView mDownIv;
 
     @BindView(R.id.item_isfriend_imageview)
     ImageView mContentImage;
 
     @BindView(R.id.tran_circle_rv)
-    RecyclerView mRecyclerView;
+    RecyclerView mTranRv;
 
     @BindView(R.id.item_isfriend_rv)
-    RecyclerView mTranRv;
+    RecyclerView mRecyclerView;
 
     @BindView(R.id.friend_date)
     TextView mCreateTimeTv;
@@ -279,8 +271,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
 
         initCircle();
 
-//        topView.setTopView(R.id.top);
-
         mTransTv.setOnClickListener(this);
         mLikeFabTv.setOnClickListener(this);
         mCommentTv.setOnClickListener(this);
@@ -396,103 +386,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
         return method;
     }
 
-//
-//    private void initCircle() {
-//
-//        if (innerCircleBean.getUsername() != null) {
-//            userNameTv.setText(innerCircleBean.getUsername());
-//        }
-//
-//        String headpic = "http://118.178.227.194:8087/";
-//        if (innerCircleBean.getHeadpic() != null && !"".equals(innerCircleBean.getHeadpic()) && !"-1".equals(innerCircleBean.getHeadpic())){
-//            headpic += innerCircleBean.getHeadpic();
-//
-//            mUserIconCv.setTag(R.id.imageid,headpic);
-//            Glide.with(this)
-//                    .load(headpic)
-//                    .dontAnimate()
-//                    .placeholder(R.mipmap.btn_img_photo_default)
-//                    .error(R.mipmap.btn_img_photo_default)
-//                    .into(mUserIconCv);
-//
-//        }else {
-//           mUserIconCv.setImageResource(R.mipmap.btn_img_photo_default);
-//        }
-//
-//        if (innerCircleBean.getShare_count() != 0) {
-//            mTransTv.setText("转发 "+innerCircleBean.getShare_count());
-//        }
-//
-//        if (innerCircleBean.getComment_count() != 0) {
-//            mCommentTv.setText("评论 "+innerCircleBean.getComment_count());
-//        }
-//        if (innerCircleBean.getFab_count() != 0){
-//            mLikeFabTv.setText("赞 "+innerCircleBean.getFab_count());
-//        }
-//
-//        if (innerCircleBean.getContent() != null && "".equals(innerCircleBean.getContent())){
-//            mContentTv.setVisibility(View.GONE);
-//        }else {
-//            mContentTv.setVisibility(View.VISIBLE);
-//        }
-//
-//        mUserIconCv.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (innerCircleBean.isIs_friend() || innerCircleBean.getUserid().equals(mUserObjId)){
-//                    Intent intent = new Intent(EarchCircleActivity.this,CircleDetialActivity.class);
-//                    intent.putExtra("friendid",innerCircleBean.getUserid());
-//                    intent.putExtra("name",innerCircleBean.getUsername());
-//                    intent.putExtra("innerCircleBean",innerCircleBean);
-//                    startActivity(intent);
-//                }
-//            }
-//        });
-//
-//        if (innerCircleBean.getPics() != null && innerCircleBean.getPics().size() != 0){
-//
-//            final ArrayList<String> selectedPhotos = new ArrayList<>();
-//            selectedPhotos.clear();
-//
-//            int picCount = innerCircleBean.getPics().size();
-//
-//            for (String pics:innerCircleBean.getPics()) {
-//                selectedPhotos.add(pics);
-//            }
-//
-//            mRecyclerView.removeAllViews();
-//
-//            CirclePhotoAdapter photoAdapter = new CirclePhotoAdapter(this, selectedPhotos);
-//
-//            mRecyclerView.setVisibility(View.VISIBLE);
-//            mRecyclerView.setAdapter(photoAdapter);
-//            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(picCount < 3 ?2:3, OrientationHelper.VERTICAL));
-//
-//            ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-//
-//            photoAdapter.setMyItemClickListener(new MyItemClickListener() {
-//                @Override
-//                public void onItemClick(View view, int position) {
-//
-//                    MyPhotoPreview.builder()
-//                            .setPhotos(selectedPhotos)
-//                            .setCurrentItem(position)
-//                            .setShowDeleteButton(false)
-//                            .start(EarchCircleActivity.this);
-//                }
-//            });
-//        }else {
-//            mRecyclerView.removeAllViews();
-//            mRecyclerView.setVisibility(View.GONE);
-//        }
-//
-//        if (!TextUtils.isEmpty(innerCircleBean.getContent()) && !"".equals(innerCircleBean.getContent())){
-//           mContentTv.setText(innerCircleBean.getContent());
-//        }
-//        if (!TextUtils.isEmpty(innerCircleBean.getCreate_time()) && !"".equals(innerCircleBean.getCreate_time())) {
-//           mCreateTimeTv.setText(innerCircleBean.getCreate_time());
-//        }
-//    }
 
     private void initCircle() {
 
@@ -579,9 +472,7 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
 
                 int picCount = innerCircleBean.getPics().size();
 
-                for (String pics:innerCircleBean.getPics()) {
-                    selectedPhotos.add(pics);
-                }
+                selectedPhotos.addAll(innerCircleBean.getPics());
 
                 mTranRv.removeAllViews();
 
@@ -618,6 +509,8 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
                 mContentTv.setText(innerCircleBean.getContent());
             }
 
+//            Log.e("fadfebdqqqqqq",innerCircleBean.getPics().size()+"-------");
+
             if (innerCircleBean.getPics() != null && innerCircleBean.getPics().size() != 0){
 
                 final ArrayList<String> selectedPhotos = new ArrayList<>();
@@ -625,9 +518,7 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
 
                 int picCount = innerCircleBean.getPics().size();
 
-                for (String pics:innerCircleBean.getPics()) {
-                    selectedPhotos.add(pics);
-                }
+                selectedPhotos.addAll(innerCircleBean.getPics());
 
                 mRecyclerView.removeAllViews();
 
@@ -643,7 +534,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
                     @Override
                     public void onItemClick(View view, int position) {
 
-
                         MyPhotoPreview.builder()
                                 .setPhotos(selectedPhotos)
                                 .setCurrentItem(position)
@@ -651,8 +541,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
                                 .start(EarchCircleActivity.this);
                     }
                 });
-
-
             }else {
                 mRecyclerView.removeAllViews();
                 mRecyclerView.setVisibility(View.GONE);
@@ -853,7 +741,8 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
             holder.mTimeTv.setText(data.getCreate_time());
         }
 
-        String headpic = "http://118.178.227.194:8087/";
+//        String headpic = "http://118.178.227.194:8087/";
+        String headpic = ConstantUtils.HEADPIC;
         if (data.getHeadpic() != null && !"".equals(data.getHeadpic()) && !"-1".equals(data.getHeadpic())){
             if (data.getHeadpic().startsWith("http")){
                 headpic = data.getHeadpic();

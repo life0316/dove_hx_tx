@@ -22,39 +22,28 @@ import android.view.WindowManager;
 import com.haoxi.dove.R;
 import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.inject.AppComponent;
-import com.haoxi.dove.observable.MyCancleObservable;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.AppManager;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.MD5Tools;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.utils.StringUtils;
 
 import java.util.Map;
 
 import butterknife.ButterKnife;
 
-/**
- * Created by lifei on 2016/12/26.
- */
+public abstract class BaseActivity extends AppCompatActivity implements MvpView {
 
-public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity implements MvpView {
-
-    protected String mLoginMac     = "";
     protected String mLoginNetwork = "";
     protected String mToken        = "";
     protected String mUserObjId    = "";
     protected String mUserPhone    = "";
 
-    protected T mPresenter;
-
-    private int mContentViewId;
-
-    private int mMenuId;
-
     private int mToolbarTitle;
 
     private int mToolbarIndicator;
-
 
     protected boolean netTag = true;
 
@@ -72,10 +61,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
             }
         }
     };
-    protected SharedPreferences        userInfoPf;
-    protected SharedPreferences.Editor mEditor;
     protected AppManager               mAppManager;
-    protected MyCancleObservable myCancleObservable;
     protected SharedPreferences mPreferences;
 
     protected Map<String,Boolean> numMap;
@@ -92,6 +78,8 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
         numMap = MyApplication.getMyBaseApplication().getNumMap();
 
+        int mContentViewId;
+        int mMenuId;
         if (getClass().isAnnotationPresent(ActivityFragmentInject.class)){
             ActivityFragmentInject annotation = getClass().getAnnotation(ActivityFragmentInject.class);
             mContentViewId = annotation.contentViewId();
@@ -109,8 +97,6 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
         mAppManager = AppManager.getAppManager();
 
-        myCancleObservable = MyCancleObservable.getInstance();
-
         initInject();
         init();
 
@@ -118,13 +104,9 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
             initToolbar();
         }
 
-
-        userInfoPf = getSharedPreferences(ConstantUtils.USERINFO, MODE_PRIVATE);
-        mEditor = userInfoPf.edit();
-
-        mToken = userInfoPf.getString("user_token", "");
-        mUserObjId = userInfoPf.getString("user_objid", "");
-        mUserPhone = userInfoPf.getString("user_phone", "");
+        mToken = SpUtils.getString(this, SpConstant.USER_TOKEN);
+        mUserObjId = SpUtils.getString(this, SpConstant.USER_OBJ_ID);
+        mUserPhone = SpUtils.getString(this, SpConstant.USER_TELEPHONE);
 
         mDialog = new Dialog(this, R.style.DialogTheme);
         mDialog.setCancelable(false);//设置对话框不能消失
@@ -179,7 +161,9 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     protected void initToolbar(Toolbar toolbar, boolean homeAsUpEnable, String title){
         toolbar.setTitle(title);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(homeAsUpEnable);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(homeAsUpEnable);
+        }
     }
 
     protected void initToolbar(Toolbar toolbar,boolean homeAsUpEnable,int resTitle){
@@ -194,11 +178,11 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
     private void setDialogWindow(Dialog mDialog) {
         Window window = mDialog.getWindow();
-        WindowManager.LayoutParams params = window.getAttributes();
-
-        params.gravity = Gravity.CENTER;
-        //   params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        window.setAttributes(params);
+        if (window != null) {
+            WindowManager.LayoutParams params = window.getAttributes();
+            params.gravity = Gravity.CENTER;
+            window.setAttributes(params);
+        }
     }
 
     protected abstract void init();
@@ -231,22 +215,22 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         ApiUtils.showToast(this,errorMsg);
     }
 
-    public String getMacAddress() {
-
-        mLoginMac = ApiUtils.getPros("ro.serialno");
-        if ("".equals(mLoginMac)) {
-            ApiUtils.showToast(BaseActivity.this,getResources().getString(R.string.mac_address_empty));
-        }
-
-        return mLoginMac;
-    }
-
-    public String getNetwork() {
-
-        mLoginNetwork = ApiUtils.getConnectedTypeName(BaseActivity.this);
-
-        return mLoginNetwork;
-    }
+//    public String getMacAddress() {
+//
+//        mLoginMac = ApiUtils.getPros("ro.serialno");
+//        if ("".equals(mLoginMac)) {
+//            ApiUtils.showToast(BaseActivity.this,getResources().getString(R.string.mac_address_empty));
+//        }
+//
+//        return mLoginMac;
+//    }
+//
+//    public String getNetwork() {
+//
+//        mLoginNetwork = ApiUtils.getConnectedTypeName(BaseActivity.this);
+//
+//        return mLoginNetwork;
+//    }
 
     @Override
     public void setNetTag(boolean netTag) {
@@ -274,12 +258,17 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     @Override
     public String getVersion() {
 
-        String appName = ApiUtils.getAppName(this);
+//        String appName = ApiUtils.getAppName(this);
         String versionName = ApiUtils.getVersionName(this);
         if (versionName != null) {
            return "1.0";
         }
         return "1.0";
+    }
+
+    @Override
+    public void toDo() {
+
     }
 }
 

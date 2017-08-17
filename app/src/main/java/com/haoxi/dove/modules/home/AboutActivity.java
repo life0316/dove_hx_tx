@@ -98,9 +98,9 @@ public class AboutActivity extends BaseActivity implements IAboutView {
     public static int versionConvert(String source) {
         int sum = 0;
         char[] array = source.toCharArray();
-        for (int i = 0; i < array.length; i++) {
-            if((array[i] >= '0')&&(array[i] <= '9')){
-                sum=sum*10+(array[i]-'0');
+        for (char anArray : array) {
+            if ((anArray >= '0') && (anArray <= '9')) {
+                sum = sum * 10 + (anArray - '0');
             }
         }
         return sum;
@@ -120,7 +120,7 @@ public class AboutActivity extends BaseActivity implements IAboutView {
         }else {
             //不一致，有最新版本
             //弹出对话框，提醒用户更新版本
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append("有新版本,是否更新");
 
 //            if (ver.getApkDesc().contains(";")) {
@@ -217,15 +217,8 @@ public class AboutActivity extends BaseActivity implements IAboutView {
     }
 
     @Override
-    public void toDo() {
-
-    }
-
-    @Override
     public String getMethod() {
-        String method = "";
-        method = "/app/gversion/get_current_version";
-        return method;
+        return "/app/gversion/get_current_version";
     }
     public Map<String,String> getParaMap(){
 

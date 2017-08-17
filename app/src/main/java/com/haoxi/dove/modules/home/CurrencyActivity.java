@@ -13,13 +13,8 @@ import com.haoxi.dove.inject.ActivityFragmentInject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-/**
- * Created by lifei on 2017/1/13.
- */
 @ActivityFragmentInject(contentViewId = R.layout.activity_currency)
 public class CurrencyActivity extends BaseActivity {
-
-    private static final String TAG = "CurrencyActivity";
 
     @BindView(R.id.custom_toolbar_iv) ImageView mBackIv;
     @BindView(R.id.custom_toolbar_tv) TextView mTitleTv;
@@ -49,12 +44,7 @@ public class CurrencyActivity extends BaseActivity {
     }
 
     @Override
-    public void toDo() {
-
-    }
-
-    @Override
     public String getMethod() {
-        return null;
+        return "";
     }
 }

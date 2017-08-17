@@ -108,7 +108,6 @@ public class InnerCirclePresenter extends BasePresenter<IMyCircleView,CircleBean
         switch (tag){
             case 0:
                 getAllCircles(playerId);
-
                 break;
             case 1:
                 getFriendCircles(playerId,userId,true);

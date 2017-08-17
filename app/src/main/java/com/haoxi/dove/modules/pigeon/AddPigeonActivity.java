@@ -20,6 +20,7 @@ import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.RxBus;
+import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.utils.StringUtils;
 
 import java.util.Calendar;
@@ -67,7 +68,6 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
     private int userAgeMonth;
     private int userAgeDay;
 
-    private Handler mHandler = new Handler();
     private boolean isAdd = false;
     private boolean isContained = false;
 
@@ -95,10 +95,9 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
     protected void onResume() {
         super.onResume();
 
-        mEditor.putInt("yearSp", 0);
-        mEditor.putInt("monthSp", 0);
-        mEditor.putInt("daySp", 0);
-        mEditor.commit();
+        SpUtils.putInt(this,"yearSp", 0);
+        SpUtils.putInt(this,"monthSp", 0);
+        SpUtils.putInt(this,"daySp", 0);
 
     }
 
@@ -344,12 +343,9 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
         this.userAgeMonth = month;
         this.userAgeDay = day;
 
-        mEditor.putInt("yearSp", year);
-        mEditor.putInt("monthSp", month);
-        mEditor.putInt("daySp", day);
-        mEditor.commit();
-
-
+        SpUtils.putInt(this,"yearSp", year);
+        SpUtils.putInt(this,"monthSp", month);
+        SpUtils.putInt(this,"daySp", day);
 
         if (currentYear == year) {
             if (currentMonth == month) {

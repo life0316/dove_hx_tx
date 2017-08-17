@@ -78,7 +78,7 @@ public class LoginModel extends BaseModel implements ILoginModel<OurUser> {
                         return 200 == user.getCode();
                     }
                 })
-                .subscribe(new BaseSubscriber<OurUser>(requestCallback));
+                .subscribe(new BaseSubscriber<>(requestCallback));
     }
 
 }

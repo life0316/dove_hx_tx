@@ -3,6 +3,7 @@ package com.haoxi.dove.adapter;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +79,8 @@ public class CirclePhotoAdapter extends RecyclerView.Adapter<CirclePhotoAdapter.
       //Uri uri = Uri.fromFile(new File(photoPaths.get(position)));
 
 //      holder.ivPhoto.setTag(uri.toString());
+      Log.e("fadfebdqqqqqq",uri+"-------1");
+
 
       boolean canLoadImage = AndroidLifecycleUtils.canLoadImage(holder.ivPhoto.getContext());
 
@@ -134,7 +137,7 @@ public class CirclePhotoAdapter extends RecyclerView.Adapter<CirclePhotoAdapter.
     public void onClick(View v) {
       if (mItemClickListener != null){
         //noinspection deprecation
-        mItemClickListener.onItemClick(v,getPosition());
+        mItemClickListener.onItemClick(v,getAdapterPosition());
       }
     }
   }

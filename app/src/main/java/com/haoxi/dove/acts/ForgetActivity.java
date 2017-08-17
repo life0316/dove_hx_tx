@@ -32,8 +32,6 @@ import rx.functions.Action1;
 @ActivityFragmentInject(contentViewId = R.layout.activity_forget)
 public class ForgetActivity extends BaseActivity implements IForgetView {
 
-//    private static final String TAG = "ForgetActivity";
-
     @BindView(R.id.activity_forget_phone) EditText mEtPhone;
     @BindView(R.id.activity_forget_vercode) EditText mEtVerCode;
     @BindView(R.id.activity_forget_send) Button   mSendCode;

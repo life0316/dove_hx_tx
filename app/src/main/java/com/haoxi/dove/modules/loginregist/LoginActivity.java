@@ -1,6 +1,5 @@
 package com.haoxi.dove.modules.loginregist;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,7 +7,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -22,18 +20,17 @@ import com.haoxi.dove.acts.PhoneLoginActivity;
 import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.base.BaseActivity;
 import com.haoxi.dove.modules.loginregist.model.LoginModel;
-import com.haoxi.dove.modules.loginregist.model.UserInfoModel;
 import com.haoxi.dove.modules.loginregist.presenter.LoginPresenter;
-import com.haoxi.dove.modules.loginregist.presenter.UserInfoPresenter;
 import com.haoxi.dove.modules.loginregist.ui.ILoginView;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.bean.OurUser;
-import com.haoxi.dove.newin.bean.OurUserInfo;
 import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.MD5Tools;
 import com.haoxi.dove.utils.RxBus;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.widget.CustomDialog;
 
 import java.util.HashMap;
@@ -43,20 +40,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
+import rx.Scheduler;
 import rx.functions.Action1;
-
-/**
- * Created by lifei on 2016/12/26.
- */
 
 @ActivityFragmentInject(contentViewId = R.layout.activity_login,menuId = 0)
 public class LoginActivity extends BaseActivity implements ILoginView, CompoundButton.OnCheckedChangeListener {
 
     private LoginPresenter presenter;
 
-    private UserInfoPresenter infoPresenter;
-
-    private static String TAG = "LoginActivity";
+//    private UserInfoPresenter infoPresenter;
 
     @BindView(R.id.act_login_username)
     EditText mUsernameEt;
@@ -77,11 +69,6 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
 
     @BindView(R.id.act_login_loginbtn)
     Button mLoginBtn;
-
-    private String mLoginType = "1";
-
-    private SharedPreferences loginsp = null;
-    private SharedPreferences.Editor loginEditor;
 
     private static Handler mHandler = new Handler();
     private Observable<Boolean> exitObservable;
@@ -109,14 +96,10 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
             }
         });
 
-        //MODE_WORLD_READABLE 和MODE_WORLD_WRITEABLE 会导致Android 7.0出现SecurityException
-        loginsp = getSharedPreferences(ConstantUtils.LOGINSP, Context.MODE_PRIVATE);
-
-        loginEditor = loginsp.edit();
-        String usernamesp = loginsp.getString("username", "");
-        String pwdsp = loginsp.getString("password", "");
-        Boolean isRemCb = loginsp.getBoolean("remebercb", false);
-        Boolean isAutoCb = loginsp.getBoolean("autocb", false);
+        String usernamesp = SpUtils.getString(this, SpConstant.USER_TELEPHONE);
+        String pwdsp = SpUtils.getString(this,SpConstant.USER_PWD);
+        Boolean isRemCb = SpUtils.getBoolean(this,SpConstant.IS_REM);
+        Boolean isAutoCb = SpUtils.getBoolean(this,SpConstant.IS_AUTO);
 
         mRemenberPwdCb.setChecked(isRemCb);
         mAutoCb.setChecked(isAutoCb);
@@ -124,12 +107,12 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
         mPwdCb.setOnCheckedChangeListener(this);
         mAutoCb.setOnCheckedChangeListener(this);
 
-        if (usernamesp != null && !"".equals(usernamesp)) {
+        if (!"".equals(usernamesp)) {
             mUsernameEt.setText(usernamesp);
             mUsernameEt.setSelection(usernamesp.length());
 
         }
-        if (pwdsp != null && !"".equals(pwdsp)) {
+        if (!"".equals(pwdsp)) {
             mPasswordEt.setText(pwdsp);
             mPasswordEt.setSelection(pwdsp.length());
         }
@@ -137,13 +120,10 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
         presenter = new LoginPresenter(new LoginModel(this));
         presenter.attachView(this);
 
-        infoPresenter = new UserInfoPresenter(new UserInfoModel(this));
-        infoPresenter.attachView(this);
-
         String mUsername = mUsernameEt.getText().toString().trim();
         String mUserpwd = mPasswordEt.getText().toString().trim();
 
-        if ("".equals(mUsername) || mUsername == null && "".equals(mUserpwd) || mUserpwd == null) {
+        if ("".equals(mUsername) && "".equals(mUserpwd)) {
             mLoginBtn.setBackgroundResource(R.drawable.btn_pigeon_bg2);
             mLoginBtn.setEnabled(false);
 
@@ -195,8 +175,8 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
         }
     };
 
-    private AlertDialog.Builder builder;
-    private AlertDialog dialog;
+//    private AlertDialog.Builder builder;
+//    private AlertDialog dialog;
 
     @OnClick(R.id.act_login_loginbtn)
     void login() {
@@ -205,30 +185,28 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
             return;
         } else {
 
-            loginEditor.putString("username", getUserPhone());
+            SpUtils.putString(this,SpConstant.USER_TELEPHONE, getUserPhone());
 
-            loginEditor.putBoolean("remebercb", mRemenberPwdCb.isChecked());
-            loginEditor.putBoolean("autocb", mAutoCb.isChecked());
+            SpUtils.putBoolean(this,SpConstant.IS_REM, mRemenberPwdCb.isChecked());
+            SpUtils.putBoolean(this,SpConstant.IS_AUTO, mAutoCb.isChecked());
 
             if (mRemenberPwdCb.isChecked()) {
-                loginEditor.putString("password", mPasswordEt.getText().toString().trim());
+                SpUtils.putString(this, SpConstant.USER_PWD, mPasswordEt.getText().toString().trim());
             } else {
-                loginEditor.putString("password", "");
+                SpUtils.putString(this, SpConstant.USER_PWD, "");
             }
-
-            loginEditor.commit();
 
             doLoginImpl();
         }
     }
 
     @OnClick(R.id.act_login_forget_password)
-    void forget(View view){
+    void forget(){
         Intent intent = new Intent(this, ForgetActivity.class);
         startActivity(intent);
     }
     @OnClick(R.id.act_login_phone_login)
-    void phoneLogin(View view){
+    void phoneLogin(){
         Intent intent = new Intent(this, PhoneLoginActivity.class);
         startActivity(intent);
     }
@@ -245,12 +223,11 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
         startActivity(intent);
     }
 
-    @Override
     public String getUserPhone() {
 
         String mUsername = mUsernameEt.getText().toString().trim();
 
-        if ("".equals(mUsername) || mUsername == null || mUsername.isEmpty()) {
+        if ("".equals(mUsername) || mUsername.isEmpty()) {
             ApiUtils.showToast(this, getResources().getString(R.string.user_phone));
             return "";
         }
@@ -263,32 +240,11 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
         return mUsername;
     }
 
-    @Override
     public String getUserPwd() {
-
-//        String mPwd = mPasswordEt.getText().toString().trim();
-//
-//        if ("".equals(mPwd) || mPwd == null || mPwd.isEmpty()) {
-//            ApiUtils.showToast(this, getResources().getString(R.string.user_pwd_empty));
-//            return "";
-//        }
-//
-//        byte[] encryptedBytes = RSAHelper.encrypt(mPwd.getBytes());
-//        String base64EncodedString = Base64.encodeToString(encryptedBytes, Base64.NO_WRAP);
-////        try {
-////            String str = URLEncoder.encode(base64EncodedString, "utf-8");
-////            return str;
-////        } catch (UnsupportedEncodingException e) {
-////            e.printStackTrace();
-////        }
-//
-//        return base64EncodedString;
-//
-//        //return mPwd;
 
         String mPwd = mPasswordEt.getText().toString().trim();
 
-        if ("".equals(mPwd) || mPwd == null || mPwd.isEmpty()) {
+        if ("".equals(mPwd) || mPwd.isEmpty()) {
             ApiUtils.showToast(this, getResources().getString(R.string.user_pwd_empty));
             return "";
         }
@@ -297,63 +253,36 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
 
     }
 
-    @Override
     public String getUserId() {
 
-        mUserObjId = userInfoPf.getString("user_objid", "");
-
-        return mUserObjId;
+        return SpUtils.getString(this,SpConstant.USER_OBJ_ID);
     }
 
-    @Override
     public String getToken() {
-
-        mToken = userInfoPf.getString("user_token", "");
-
-        return mToken;
+        return SpUtils.getString(this,SpConstant.USER_TOKEN);
     }
 
     @Override
     public void toGetDetail(OurUser user) {
 
-        mEditor.putString("user_objid", user.getData().getUserid());
-        mEditor.putString("user_token", user.getData().getToken());
-        mEditor.commit();
-        methodType = MethodType.METHOD_TYPE_USER_DETAIL;
-        infoPresenter.getDataFromNets(getParaMap());
-    }
+        SpUtils.putBoolean(this, SpConstant.MAIN_EXIT,true);
 
-
-    @Override
-    public void toMainActivity(OurUserInfo userInfo) {
-
-        mEditor.putString("user_phone", userInfo.getData().getTelephone());
-        mEditor.putString("nick_name",userInfo.getData().getNickname());
-        mEditor.putString("user_headpic", userInfo.getData().getHeadpic());
-        mEditor.putString("user_dovecote", userInfo.getData().getLoftname());
-        mEditor.putString("user_code", userInfo.getData().getUserid());
-        mEditor.putString("user_age", String.valueOf(userInfo.getData().getAge()));
-        mEditor.putString("user_birth", String.valueOf(userInfo.getData().getUser_birth()));
-        mEditor.putString("user_sex", String.valueOf(userInfo.getData().getGender()));
-        mEditor.putString("user_year",userInfo.getData().getExperience() == null?"1年":String.valueOf(userInfo.getData().getExperience()));
-        mEditor.commit();
-
+        SpUtils.putString(this,SpConstant.USER_OBJ_ID,user.getData().getUserid());
+        SpUtils.putString(this,SpConstant.USER_TOKEN,user.getData().getToken());
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra("user_info",userInfo);
-        intent.putExtra("LoginActivity", true);
         startActivity(intent);
         finish();
 
     }
 
+
     @Override
     public void loginFail(final String msg) {
 
-        loginEditor.putString("username","");
-        loginEditor.putBoolean("remebercb",false);
-        loginEditor.putBoolean("autocb",false);
-        loginEditor.putString("password", "");
-        loginEditor.commit();
+        SpUtils.putString(this,SpConstant.USER_TELEPHONE,"");
+        SpUtils.putString(this,SpConstant.USER_PWD,"");
+        SpUtils.putBoolean(this,SpConstant.IS_AUTO,false);
+        SpUtils.putBoolean(this,SpConstant.IS_REM,false);
 
         final CustomDialog dialog = new CustomDialog(this, "登录失败", msg+",请重新输入", "确定", "取消");
         dialog.show();
@@ -422,11 +351,6 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
     }
 
     @Override
-    public void toDo() {
-
-    }
-
-    @Override
     public String getMethod() {
         String method = "";
 
@@ -462,17 +386,4 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
 
         return map;
     }
-
-
-//    @Override
-//    public void showErrorMsg(String errorMsg) {
-//        super.showErrorMsg(errorMsg);
-//
-//        loginEditor.putString("username","");
-//        loginEditor.putBoolean("remebercb",false);
-//        loginEditor.putBoolean("autocb",false);
-//        loginEditor.putString("password", "");
-//        loginEditor.commit();
-//
-//    }
 }

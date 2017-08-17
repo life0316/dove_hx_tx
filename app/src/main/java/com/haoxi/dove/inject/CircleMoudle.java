@@ -3,6 +3,7 @@ package com.haoxi.dove.inject;
 import android.content.Context;
 
 import com.haoxi.dove.inject.scopes.PerFragment;
+import com.haoxi.dove.newin.ourcircle.ui.IMyCircleView;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.newin.ourcircle.ui.CircleFragment;
 import com.haoxi.dove.newin.ourcircle.presenter.InnerCirclePresenter;
@@ -17,12 +18,10 @@ import dagger.Provides;
 @Module
 public class CircleMoudle {
 
-    private CircleFragment mView;
-
+    private IMyCircleView mView;
     private Context mContext;
 
-
-    public CircleMoudle(Context mContext, CircleFragment mView){
+    public CircleMoudle(Context mContext, IMyCircleView mView){
         this.mView = mView;
         this.mContext = mContext;
     }

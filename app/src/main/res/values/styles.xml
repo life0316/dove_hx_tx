@@ -24,7 +24,7 @@
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@color/transparent</item>
+        <!--<item name="android:windowBackground">@color/transparent</item>-->
     </style>
 
     <style name="Animation.Activity.Style" parent="@android:style/Animation.Activity">

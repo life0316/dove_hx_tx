@@ -23,9 +23,6 @@ import butterknife.BindView;
 import rx.Observable;
 import rx.functions.Action1;
 
-/**
- * Created by Administrator on 2017\7\6 0006.
- */
 @ActivityFragmentInject(contentViewId = R.layout.activity_route_select)
 public class RouteSelectActivity extends BaseActivity implements View.OnClickListener {
 

@@ -1,51 +1,45 @@
 package com.haoxi.dove.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Base64;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.haoxi.dove.R;
-import com.haoxi.dove.acts.MainActivity;
+import com.haoxi.dove.base.BaseFragment;
 import com.haoxi.dove.modules.home.MyPigeonActivity;
 import com.haoxi.dove.modules.home.MyRingActivity;
 import com.haoxi.dove.modules.home.OptimisedActivity;
 import com.haoxi.dove.modules.home.PersonalActivity;
+import com.haoxi.dove.modules.loginregist.model.UserInfoModel;
+import com.haoxi.dove.modules.loginregist.presenter.UserInfoPresenter;
+import com.haoxi.dove.modules.loginregist.ui.IGetInfo;
 import com.haoxi.dove.newin.bean.OurUserInfo;
-import com.haoxi.dove.utils.ConstantUtils;
-import com.haoxi.dove.widget.GlideCircleImage;
+import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 
 import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * Created by lifei on 2016/12/27.
- */
-
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment implements IGetInfo {
 
     private OurUserInfo userInfo;
-    private String userPhone;
-    private SharedPreferences preferences;
-    public HomeFragment homeFragment;
-
-    private String headPic;
+//    private String userPhone;
+//    private String headPic;
 
     @BindView(R.id.fragment_home_civ_icon)
     CircleImageView mHomeCiv;
@@ -55,21 +49,15 @@ public class HomeFragment extends Fragment {
 
     @BindView(R.id.fragment_home_userid)
     TextView mUserCodeTv;
+    private UserInfoPresenter infoPresenter;
+    private boolean isLoad = true;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        userInfo = ((MainActivity) getActivity()).getUser();
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, null);
-        ButterKnife.bind(this, view);
-        readFromPreference();
+        infoPresenter = new UserInfoPresenter(new UserInfoModel(getActivity()));
+        infoPresenter.attachView(this);
 
         mHomeCiv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,35 +67,17 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+    }
 
-        if (userInfo != null) {
-            userPhone =userInfo.getData().getTelephone();
-            headPic = userInfo.getData().getHeadpic();
-//            if (!"".equals(headPic)) {
-//
-//                GlideCircleImage circleImage = new GlideCircleImage(getContext());
-//
-//                Glide.with(getContext())
-//                        .load(headPic)
-//                        .transform(circleImage)
-//                        .centerCrop()
-////                        .fitCenter()
-//                        .thumbnail(0.1f)
-////                        .placeholder(R.mipmap.btn_img_photo_default)
-//                        .error(R.mipmap.btn_img_photo_default)
-//                        .crossFade()
-//                        .into(mHomeCiv);
-//            }
-        }
-        return view;
+    @Override
+    protected int getLayout() {
+        return R.layout.fragment_home;
     }
 
     @OnClick(R.id.fragment_home_route)
     void routeOnCli() {
-
         Intent intent = new Intent(getActivity(), RouteSelectActivity.class);
         startActivity(intent);
-
     }
 
     @OnClick(R.id.fragment_home_mypigeons)
@@ -118,9 +88,8 @@ public class HomeFragment extends Fragment {
 
     @OnClick(R.id.fragment_home_ring)
     void myRingOnCli() {
-
-            Intent intent = new Intent(getActivity(), MyRingActivity.class);
-            startActivity(intent);
+        Intent intent = new Intent(getActivity(), MyRingActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.fragment_home_optimised)
@@ -134,38 +103,29 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        readFromPreference();
+        int curNum = SpUtils.getInt(getActivity(),SpConstant.CLICK_NUM,3);
+        boolean hasChange = SpUtils.getBoolean(getActivity(),SpConstant.USER_INFO_CHANGE);
+
+        if (isLoad && curNum == 3) {
+            infoPresenter.getDataFromNets(getParaMap());
+            isLoad = false;
+        }else if (hasChange){
+            readFromPreference();
+        }
     }
-
     private void readFromPreference() {
-
-        preferences = this.getActivity().getSharedPreferences(ConstantUtils.USERINFO, Context.MODE_PRIVATE);
-
-        String mNickName = preferences.getString("nick_name","");
-        String mUserCode = preferences.getString("user_code","");
-        String mUserPVR = preferences.getString("user_headpic", "");
+        String mNickName = SpUtils.getString(getActivity(),SpConstant.NICK_NAME);
+        String mUserCode = SpUtils.getString(getActivity(),SpConstant.USER_CODE);
+        String mUserPVR = SpUtils.getString(getActivity(),SpConstant.USER_HEAD_PIC);
 
         mUserNameTv.setText(mNickName);
         mUserCodeTv.setText(mUserCode);
 
         if (mUserPVR.startsWith("http")) {
-            GlideCircleImage circleImage = new GlideCircleImage(getContext());
-
-//                Glide.with(getContext())
-//                        .load(headPic)
-//                        .transform(circleImage)
-//                        .centerCrop()
-//                        .thumbnail(0.1f)
-//                        .error(R.mipmap.btn_img_photo_default)
-//                        .crossFade()
-//                        .into(mHomeCiv);
-
             Glide.with(getContext())
-                    .load(headPic)
+                    .load(mUserPVR)
                     .asBitmap()
-//                    .placeholder(R.mipmap.btn_img_photo_default)
                     .error(R.mipmap.btn_img_photo_default)
-//                    .into(mHomeCiv);
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -174,7 +134,7 @@ public class HomeFragment extends Fragment {
                     });
 
         }else {
-            if (mUserPVR.equals("") == false) {
+            if (!mUserPVR.equals("")) {
                 byte[] byteArray = Base64.decode(mUserPVR, Base64.DEFAULT);
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArray);
                 //第三步:利用ByteArrayInputStream生成Bitmap
@@ -190,5 +150,37 @@ public class HomeFragment extends Fragment {
         HomeFragment fragment = new HomeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void getUserInfo(OurUserInfo userInfo) {
+        SpUtils.putBoolean(getActivity(), SpConstant.USER_INFO_CHANGE,false);
+
+        SpUtils.putString(getActivity(),SpConstant.USER_TELEPHONE, userInfo.getData().getTelephone());
+        SpUtils.putString(getActivity(),SpConstant.NICK_NAME,userInfo.getData().getNickname());
+        SpUtils.putString(getActivity(),SpConstant.USER_HEAD_PIC, userInfo.getData().getHeadpic());
+        SpUtils.putString(getActivity(),SpConstant.USER_DOVECOTE, userInfo.getData().getLoftname());
+        SpUtils.putString(getActivity(),SpConstant.USER_CODE, userInfo.getData().getUserid());
+        SpUtils.putString(getActivity(),SpConstant.USER_AGE, String.valueOf(userInfo.getData().getAge()));
+        SpUtils.putString(getActivity(),SpConstant.USER_BIRTH, String.valueOf(userInfo.getData().getUser_birth()));
+        SpUtils.putString(getActivity(),SpConstant.USER_SEX, String.valueOf(userInfo.getData().getGender()));
+        SpUtils.putString(getActivity(),SpConstant.USER_YEAR,userInfo.getData().getExperience() == null?"1年":String.valueOf(userInfo.getData().getExperience()));
+        readFromPreference();
+    }
+
+    @Override
+    public String getMethod() {
+        return MethodConstant.USER_INFO_DETAIL;
+    }
+    public Map<String,String> getParaMap(){
+
+        Map<String,String> map = new HashMap<>();
+        map.put("method",getMethod());
+        map.put("sign",getSign());
+        map.put("time",getTime());
+        map.put("version",getVersion());
+        map.put("token",getToken());
+        map.put("userid",getUserObjId());
+        return map;
     }
 }

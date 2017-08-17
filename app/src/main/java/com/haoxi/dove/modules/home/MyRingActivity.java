@@ -29,14 +29,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-/**
- * Created by lifei on 2017/1/10.
- */
-
 @ActivityFragmentInject(contentViewId = R.layout.activity_mycircle)
 public class MyRingActivity extends BaseActivity implements IGetRingView {
-
-    private static final String TAG = "MyRingActivity";
 
     @BindView(R.id.act_myring_pigeon)
     ExpandableListView mElistview;
@@ -62,12 +56,8 @@ public class MyRingActivity extends BaseActivity implements IGetRingView {
     @Inject
     RxBus mRxBus;
 
-    private static Handler mHandler = new Handler();
-
-
     @Override
     protected void initInject() {
-
         DaggerMyRing2Component.builder()
                 .appComponent(getAppComponent())
                 .myRing2Moudle(new MyRing2Moudle(this,this))
@@ -112,10 +102,10 @@ public class MyRingActivity extends BaseActivity implements IGetRingView {
     @Override
     protected void onResume() {
         super.onResume();
-        getDatas(false);
+        getDatas();
     }
 
-    public void getDatas(boolean tag) {
+    public void getDatas() {
 
         if (!ApiUtils.isNetworkConnected(this)) {
             presenter.getDatas();
@@ -140,7 +130,7 @@ public class MyRingActivity extends BaseActivity implements IGetRingView {
         return map;
     }
 
-    void backOnCli(View v){
+    void backOnCli(){
         mRxBus.post("isLoad",false);
         finish();
     }
@@ -186,11 +176,6 @@ public class MyRingActivity extends BaseActivity implements IGetRingView {
 
     @Override
     public void setRefrash(boolean isRefrash) {
-
-    }
-
-    @Override
-    public void toDo() {
 
     }
 

@@ -36,8 +36,6 @@ import butterknife.OnClick;
 @ActivityFragmentInject(contentViewId = R.layout.activity_pigeon)
 public class PigeonActivity extends BaseActivity implements IUpdateDoveView {
 
-//    private static final String TAG = "PigeonActivity";
-
     private static final int UPDATE_GENDER = 1;
     private static final int UPDATE_AGE = 2;
     private static final int UPDATE_COLOR = 3;
@@ -251,13 +249,13 @@ public class PigeonActivity extends BaseActivity implements IUpdateDoveView {
             }
         });
 
-
-        mDialog_et.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        mDialog_et.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        mDialog_et.setContentView(view, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ApiUtils.setDialogWindow(mDialog_et);
-        mDialog_et.show();
-
+        if (mDialog_et.getWindow() != null) {
+            mDialog_et.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            mDialog_et.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            mDialog_et.setContentView(view, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            ApiUtils.setDialogWindow(mDialog_et);
+            mDialog_et.show();
+        }
     }
 
 

@@ -21,6 +21,8 @@ import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.MD5Tools;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,17 +30,11 @@ import java.util.Map;
 @ActivityFragmentInject(contentViewId = R.layout.activity_splash)
 public class SplashActivity extends BaseActivity implements ILoginView {
 
-//    private static final String TAG = "SplashActivity";
-
     private Handler mHandler = new Handler();
 
     private LoginPresenter presenter;
 
-    private UserInfoPresenter infoPresenter;
-
     private String mPwdsp;
-
-//    private String mLoginType = "1";
 
     private int methodType = MethodType.METHOD_TYPE_LOGIN;
 
@@ -52,13 +48,8 @@ public class SplashActivity extends BaseActivity implements ILoginView {
 
         presenter = new LoginPresenter(new LoginModel(this));
         presenter.attachView(this);
-        infoPresenter = new UserInfoPresenter(new UserInfoModel(this));
-        infoPresenter.attachView(this);
-
-        SharedPreferences loginsp = getSharedPreferences(ConstantUtils.LOGINSP, Context.MODE_PRIVATE);
-//        String mUsername = loginsp.getString("username", null);
-        mPwdsp = loginsp.getString("password", null);
-        final Boolean isAutoCb = loginsp.getBoolean("autocb", false);
+        mPwdsp = SpUtils.getString(this, SpConstant.USER_PWD);
+        final Boolean isAutoCb = SpUtils.getBoolean(this,SpConstant.IS_AUTO);
 
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -86,26 +77,11 @@ public class SplashActivity extends BaseActivity implements ILoginView {
         }, 1000);
     }
 
-    @Override
     public String getUserPhone() {
         return mUserPhone;
     }
 
-    @Override
     public String getUserPwd() {
-//
-//        byte[] encryptedBytes = RSAHelper.encrypt(mPwdsp.getBytes());
-//        String base64EncodedString = Base64.encodeToString(encryptedBytes, Base64.NO_WRAP);
-////        try {
-////            String str = URLEncoder.encode(base64EncodedString, "utf-8");
-////            return str;
-////        } catch (UnsupportedEncodingException e) {
-////            e.printStackTrace();
-////        }
-//
-//        return base64EncodedString;
-
-
         if ("".equals(mPwdsp) || mPwdsp == null || mPwdsp.isEmpty()) {
             ApiUtils.showToast(this, getResources().getString(R.string.user_pwd_empty));
             return "";
@@ -114,59 +90,28 @@ public class SplashActivity extends BaseActivity implements ILoginView {
         return MD5Tools.MD5(mPwdsp);
     }
 
-    @Override
     public String getUserId() {
 
-        mUserObjId = userInfoPf.getString("user_objid", "");
-
-        return mUserObjId;
+        return SpUtils.getString(this,SpConstant.USER_OBJ_ID);
     }
 
-    @Override
     public String getToken() {
-        mToken = userInfoPf.getString("user_token", "");
-        return mToken;
+        return SpUtils.getString(this,SpConstant.USER_TOKEN);
     }
 
     @Override
     public void toGetDetail(OurUser user) {
-        mEditor.putString("user_objid", user.getData().getUserid());
-        mEditor.putString("user_token", user.getData().getToken());
-        mEditor.commit();
-        methodType = MethodType.METHOD_TYPE_USER_DETAIL;
-        infoPresenter.getDataFromNets(getParaMap());
-    }
-
-    @Override
-    public void toMainActivity(OurUserInfo userInfo) {
-
-        mEditor.putString("user_phone", userInfo.getData().getTelephone());
-        mEditor.putString("nick_name",userInfo.getData().getNickname());
-        mEditor.putString("user_headpic", userInfo.getData().getHeadpic());
-        mEditor.putString("user_dovecote", userInfo.getData().getLoftname());
-        mEditor.putString("user_code", userInfo.getData().getUserid());
-        mEditor.putString("user_age", String.valueOf(userInfo.getData().getAge()));
-        mEditor.putString("user_sex", String.valueOf(userInfo.getData().getGender()));
-        mEditor.putString("user_year",userInfo.getData().getExperience() == null?"1年":String.valueOf(userInfo.getData().getExperience()));
-        mEditor.commit();
-
+        SpUtils.putString(this,SpConstant.USER_OBJ_ID,user.getData().getUserid());
+        SpUtils.putString(this,SpConstant.USER_TOKEN,user.getData().getToken());
 
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-        intent.putExtra("user_info",userInfo);
-        intent.putExtra("LoginActivity", true);
         startActivity(intent);
         finish();
-
     }
 
 
     @Override
     public void loginFail(String msg) {
-
-    }
-
-    @Override
-    public void toDo() {
 
     }
 
@@ -214,7 +159,6 @@ public class SplashActivity extends BaseActivity implements ILoginView {
                 map.put("userid",getUserId());
                 break;
         }
-
         return map;
     }
 

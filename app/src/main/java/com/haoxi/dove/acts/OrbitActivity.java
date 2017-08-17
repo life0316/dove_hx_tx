@@ -34,10 +34,6 @@ import butterknife.OnClick;
 @ActivityFragmentInject(contentViewId = R.layout.activity_orbit)
 public class OrbitActivity extends BaseActivity{
 
-//    private static final String TAG = "OrbitActivity";
-
-//    @BindView(R.id.custom_toolbar_iv)
-//    ImageView mBackIv;
     @BindView(R.id.custom_toolbar_tv)
     TextView  mTitleTv;
 

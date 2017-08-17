@@ -66,16 +66,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
 import rx.functions.Action1;
 
-/**
- * Created by lifei on 2017/1/14.
- */
-
 public class CircleFragment extends BaseSrFragment implements IMyCircleView<CircleBean>,MyItemClickListener, OnHolder2Listener<InnerCircleBean,MyLmAdapter.MyRefrashHolder>, OnRefreshListener, OnLoadmoreListener {
 
     private static final String TAG = "CircleFragment";
 
     private int methodType = MethodType.METHOD_TYPE_FRIENDS_CIRCLES;
-
 
     private int PAGENUM = 1;  //查询起始下标，默认为0
     private int PAGESIZE = 10;//每页返回的数据，默认10
@@ -88,13 +83,8 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
 
     private Dialog mDialogEt;
 
-//    @BindView(R.id.bsrl)
-//    SwipeRefreshLayout swipeRefreshLayout;
-
-
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-
 
     @BindView(R.id.bsr_rv)
     RecyclerView recyclerView;
@@ -217,11 +207,6 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_red_light,
-//                android.R.color.holo_orange_light, android.R.color.holo_green_light);
-//        swipeRefreshLayout.setOnRefreshListener(this);
-
-
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadmoreListener(this);
 
@@ -294,7 +279,6 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
         super.onResume();
 
         if (isLoad) {
-
             PAGENUM = 1;
             pageNumMap.put(fragmentBundle,1);
             changeMethodType();
@@ -508,14 +492,6 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
     public String getUserObJId() {
         return userObjId;
     }
-
-//    @Override
-//    public void onLoadListener() {
-//        //加载更多监听
-//        changeMethodType();
-//        isDao = false;
-//        innerCirclePresenter.loadMoreData(getParaMap(),tag);
-//    }
 
     public Map<String,String> getParaMap(){
 
@@ -1171,10 +1147,6 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
 
     @Override
     public void onLoadmore(RefreshLayout refreshLayout) {
-//        //加载更多监听
-//        changeMethodType();
-//        isDao = false;
-//        innerCirclePresenter.loadMoreData(getParaMap(),tag);
         updateRecyclerView();
     }
 }

@@ -109,4 +109,5 @@ dependencies {
     compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.2-alpha-7'
     compile files('libs/stats_assis_sdk_4pigeon.jar')
     compile files('libs/zhys_sdk_4gequan_67111001_170221.jar')
+    compile files('libs/1.1.4.jar')
 }

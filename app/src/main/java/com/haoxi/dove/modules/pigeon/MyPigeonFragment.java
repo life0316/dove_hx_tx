@@ -3,7 +3,6 @@ package com.haoxi.dove.modules.pigeon;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +29,8 @@ import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.RxBus;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.widget.CustomDialog;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -44,59 +45,31 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Action1;
-
-
-/**
- * Created by lifei on 2017/1/6.
- */
 
 public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView, MyPigeonAdapter.MyItemCheckListener, MyPigeonAdapter.RecyclerViewOnItemClickListener, OnRefreshListener {
 
     private static final String TAG = "MyPigeonFragment";
 
-    @BindView(R.id.fragment_mypigeon_tv_refrash)
-    TextView mRefrashTv;
-    @BindView(R.id.fragment_mypigeon_ll_refrash)
-    LinearLayout mRefrashLl;
-    @BindView(R.id.fragment_mypigeon_show_add)
-    LinearLayout mShowAddLv;
-//    @BindView(R.id.fragment_mypigeon_srl)
-//    SwipeRefreshLayout mSrl;
-
-    @BindView(R.id.refreshLayout)
-    RefreshLayout refreshLayout;
-
-    @BindView(R.id.fragment_mypigeon_swiprv)
-    RecyclerView mRecyclerView;
-    @BindView(R.id.mypigeon_select)
-    RelativeLayout mSelectRv;
-
-    @BindView(R.id.fragment_mypigeon_no_network)
-    TextView mNetworkTv;
-
-    @BindView(R.id.mypigeon_select_cb)
-    CheckBox mSelectCb;
-
+    @BindView(R.id.fragment_mypigeon_tv_refrash) TextView mRefrashTv;
+    @BindView(R.id.fragment_mypigeon_ll_refrash) LinearLayout mRefrashLl;
+    @BindView(R.id.fragment_mypigeon_show_add) LinearLayout mShowAddLv;
+    @BindView(R.id.refreshLayout) RefreshLayout refreshLayout;
+    @BindView(R.id.fragment_mypigeon_swiprv) RecyclerView mRecyclerView;
+    @BindView(R.id.mypigeon_select) RelativeLayout mSelectRv;
+    @BindView(R.id.fragment_mypigeon_no_network) TextView mNetworkTv;
+    @BindView(R.id.mypigeon_select_cb) CheckBox mSelectCb;
     private int countTemp;
-
     @Inject
     MyPigeonPresenter mPresenter;
-
     @Inject
     DaoSession daoSession;
-
     @Inject
     OurCodePresenter ourCodePresenter;
-
-
     @Inject
     MyPigeonAdapter pigeonAdapter;
-
     @Inject
     Context mContext;
-
     private boolean isLoad = true;
 
     @Inject
@@ -110,10 +83,8 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 
     private List<String> mPigeonCodes;
 
-
     private List<InnerDoveData> pigeonBeans = new ArrayList<>();
     private List<InnerDoveData> pigeonTemps = new ArrayList<>();
-    private static Handler mHandler = new Handler();
 
     private int unbindTag = 5;
     private int clickRadio = 0;
@@ -122,6 +93,8 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     private CustomDialog dialog;
 
     private int methodType = MethodType.METHOD_TYPE_DOVE_SEARCH;
+
+    private Observable<String> exitObservable;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -136,13 +109,11 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 
     @Override
     protected void inject() {
-
         DaggerMyPigeonComponent.builder()
                 .appComponent(getAppComponent())
                 .myPigeonMoudle(new MyPigeonMoudle(mContext, this))
                 .build()
                 .inject(this);
-
     }
 
     @Override
@@ -150,6 +121,25 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         super.onCreate(savedInstanceState);
         mPigeonCodes = MyApplication.getMyBaseApplication().getmPigeonCodes();
 
+        exitObservable = mRxBus.register("exit",String.class);
+
+        exitObservable.subscribe(new Action1<String>() {
+            @Override
+            public void call(String s) {
+                if ("pigeon".equals(s)){
+                    mShowAddLv.setVisibility(View.GONE);
+                    mRxBus.post("cancle", true);
+                    mSelectRv.setVisibility(View.GONE);
+                    mSelectCb.setChecked(false);
+                    pigeonAdapter.setIsShow(false);
+                    pigeonAdapter.setLongClickTag(false);
+                    pigeonAdapter.notifyDataSetChanged();
+                    MyPigeonFragment.this.longClickTag = false;
+                    SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,true);
+                    SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,"");
+                }
+            }
+        });
     }
 
     @Override
@@ -161,9 +151,6 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
 
         mRecyclerView.setAdapter(pigeonAdapter);
-
-//        mSrl.setOnRefreshListener(this);
-//        mSrl.setColorSchemeColors(getResources().getColor(android.R.color.holo_blue_bright), getResources().getColor(android.R.color.holo_green_light), getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
 
         refreshLayout.setEnableLoadmore(false);
 
@@ -191,10 +178,8 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
                         }
                     }
                 }
-
             }
         });
-
 
         pigeonAdapter.setItemCheckListener(this);
         pigeonAdapter.setRecyclerViewOnItemClickListener(this);
@@ -207,47 +192,59 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         });
     }
 
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        isLoadObservable = mRxBus.register("isLoad", Boolean.class);
+//
+//        mTagNumObservable = mRxBus.register("tagnum", Integer.class);
+//
+//        dataObservable = mRxBus.register("isLoadData", Boolean.class);
+//
+//        clickObservable = mRxBus.register("clickRadio", Integer.class);
+//        unbindObservable = mRxBus.register("refrash", Integer.class);
+//
+//        setObservable2();
+//
+//        Log.e("isload-pigeon", isLoad + "-----pigeon");
+//
+//        if (isLoad) {
+//            if (longClickTag) {
+//                mRxBus.post("tagnum", 6);
+//                if (dialog.isShowing() && dialog != null) {
+//                    dialog.dismiss();
+//                }
+//            }
+//            getDatas();
+//        } else {
+//            Log.e(TAG, unbindTag + "-------unbindTag");
+//            Log.e(TAG, clickRadio + "-------clickRadio");
+//
+//            if (unbindTag == clickRadio) {
+//                if (longClickTag) {
+//                    mRxBus.post("tagnum", 6);
+//                    if (dialog.isShowing() && dialog != null) {
+//                        dialog.dismiss();
+//                    }
+//                }
+//                getDatas();
+//                unbindTag = 1;
+//            }
+//        }
+//        isLoad = true;
+//    }
+
     @Override
     public void onResume() {
         super.onResume();
-
-        isLoadObservable = mRxBus.register("isLoad", Boolean.class);
-
         mTagNumObservable = mRxBus.register("tagnum", Integer.class);
-
-        dataObservable = mRxBus.register("isLoadData", Boolean.class);
-
-        clickObservable = mRxBus.register("clickRadio", Integer.class);
-        unbindObservable = mRxBus.register("refrash", Integer.class);
-
+        isLoadObservable = mRxBus.register("isLoad", Boolean.class);
         setObservable2();
-
-        Log.e("isload-pigeon", isLoad + "-----pigeon");
-
         if (isLoad) {
-            if (longClickTag) {
-                mRxBus.post("tagnum", 6);
-                if (dialog.isShowing() && dialog != null) {
-                    dialog.dismiss();
-                }
-            }
             getDatas();
-        } else {
-            Log.e(TAG, unbindTag + "-------unbindTag");
-            Log.e(TAG, clickRadio + "-------clickRadio");
-
-            if (unbindTag == clickRadio) {
-                if (longClickTag) {
-                    mRxBus.post("tagnum", 6);
-                    if (dialog.isShowing() && dialog != null) {
-                        dialog.dismiss();
-                    }
-                }
-                getDatas();
-                unbindTag = 1;
-            }
+            isLoad = false;
         }
-        isLoad = true;
     }
 
     public void getDatas() {
@@ -283,96 +280,45 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     }
 
     public void setObservable2() {
-
-        isLoadObservable.subscribe(new Subscriber<Boolean>() {
+        isLoadObservable.subscribe(new Action1<Boolean>() {
             @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage() + "--isLoadObservable--" + TAG);
-            }
-
-            @Override
-            public void onNext(Boolean aBoolean) {
+            public void call(Boolean aBoolean) {
                 isLoad = aBoolean;
             }
         });
-
-        dataObservable.subscribe(new Subscriber<Boolean>() {
+//
+//        dataObservable.subscribe(new Action1<Boolean>() {
+//            @Override
+//            public void call(Boolean aBoolean) {
+//                getDatas();
+//            }
+//        });
+//
+//        unbindObservable.subscribe(new Action1<Integer>() {
+//            @Override
+//            public void call(Integer integer) {
+//                unbindTag = integer;
+//            }
+//        });
+//
+//        clickObservable.subscribe(new Action1<Integer>() {
+//            @Override
+//            public void call(Integer integer) {
+//                clickRadio = integer;
+//
+//                Log.e(TAG, unbindTag + "-------unbindTag---");
+//                Log.e(TAG, clickRadio + "-------clickRadio---");
+//
+//                if (unbindTag == clickRadio) {
+//                    getDatas();
+//                    unbindTag = 5;
+//                }
+//            }
+//        });
+//
+        mTagNumObservable.subscribe(new Action1<Integer>() {
             @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage() + "--dataObservable--" + TAG);
-            }
-
-            @Override
-            public void onNext(Boolean aBoolean) {
-                getDatas();
-            }
-        });
-
-        unbindObservable.subscribe(new Subscriber<Integer>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage() + "--unbindObservable--" + TAG);
-            }
-
-            @Override
-            public void onNext(Integer integer) {
-                unbindTag = integer;
-            }
-        });
-
-        clickObservable.subscribe(new Subscriber<Integer>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage() + "--clickObservable--" + TAG);
-            }
-
-            @Override
-            public void onNext(Integer integer) {
-                clickRadio = integer;
-
-                Log.e(TAG, unbindTag + "-------unbindTag---");
-                Log.e(TAG, clickRadio + "-------clickRadio---");
-
-                if (unbindTag == clickRadio) {
-                    getDatas();
-                    unbindTag = 5;
-                }
-            }
-        });
-
-        mTagNumObservable.subscribe(new Subscriber<Integer>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage() + "--mTagNumObservable--" + TAG);
-            }
-
-            @Override
-            public void onNext(Integer integer) {
+            public void call(Integer integer) {
                 if (integer == 1) {
                     changeAdapter();
                 } else if (integer == 6) {
@@ -393,75 +339,16 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         }
         mSelectRv.setVisibility(View.GONE);
         mSelectCb.setChecked(false);
-//        mSrl.setEnabled(true);
         refreshLayout.setEnableRefresh(true);
-        mRxBus.post("exit", 30);
-        mRxBus.post("cancle", 200);
-    }
-
-
-    public void setObservable() {
-
-        isLoadObservable.subscribe(new Action1<Boolean>() {
-            @Override
-            public void call(Boolean aIsLoad) {
-                isLoad = aIsLoad;
-            }
-        });
-
-        dataObservable.subscribe(new Action1<Boolean>() {
-            @Override
-            public void call(Boolean aBoolean) {
-                getDatas();
-            }
-        });
-
-        unbindObservable.subscribe(new Action1<Integer>() {
-            @Override
-            public void call(Integer integer) {
-                unbindTag = integer;
-
-
-            }
-        });
-        clickObservable.subscribe(new Action1<Integer>() {
-            @Override
-            public void call(Integer integer) {
-                clickRadio = integer;
-
-                Log.e(TAG, unbindTag + "-------unbindTag---");
-                Log.e(TAG, clickRadio + "-------clickRadio---");
-
-                if (unbindTag == clickRadio) {
-                    getDatas();
-                    unbindTag = 5;
-                }
-            }
-        });
-
-        mTagNumObservable.subscribe(new Action1<Integer>() {
-            @Override
-            public void call(Integer integer) {
-                if (integer == 1) {
-                    changeAdapter();
-                } else if (integer == 6) {
-                    changeAdapter();
-                    isLoad = true;
-                }
-            }
-        });
+        SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,true);
+        SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,"");
     }
 
     public String getDeleteObjIds() {
-
-
-        StringBuffer sb = new StringBuffer();
-
+        StringBuilder sb = new StringBuilder();
         if (pigeonTemps != null) {
             for (int i = 0; i < pigeonTemps.size(); i++) {
-
                 if ((i == pigeonTemps.size() - 1)) {
-
                     sb.append(pigeonTemps.get(i).getDoveid());
                 } else {
                     sb.append(pigeonTemps.get(i).getDoveid()).append(",");
@@ -504,81 +391,44 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         return method;
     }
 
-
-//    @Override
-//    public void onRefresh() {
-//
-//        if (!ApiUtils.isNetworkConnected(getActivity())) {
-//
-//            Log.e(TAG,"------onRefresh");
-//            mPresenter.getDatas();
-//        } else {
-//
-//            methodType = MethodType.METHOD_TYPE_DOVE_SEARCH;
-//            mPresenter.getDatasRefrash(getParaMap());
-//        }
-//    }
-
-
     @Override
     public void setPigeonData(List<InnerDoveData> pigeonData) {
-
         setRefrash(false);
         pigeonBeans.clear();
-
         if (dialog != null) {
-
-            Log.e(TAG, (dialog.isShowing()) + "----dialog---" + (dialog != null));
-
             if (dialog.isShowing()) {
-
                 dialog.dismiss();
             }
         }
 
-
         if (pigeonData != null && pigeonData.size() != 0) {
-
-
             if (pigeonData.size() >= 15) {
                 numMap.put("pigeon_num", true);
             } else {
                 numMap.put("pigeon_num", false);
             }
-
             pigeonBeans.addAll(pigeonData);
             pigeonAdapter.addData(pigeonBeans);
-//            mSrl.setEnabled(true);
             refreshLayout.setEnableRefresh(true);
             mShowAddLv.setVisibility(View.GONE);
-
-            mRxBus.post("cancle", 200);
-            mSelectRv.setVisibility(View.GONE);
-            mSelectCb.setChecked(false);
-            pigeonAdapter.setIsShow(false);
-            pigeonAdapter.setLongClickTag(false);
-            pigeonAdapter.setLongIntTag(0);
             this.longClickTag = false;
-
         } else {
-//            mSrl.setEnabled(false);
             refreshLayout.setEnableRefresh(false);
             pigeonAdapter.addData(pigeonBeans);
             mShowAddLv.setVisibility(View.VISIBLE);
-            mRxBus.post("cancle", 200);
             mSelectRv.setVisibility(View.GONE);
-//            daoSession.getMyPigeonBean1Dao().deleteAll();
             mPigeonCodes.clear();
-            mSelectCb.setChecked(false);
-            pigeonAdapter.setIsShow(false);
-            pigeonAdapter.setLongClickTag(false);
-            pigeonAdapter.setLongIntTag(0);
         }
+        mRxBus.post("cancle", true);
+        mSelectRv.setVisibility(View.GONE);
+        mSelectCb.setChecked(false);
+        pigeonAdapter.setIsShow(false);
+        pigeonAdapter.setLongClickTag(false);
+        pigeonAdapter.setLongIntTag(0);
     }
 
     @Override
     public void setRefrash(boolean isRefrash) {
-//        mSrl.setRefreshing(isRefrash);
         refreshLayout.finishRefresh(isRefrash);
     }
 
@@ -586,8 +436,6 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     public void itemChecked(View view, int count) {
 
         countTemp = count;
-
-        Log.e("count", count + "-----d--" + pigeonBeans.size());
 
         if (count >= pigeonBeans.size()) {
             mSelectCb.setChecked(true);
@@ -598,8 +446,6 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 
     @Override
     public void onItemClickListener(View view, int position, boolean longClickTag) {
-
-        Log.e("longClickTag", longClickTag + "-----longClickTag");
 
         if (!longClickTag) {
             InnerDoveData pigeonBean = pigeonBeans.get(position);
@@ -623,14 +469,14 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
             //设置选中的项
             pigeonAdapter.setSelectItem(position);
             pigeonAdapter.notifyDataSetChanged();
-
             mSelectRv.setVisibility(View.VISIBLE);
-//            mSrl.setEnabled(false);
             refreshLayout.setEnableRefresh(false);
-
             pigeonAdapter.setLongClickTag(true);
-            mRxBus.post("exit", 20);
-            mRxBus.post("cancle", 100);
+            mRxBus.post("cancle", false);
+
+            SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,false);
+            SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,"pigeon");
+
             return false;
 
         }
@@ -638,7 +484,7 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     }
 
     @OnClick(R.id.mypigeon_select_delete)
-    void deleteOnCli(View view) {
+    void deleteOnCli(){
 
         pigeonTemps.clear();
 
@@ -685,7 +531,7 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     }
 
     @OnClick(R.id.mypigeon_select_share)
-    void shareOnCli(View view) {
+    void shareOnCli() {
 
         pigeonTemps.clear();
 
@@ -737,5 +583,11 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
             methodType = MethodType.METHOD_TYPE_DOVE_SEARCH;
             mPresenter.getDatasRefrash(getParaMap());
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mRxBus.unregister("exit",exitObservable);
     }
 }

@@ -330,17 +330,6 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
             public void onClick(View v) {
                 Intent intentUrl = new Intent(CircleDetialActivity.this,ImageDetailActivity.class);
 
-                String test = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1501844000644&di=87af1ee1ea24143fe198ef85ad6bbaa0&imgtype=0&src=http%3A%2F%2Fimage.9game.cn%2F2017%2F7%2F7%2F17433744.jpg";
-
-//                headpic = ConstantUtils.HEADPIC;
-//                if (attenHeadpic.startsWith("http")) {
-//                    headpic = attenHeadpic;
-//                }else {
-//                    headpic += attenHeadpic;
-//                }
-
-                Log.e("fafssdfwe",headpic);
-
                 intentUrl.putExtra(ImageDetailActivity.EXTRA_IMAGE_URL,headpic);
 
                 ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -364,7 +353,6 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
             mUserCodeIv.setText("用户编号:"+innerCircleBean.getUserid());
 
-//            headpic = "http://118.178.227.194:8087/";
             headpic = ConstantUtils.HEADPIC;
             if (innerCircleBean.getHeadpic() != null && !"".equals(innerCircleBean.getHeadpic()) && !"-1".equals(innerCircleBean.getHeadpic())){
 
@@ -409,7 +397,6 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
         appBarLayout.addOnOffsetChangedListener(this);
         PAGENUM = 1;
         methodType = MethodType.METHOD_TYPE_SINGLE_CIRCLES;
-//        innerCirclePresenter.getDatasFromNets(getParaMap(),2);
         innerCirclePresenter.refreshFromNets(getParaMap(),2);
     }
 

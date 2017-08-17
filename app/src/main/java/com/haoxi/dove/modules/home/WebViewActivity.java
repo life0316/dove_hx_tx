@@ -16,10 +16,6 @@ import com.haoxi.dove.utils.ConstantUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-/**
- * Created by lifei on 2017/1/14.
- */
 @ActivityFragmentInject(contentViewId = R.layout.activity_webview)
 public class WebViewActivity extends BaseActivity {
 
@@ -39,8 +35,6 @@ public class WebViewActivity extends BaseActivity {
     protected void initInject() {
 
     }
-
-
 
     @Override
     protected void init() {
@@ -107,12 +101,7 @@ public class WebViewActivity extends BaseActivity {
     }
 
     @Override
-    public void toDo() {
-
-    }
-
-    @Override
     public String getMethod() {
-        return null;
+        return "";
     }
 }

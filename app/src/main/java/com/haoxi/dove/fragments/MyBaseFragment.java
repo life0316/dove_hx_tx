@@ -16,7 +16,6 @@ import com.haoxi.dove.base.MyApplication;
 import com.haoxi.dove.base.MyBaseAdapter;
 import com.haoxi.dove.newin.ourcircle.ui.AttenFriendActivity;
 import com.haoxi.dove.newin.ourcircle.ui.ReleaseCircleActivity;
-import com.haoxi.dove.observable.MyCancleObservable;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.widget.CustomViewPager;
 
@@ -25,13 +24,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
-
-/**
- * Created by lifei on 2017/1/6.
- */
-
 public abstract class MyBaseFragment extends Fragment {
-
 
     @BindView(R.id.fragment_base_add)
     ImageView mTabAddIv;
@@ -52,10 +45,8 @@ public abstract class MyBaseFragment extends Fragment {
 
     protected MyBaseAdapter adapter;
 
-    protected MyCancleObservable mCancleObservable;
-
     protected int viewpagerTagNum = 0;
-    protected Observable<Integer> cancleObservable;
+    protected Observable<Boolean> cancleObservable;
     protected List<String> mateList;
 
     protected Bundle getBundle(String arg) {
@@ -80,14 +71,11 @@ public abstract class MyBaseFragment extends Fragment {
 
         initToolbar(view);
 
-
         isPaging(true);
-        //
         mViewPager.setOffscreenPageLimit(2);
         adapter = new MyBaseAdapter(getChildFragmentManager(), mViewPager, mTablayout, getActivity());
         mTablayout.setupWithViewPager(mViewPager);
 
-//        mTabSearchIv.setVisibility(View.GONE);
         mTabSearchIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,7 +88,7 @@ public abstract class MyBaseFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 viewpagerTagNum = mViewPager.getCurrentItem();
-                RxBus.getInstance().post("cancle", 200);
+                RxBus.getInstance().post("cancle", true);
                 RxBus.getInstance().post("tagnum", viewpagerTagNum);
             }
         });
@@ -113,7 +101,6 @@ public abstract class MyBaseFragment extends Fragment {
             }
         });
 
-
         adapter.clearFragment();
         setupAdapter(adapter);
     }
@@ -123,8 +110,7 @@ public abstract class MyBaseFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        cancleObservable = RxBus.getInstance().register("cancle", Integer.class);
-
+        cancleObservable = RxBus.getInstance().register("cancle", Boolean.class);
 
     }
 
@@ -134,11 +120,6 @@ public abstract class MyBaseFragment extends Fragment {
         RxBus.getInstance().unregister("cancle", cancleObservable);
     }
 
-    /**
-     * 设置viewpager是否可滑动
-     *
-     * @param ispag
-     */
     protected void isPaging(boolean ispag) {
         mViewPager.setPagingEnabled(ispag);
     }

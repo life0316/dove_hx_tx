@@ -136,6 +136,7 @@ public class MyApplication extends Application {
 
     @Override
     public void onCreate() {
+        com.ytb.logic.CMain.setAppId(this, "hmCySW5dkeYcLxlQCh", "2a488da56d814bb657c9fc683838f18b");
         super.onCreate();
 
         //CrashReport.initCrashReport(getApplicationContext(), "80824f0a59", false);

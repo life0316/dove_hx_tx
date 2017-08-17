@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
@@ -22,27 +21,16 @@ import com.haoxi.dove.inject.DaggerMainComponent;
 import com.haoxi.dove.inject.MainMoudle;
 import com.haoxi.dove.base.BaseActivity;
 import com.haoxi.dove.modules.traject.OurTrailFragment;
-import com.haoxi.dove.newin.bean.OurUserInfo;
-import com.haoxi.dove.observable.MyCancleObservable;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.RxBus;
-
-import java.util.Observable;
-import java.util.Observer;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 
 import javax.inject.Inject;
-
 import butterknife.BindView;
-import rx.Subscriber;
 
 @ActivityFragmentInject(contentViewId = R.layout.act_main)
-public class MainActivity extends BaseActivity implements Observer {
-
-    private static final String TAG = "MainActivity";
-
-//    private LayoutInflater layoutInflater;
-
-    private OurUserInfo userInfo;
+public class MainActivity extends BaseActivity{
 
     @BindView(R.id.act_main_cvp)
     FrameLayout mCvp;
@@ -60,12 +48,6 @@ public class MainActivity extends BaseActivity implements Observer {
 
     @Inject
     RxBus mRxBus;
-    private rx.Observable<Integer> mExitObserver;
-
-    public OurUserInfo getUser() {
-        return userInfo;
-    }
-
 
     PigeonFragment mTab1;
     OurTrailFragment mTab2;
@@ -108,40 +90,26 @@ public class MainActivity extends BaseActivity implements Observer {
 
     @Override
     protected void initInject() {
-
         //noinspection deprecation
         DaggerMainComponent.builder().appComponent(getAppComponent())
                 .mainMoudle(new MainMoudle(this))
                 .build()
                 .inject(this);
-
     }
 
     @Override
     protected void init() {
-
-//        layoutInflater = LayoutInflater.from(this);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
 
-
         registerReceiver(mHomeKeyEventReceiver, filter);
 
-
-        userInfo = getIntent().getParcelableExtra("user_info");
-
-        MyCancleObservable myCancleObservable = MyCancleObservable.getInstance();
-        myCancleObservable.addObserver(this);
-
         mAppManager.addActivity(this);
-
         initView();
-
         setSelection(0);
-
     }
 
     private void initView() {
@@ -167,44 +135,29 @@ public class MainActivity extends BaseActivity implements Observer {
             }
         });
     }
-
     private int currentPos = 0;
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        mExitObserver = mRxBus.register("exit", Integer.class);
-
-        mExitObserver.subscribe(new Subscriber<Integer>() {
-            @Override
-            public void onCompleted() {
-
-            }
-            @Override
-            public void onError(Throwable e) {
-
-                Log.e(TAG,e.toString()+"-----退出异常");
-            }
-
-            @Override
-            public void onNext(Integer integer) {
-                isCanExit = integer;
-            }
-        });
+//        mExitObserver = mRxBus.register("exit", Integer.class);
+//
+//        mExitObserver.subscribe(new Action1<Integer>() {
+//            @Override
+//            public void call(Integer integer) {
+//                isCanExit = integer;
+//            }
+//        });
 
         setSelection(currentPos);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     private void setSelection(int position) {
 
         mRxBus.post("clickRadio", position);
 
+        SpUtils.putInt(this, SpConstant.CLICK_NUM,position);
         currentPos = position;
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -244,13 +197,10 @@ public class MainActivity extends BaseActivity implements Observer {
                 }
                 break;
         }
-
-        //ft.commit();
         ft.commitAllowingStateLoss();
     }
 
     private void hideAllFragments(FragmentTransaction ft) {
-
         if (mTab1 != null) {
             ft.hide(mTab1);
         }
@@ -263,62 +213,35 @@ public class MainActivity extends BaseActivity implements Observer {
         if (mTab4 != null) {
             ft.hide(mTab4);
         }
-
-
     }
-
-    @Override
-    public void update(Observable o, Object arg) {
-
-        switch ((int) arg) {
-            case 10:
-                isCanExit = 10;
-                break;
-            case 20:
-                isCanExit = 20;
-                break;
-            case 30:
-                isCanExit = 30;
-                break;
-            case 40:
-                isCanExit = 40;
-                break;
-        }
-
-    }
-
-    private int isCanExit = 30;
 
     private long exitTime = 0;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
+        boolean isExit = SpUtils.getBoolean(this,SpConstant.MAIN_EXIT,true);
 
-        switch (isCanExit) {
-            case 30:
-
-                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if ((System.currentTimeMillis() - exitTime) > 2000) {
-                        ApiUtils.showToast(this, "再按一次退出信鸽");
-                        exitTime = System.currentTimeMillis();
-                    } else {
-                        finish();
-                        System.exit(0);
-                    }
-                    return true;
+        if (isExit){
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+                if ((System.currentTimeMillis() - exitTime) > 2000) {
+                    ApiUtils.showToast(this, "再按一次退出信鸽");
+                    exitTime = System.currentTimeMillis();
+                } else {
+                    finish();
+                    System.exit(0);
                 }
-                break;
-            case 10:
-                mRxBus.post("tagnum", 0);
-                return false;
-            case 20:
-                mRxBus.post("tagnum", 1);
-                return false;
-            case 40:
-                mRxBus.post("showTrilPop",false);
-                return false;
+                return true;
+            }
+        }else {
+            String other = SpUtils.getString(this,SpConstant.OTHER_EXIT);
+
+            if (!"".equals(other)){
+                RxBus.getInstance().post("exit",other);
+            }
+            return false;
         }
+
         return super.onKeyDown(keyCode, event);
     }
 
@@ -326,17 +249,11 @@ public class MainActivity extends BaseActivity implements Observer {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mHomeKeyEventReceiver);
-        mRxBus.unregister("exit", mExitObserver);
+//        mRxBus.unregister("exit", mExitObserver);
 
     }
-
-    @Override
-    public void toDo() {
-
-    }
-
     @Override
     public String getMethod() {
-        return null;
+        return "";
     }
 }

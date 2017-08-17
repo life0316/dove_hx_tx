@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/ad_rl"
+    android:background="@color/darkgray"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/ad_fl"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:background="@color/color_white"
+        >
+
+        <ImageView
+            android:id="@+id/ad_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:background="@color/color_white"
+        android:gravity="center"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+
+            <ImageView
+                android:layout_width="@dimen/x110"
+                android:layout_height="@dimen/x110"
+                android:src="@mipmap/logo"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/x20"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="鸽环APP"
+                    android:textSize="@dimen/SIZE_22_SP"
+                    android:textColor="@android:color/black"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="为鸽友而生"
+                    android:layout_marginTop="@dimen/x10"
+                    android:textSize="@dimen/SIZE_14_SP"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_marginTop="@dimen/x20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/SIZE_12_SP"
+            android:text="Copyright @2016-2017 鸽环APP"/>
+
+    </LinearLayout>
+</LinearLayout>

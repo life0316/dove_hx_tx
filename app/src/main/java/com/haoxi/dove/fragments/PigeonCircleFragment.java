@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.haoxi.dove.base.MyBaseAdapter;
+import com.haoxi.dove.modules.circle.AllCircleFragment;
 import com.haoxi.dove.newin.ourcircle.ui.CircleFragment;
 
 import static android.view.View.VISIBLE;
@@ -23,7 +24,7 @@ public class PigeonCircleFragment extends MyBaseFragment {
 
     @Override
     public void setupAdapter(MyBaseAdapter adapter) {
-        adapter.addFragment(CircleFragment.class,"鸽圈",getBundle("鸽圈"));
+        adapter.addFragment(AllCircleFragment.class,"鸽圈",getBundle("鸽圈"));
         adapter.addFragment(CircleFragment.class,"好友圈",getBundle("好友圈"));
         adapter.addFragment(CircleFragment.class,"我的鸽圈",getBundle("我的鸽圈"));
     }

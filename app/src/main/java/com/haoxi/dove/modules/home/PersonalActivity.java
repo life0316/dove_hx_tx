@@ -42,6 +42,9 @@ import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.google.zxing.DecodeHintType;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
+import com.qq.e.comm.pi.SPVI;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,10 +63,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.iwf.photopicker.utils.ImageCaptureManager;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-
-/**
- * Created by lifei on 2017/1/13.
- */
+import rx.Scheduler;
 
 @ActivityFragmentInject(contentViewId = R.layout.activity_personal)
 public class PersonalActivity extends BaseActivity implements IPersonalView,IUpdateImageView {
@@ -93,7 +93,7 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
     @BindView(R.id.custom_toolbar_tv)
     TextView  mTitleTv;
 
-    private String  tagMsg      = "拍照权限";
+//    private String  tagMsg      = "拍照权限";
     private Bitmap mScanBitmap;
 
     @Inject
@@ -136,7 +136,6 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
 
     @Override
     protected void initInject() {
-
         DaggerPersonalComponent.builder()
                 .appComponent(getAppComponent())
                 .personalMoudle(new PersonalMoudle(this,this))
@@ -151,21 +150,18 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
 
         mBackIv.setVisibility(View.VISIBLE);
         mTitleTv.setText("帐号管理");
-        preferences = getSharedPreferences(ConstantUtils.USERINFO, Context.MODE_PRIVATE);
-        editor = preferences.edit();
 
-        userHeadpic = preferences.getString("user_headpic","");
-        String mDovecoteName = preferences.getString("user_dovecote", "");
-        mNickName = preferences.getString("nick_name","");
-        String mUserPhone = preferences.getString("user_phone", "");
-        String mUserCode = preferences.getString("user_code", "");
-        String mUserAge = preferences.getString("user_age", "");
-        mUserYear = preferences.getString("user_year", "1年");
+        userHeadpic = SpUtils.getString(this,SpConstant.USER_HEAD_PIC);
+        String mDovecoteName = SpUtils.getString(this,SpConstant.USER_DOVECOTE);
+        mNickName = SpUtils.getString(this,SpConstant.NICK_NAME);
+        String mUserPhone = SpUtils.getString(this,SpConstant.USER_TELEPHONE);
+        String mUserCode = SpUtils.getString(this,SpConstant.USER_CODE);
+        String mUserAge = SpUtils.getString(this,SpConstant.USER_AGE);
+        mUserYear = SpUtils.getString(this,SpConstant.USER_YEAR, "1年");
 
-        mUserBirth = preferences.getString("user_birth","");
+        mUserBirth = SpUtils.getString(this, SpConstant.USER_BIRTH);
 
-        Log.e("afsdfe",mUserYear);
-        String mUserSex = preferences.getString("user_sex", "");
+        String mUserSex = SpUtils.getString(this,SpConstant.USER_SEX);
 
         //readFromPreference();
 
@@ -175,26 +171,12 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
 
         if (!"".equals(userHeadpic)) {
 
-//            GlideCircleImage circleImage = new GlideCircleImage(this);
-//
-//            Glide.with(this)
-//                    .load(userHeadpic)
-//                    .transform(circleImage)
-////                    .fitCenter()
-//                    .centerCrop()
-//                    .thumbnail(0f)
-////                    .placeholder(R.mipmap.btn_img_photo_default)
-//                    .error(R.mipmap.btn_img_photo_default)
-//                    .crossFade()
-//                    .into(mCiv);
-
             if (userHeadpic.startsWith("http")){
                 Glide.with(this)
                         .load(userHeadpic)
                         .asBitmap()
                         .placeholder(R.mipmap.btn_img_photo_default)
                         .error(R.mipmap.btn_img_photo_default)
-//                    .into(mCiv);
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -235,13 +217,13 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
 
 
     @OnClick(R.id.custom_toolbar_iv)
-    void backOnCli(View v){
+    void backOnCli(){
         mRxBus.post("isLoad",false);
         this.finish();
     }
 
     @OnClick(R.id.activity_personal_civ_rv)
-    void civOnCli(View v){
+    void civOnCli(){
         methodType = MethodType.METHOD_TYPE_IMAGE_UPLOAD;
 
         showHeadDialog();
@@ -280,38 +262,19 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
 
     private void takePhoto() {
 
-//        Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//
-//        //文件夹aaaa
-//        String path = Environment.getExternalStorageDirectory().toString()+"/pigeon";
-//        File path1 = new File(path);
-//        if(!path1.exists()){
-//            path1.mkdirs();
-//        }
-//        File file = new File(path1,System.currentTimeMillis()+".png");
-//        Uri mOutPutFileUri = Uri.fromFile(file);
-//        takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,mOutPutFileUri);
-//
-//        startActivityForResult(takeIntent, 100);
-
         try {
             Intent intent = captureManager.dispatchTakePictureIntent();
             startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ActivityNotFoundException e) {
-            // TODO No Activity Found to handle Intent
-            e.printStackTrace();
         }
     }
 
     private void choosePhoto() {
-
         Intent innerIntent = new Intent(Intent.ACTION_PICK,null);
         innerIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
         innerIntent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(innerIntent, 200);
-
     }
 
     @Override
@@ -321,41 +284,17 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
 
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-//                case 100:
                 case ImageCaptureManager.REQUEST_TAKE_PHOTO:
 
                     captureManager.galleryAddPic();
 
                     String takePath = captureManager.getCurrentPhotoPath();
-
                     Log.e("takephoto",takePath+"------path");
-
                     updatePhotoPath = takePath;
                     updatePamas = UPDATE_HEADPIC;
                     methodType = MethodType.METHOD_TYPE_IMAGE_UPLOAD;
                     presenter.uploadImage(getParaMap2());
-
-//                    if (data != null) {
-//
-//                        Uri uri = data.getData();
-//
-//                        if (uri == null) {
-//                            Bundle bundle = data.getExtras();
-//                            if (bundle != null) {
-//                                Bitmap photo = (Bitmap) bundle.get("data");
-//                                if (photo != null) {
-//
-//                                    mCiv.setImageBitmap(photo);
-//                                    saveToPreference(photo);
-//
-//                                }
-//                            }
-//                        }else {
-//                            Log.e("fasdfawf",uri.getPath()+"-----uri");
-//                        }
-//                    }
                     break;
-
                 case 200:
 
                     try {
@@ -371,7 +310,6 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     break;
             }
         }
@@ -422,25 +360,23 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
         src.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
         //第二步:利用Base64将字节数组输出流中的数据转换成字符串String
         byte[] byteArray=byteArrayOutputStream.toByteArray();
-        String imageString=new String(Base64.encodeToString(byteArray, Base64.DEFAULT));
+        String imageString=Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-        SharedPreferences.Editor editor=preferences.edit();
-        editor.putString("user_headpic", imageString);
-        editor.commit();
+        SpUtils.putString(this,SpConstant.USER_HEAD_PIC,imageString);
     }
 
-    private void readFromPreference(){
-        String mUserPVR = preferences.getString("user_pvr", "");
-
-        if(mUserPVR.equals("") == false)
-        {
-            byte[] byteArray= Base64.decode(mUserPVR, Base64.DEFAULT);
-            ByteArrayInputStream byteArrayInputStream=new ByteArrayInputStream(byteArray);
-            //第三步:利用ByteArrayInputStream生成Bitmap
-            Bitmap bitmap=BitmapFactory.decodeStream(byteArrayInputStream);
-            mCiv.setImageBitmap(bitmap);
-        }
-    }
+//    private void readFromPreference(){
+//        String mUserPVR = preferences.getString("user_pvr", "");
+//
+//        if(!mUserPVR.equals(""))
+//        {
+//            byte[] byteArray= Base64.decode(mUserPVR, Base64.DEFAULT);
+//            ByteArrayInputStream byteArrayInputStream=new ByteArrayInputStream(byteArray);
+//            //第三步:利用ByteArrayInputStream生成Bitmap
+//            Bitmap bitmap=BitmapFactory.decodeStream(byteArrayInputStream);
+//            mCiv.setImageBitmap(bitmap);
+//        }
+//    }
 
     @OnClick(R.id.activity_personal_dovname_rl)
     void dovNameOnCli(View v){
@@ -459,19 +395,16 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
         if (mUserBirth != null && !"".equals(mUserBirth) && !"null".equals(mUserBirth)) {
             showAgeDialog();
         }
-
-//        Log.e("mmsmsmsm",mUserBirth+"-------"+(mUserBirth != null)+"--------"+ ( !"".equals(mUserBirth)));
-//        Log.e("mmsmsmsm",mUserBirth+"-------"+("null".equals(mUserBirth)));
     }
 
     @OnClick(R.id.activity_personal_sex_rl)
-    void sexOnCli(View v){
+    void sexOnCli(){
         methodType = MethodType.METHOD_TYPE_USER_UPDATE;
         setUserSex();
     }
 
     @OnClick(R.id.activity_personal_year_rl)
-    void yearOnCli(View v){
+    void yearOnCli(){
         methodType = MethodType.METHOD_TYPE_USER_UPDATE;
         showYearDialog();
     }
@@ -484,17 +417,12 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
 
     @Override
     public String getDovecoteName() {
-
-        String mDovName = mDoveNameTv.getText().toString().trim();
-
-        return mDovName;
+        return mDoveNameTv.getText().toString().trim();
     }
 
     @Override
     public String getUserSex() {
-
-        String mUserSex = mUserSexTv.getText().toString().trim();
-        return mUserSex;
+        return mUserSexTv.getText().toString().trim();
     }
 
     @Override
@@ -545,35 +473,31 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
     @Override
     public void toDo() {
 
+        SpUtils.putBoolean(this, SpConstant.USER_INFO_CHANGE,true);
         switch (updatePamas){
             case UPDATE_BIRTH:
                 break;
             case UPDATE_GENDER:
                 mUserSexTv.setText("1".equals(updateGender)?"男":"女");
-                editor.putString("user_sex","1".equals(updateGender)?"男":"女");
+                SpUtils.putString(this,SpConstant.USER_SEX,"1".equals(updateGender)?"男":"女");
                 break;
             case UPDATE_NAME:
                 mNickNameTv.setText(updateName);
-                editor.putString("nick_name",updateName);
+                SpUtils.putString(this,SpConstant.NICK_NAME,updateName);
                 break;
             case UPDATE_HEADPIC:
                 setPicToView(updatePhotoPath);
-
-//                if (!updateHeadpic.startsWith("http")){
-//                    updateHeadpic = "http://118.178.227.194:8087/" + updateHeadpic;
-//                }
-                editor.putString("user_headpic",updatePhotoPath);
+                SpUtils.putString(this,SpConstant.USER_HEAD_PIC,updatePhotoPath);
                 break;
             case UPDATE_LOFTNAME:
                 mDoveNameTv.setText(updateLoftName);
-                editor.putString("user_dovecote",updateLoftName);
+                SpUtils.putString(this,SpConstant.USER_DOVECOTE,updateLoftName);
                 break;
             case UPDATE_EXPE:
                 mPigeonYearTv.setText(updateExper);
-                editor.putString("user_year",updateExper);
+                SpUtils.putString(this,SpConstant.USER_YEAR,updateExper);
                 break;
         }
-        editor.commit();
     }
 
     private int updatePamas = 0;
@@ -586,7 +510,6 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
     private final int UPDATE_LOFTNAME = 4;
     private final int UPDATE_EXPE = 5;
 
-    private  String updateBirth = "";
     private String updateName = "";
     private String updateGender = "";
     private String updateLoftName= "";
@@ -612,10 +535,8 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
         File file = new File(updatePhotoPath);
         Log.e("fasdfsd",updatePhotoPath+"-------path");
 
-        if (file != null) {
-            RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), file);
-            map.put("file\"; filename=\""+file.getName()+"", fileBody);
-        }
+        RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), file);
+        map.put("file\"; filename=\""+file.getName()+"", fileBody);
         return map;
     }
 
@@ -636,7 +557,8 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
             case MethodType.METHOD_TYPE_USER_UPDATE:
                 switch (updatePamas){
                     case UPDATE_BIRTH:
-                        map.put("birthday",updateBirth);
+                        String updateBirth = "";
+                        map.put("birthday", updateBirth);
                         break;
                     case UPDATE_GENDER:
                         map.put("gender",updateGender);
@@ -696,7 +618,7 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
         mTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tagMsg = "拍照权限";
+//                tagMsg = "拍照权限";
 
                 if (isNeedCheck){
                     if (!ApiUtils.checkPermissions(PersonalActivity.this, ConstantUtils.PERMISSION_REQUESTCODE_1,needPermissions)){
@@ -712,7 +634,7 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
         mFromPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tagMsg = "相册权限";
+//                tagMsg = "相册权限";
 
                 if (isNeedCheck){
                     if (!ApiUtils.checkPermissions(PersonalActivity.this, ConstantUtils.PERMISSION_REQUESTCODE_2,needPermissions)){
@@ -849,10 +771,10 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
     }
 
     private int pigeonYear, newAgeYear, newAgeMonth, newAgeDay, age, maxFeedAge;
-    private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
+//    private SharedPreferences preferences;
+//    private SharedPreferences.Editor editor;
     private NumberPicker dayPicker;
-    private String mUserAge;
+//    private String mUserAge;
 
     public void showYearDialog() {
 
@@ -882,10 +804,6 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
                     return;
                 }
 
-
-                if (userAge != null && !"".equals(userAge)) {
-                }
-
 //                if (pigeonYear > age && pigeonYear > userAge) {
 //
 //                    ApiUtils.showToast(context, "年限大于年龄");
@@ -898,8 +816,8 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
             }
         });
 
-        final Calendar calendar = Calendar.getInstance();
-        final int year = calendar.get(Calendar.YEAR);
+//        final Calendar calendar = Calendar.getInstance();
+//        final int year = calendar.get(Calendar.YEAR);
 
         String age = mPigeonYearTv.getText().toString().trim();
         String userAge = mUserAgeTv.getText().toString().trim();
@@ -956,19 +874,19 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
             @Override
             public void onClick(View v) {
 
-                String newAgeYearTemp = String.valueOf(newAgeYear);
-                String newAgeMonthTemp = String.valueOf(newAgeMonth);
-                String newAgeDayTemp = String.valueOf(newAgeDay);
-
-                if (newAgeYear < 10) {
-                    newAgeYearTemp = "0" + newAgeYear;
-                }
-                if (newAgeMonth < 10) {
-                    newAgeMonthTemp = "0" + newAgeMonth;
-                }
-                if (newAgeDay < 10) {
-                    newAgeDayTemp = "0" + newAgeDay;
-                }
+//                String newAgeYearTemp = String.valueOf(newAgeYear);
+//                String newAgeMonthTemp = String.valueOf(newAgeMonth);
+//                String newAgeDayTemp = String.valueOf(newAgeDay);
+//
+//                if (newAgeYear < 10) {
+//                    newAgeYearTemp = "0" + newAgeYear;
+//                }
+//                if (newAgeMonth < 10) {
+//                    newAgeMonthTemp = "0" + newAgeMonth;
+//                }
+//                if (newAgeDay < 10) {
+//                    newAgeDayTemp = "0" + newAgeDay;
+//                }
 
                 final Calendar calendar = Calendar.getInstance();
 
@@ -990,17 +908,14 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
         final Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-
-        mUserBirth = preferences.getString("user_birth", "");
+        mUserBirth = SpUtils.getString(this, SpConstant.USER_BIRTH);
 
         yearPicker.setMaxValue(year);
         yearPicker.setMinValue(year - 100);
         yearPicker.setValue(Integer.parseInt(mUserBirth.substring(0, 4)));
 
         monthPicker.setMaxValue(12);
-        monthPicker.setMinValue(01);
+        monthPicker.setMinValue(1);
         monthPicker.setValue(Integer.parseInt(mUserBirth.substring(5, 7)));
 
         newAgeYear = yearPicker.getValue();
@@ -1047,25 +962,25 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
 
         if (newAgeMonth == 1 || newAgeMonth == 3 || newAgeMonth == 5 || newAgeMonth == 7 || newAgeMonth == 8 || newAgeMonth == 10 || newAgeMonth == 12) {
             dayPicker.setMaxValue(31);
-            dayPicker.setMinValue(01);
+            dayPicker.setMinValue(1);
             if (!"".equals(dayValue)) {
                 dayPicker.setValue(Integer.parseInt(dayValue));
             }
         } else if (newAgeMonth == 4 || newAgeMonth == 6 || newAgeMonth == 9 || newAgeMonth == 11) {
             dayPicker.setMaxValue(30);
-            dayPicker.setMinValue(01);
+            dayPicker.setMinValue(1);
             if (!"".equals(dayValue)) {
                 dayPicker.setValue(Integer.parseInt(dayValue));
             }
         } else if (newAgeMonth == 2 && newAgeYear % 4 == 0) {
             dayPicker.setMaxValue(29);
-            dayPicker.setMinValue(01);
+            dayPicker.setMinValue(1);
             if (!"".equals(dayValue)) {
                 dayPicker.setValue(Integer.parseInt(dayValue));
             }
         } else if (newAgeMonth == 2 && newAgeYear % 4 != 0) {
             dayPicker.setMaxValue(28);
-            dayPicker.setMinValue(01);
+            dayPicker.setMinValue(1);
             if (!"".equals(dayValue)) {
                 dayPicker.setValue(Integer.parseInt(dayValue));
             }

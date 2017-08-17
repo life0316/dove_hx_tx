@@ -29,6 +29,8 @@ import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.MD5Tools;
 import com.haoxi.dove.utils.RxBus;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.utils.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -50,7 +52,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
 
     private RegistPresenter presenter;
 
-
     @BindView(R.id.custom_toolbar_tv) TextView mTabTitleTv;
     @BindView(R.id.custom_toolbar_iv)
     ImageView mTabBackIv;
@@ -66,11 +67,7 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     @BindView(R.id.act_regist_sendcode) Button mSendCodeBtn;
     @BindView(R.id.act_regist_user_protocol) TextView mUserProtocol;
 
-    private Handler mHandler = new Handler();
-
     private String verCode = "";
-
-    private UserInfoPresenter infoPresenter;
 
     @Inject
     OurCodePresenter ourCodePresenter;
@@ -100,18 +97,11 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
         presenter = new RegistPresenter();
         presenter.attachView(this);
 
-        infoPresenter = new UserInfoPresenter(new UserInfoModel(this));
-        infoPresenter.attachView(this);
-
         mTabTitleTv.setText(getResources().getString(R.string.app_user_regist));
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
         Date date = new Date();
-
         String strDate = format.format(date);
-
         mUserBirthTv.setText(strDate);
-
     }
 
     @OnClick(R.id.act_regist_user_protocol)
@@ -236,44 +226,17 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
         return mUserPwd;
     }
 
-    @Override
     public String getUserId() {
-
-        mUserObjId = userInfoPf.getString("user_objid", "");
-        return mUserObjId;
+        return SpUtils.getString(this, SpConstant.USER_OBJ_ID);
     }
 
-    @Override
     public String getToken() {
-        mToken = userInfoPf.getString("user_token", "");
-        return mToken;
+        return SpUtils.getString(this, SpConstant.USER_TOKEN);
     }
 
     @Override
     public void toGetDetail(OurUser user) {
 
-    }
-
-    @Override
-    public void toMainActivity(OurUserInfo userInfo) {
-        //RxBus.getInstance().post("finishActivity",true);
-        mEditor.putString("user_phone", userInfo.getData().getTelephone());
-        mEditor.putString("nick_name",userInfo.getData().getNickname());
-        mEditor.putString("user_headpic", userInfo.getData().getHeadpic());
-        mEditor.putString("user_dovecote", userInfo.getData().getLoftname());
-        mEditor.putString("user_code", userInfo.getData().getUserid());
-        mEditor.putString("user_birth", String.valueOf(userInfo.getData().getUser_birth()));
-        mEditor.putString("user_age", String.valueOf(userInfo.getData().getAge()));
-        mEditor.putString("user_sex", String.valueOf(userInfo.getData().getGender()));
-        mEditor.putString("user_year",userInfo.getData().getExperience() == null?"1年":String.valueOf(userInfo.getData().getExperience()));
-        mEditor.commit();
-
-        Intent intent = new Intent(RegistActivity.this, MainActivity.class);
-        intent.putExtra("user_info",userInfo);
-        intent.putExtra("LoginActivity", true);
-        startActivity(intent);
-        mRxBus.post("finish",true);
-        finish();
     }
 
     @Override
@@ -343,19 +306,13 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     @Override
     public void toMainActivity(OurUser user) {
 
-        mEditor.putString("user_objid", user.getData().getUserid());
-        mEditor.putString("user_token", user.getData().getToken());
-        mEditor.commit();
+        SpUtils.putString(this,SpConstant.USER_OBJ_ID,user.getData().getUserid());
+        SpUtils.putString(this,SpConstant.USER_TOKEN,user.getData().getToken());
 
-        methodType = MethodType.METHOD_TYPE_USER_DETAIL;
-        Map<String,String> map = new HashMap<>();
-        map.put("method","/app/user/detail");
-        map.put("userid",getUserId());
-        map.put("sign",getSign());
-        map.put("token",getToken());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        infoPresenter.getDataFromNets(getParaMap());
+        Intent intent = new Intent(RegistActivity.this, MainActivity.class);
+        startActivity(intent);
+        mRxBus.post("finish",true);
+        finish();
     }
 
     public Map<String,String> getParaMap(){
@@ -395,11 +352,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     }
 
     @Override
-    public void toDo() {
-
-    }
-
-    @Override
     public String getMethod() {
         String method = "";
         switch (methodType){
@@ -423,7 +375,7 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     Thread mThread = null;
 
     @OnClick(R.id.act_regist_sendcode)
-    void sendCode(View view){
+    void sendCode(){
         if (!isValidate())
             return;
         mSendCodeBtn.setText("获取验证码");

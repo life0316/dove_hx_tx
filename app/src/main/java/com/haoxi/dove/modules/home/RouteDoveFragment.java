@@ -46,9 +46,6 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
 
     private int methodType = MethodType.METHOD_TYPE_DOVE_SEARCH;
 
-//    @BindView(R.id.fragment_mypigeon_srl)
-//    SwipeRefreshLayout mSrl;
-
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
 
@@ -94,9 +91,6 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
 
         mRecyclerView.setAdapter(doveAdapter);
 
-//        mSrl.setOnRefreshListener(this);
-//        mSrl.setColorSchemeColors(getResources().getColor(android.R.color.holo_blue_bright), getResources().getColor(android.R.color.holo_green_light), getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
-
         refreshLayout.setEnableLoadmore(false);
 
         refreshLayout.setOnRefreshListener(this);
@@ -108,9 +102,7 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
     @Override
     public void onResume() {
         super.onResume();
-
         if (isLoad) {
-
             getDatas();
         }
 
@@ -162,11 +154,6 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
         Intent intent = new Intent(getActivity(),RouteTitleActivity.class);
         intent.putExtra("dove",doveData);
         startActivity(intent);
-    }
-
-    @Override
-    public void toDo() {
-
     }
 
     @Override

@@ -40,3 +40,7 @@
 
 -dontwarn com.android.statis.assis.**
 -keep class com.android.statis.assis.** {*;}
+
+-keep class com.qq.e.** { public protected *; }
+-keep class com.ytb.**{ *;}
+-keep class android.support.v4.app.NotificationCompat**{public *;}

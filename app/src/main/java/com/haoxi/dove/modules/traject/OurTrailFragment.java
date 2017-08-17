@@ -64,6 +64,7 @@ import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.RxBus;
+import com.haoxi.dove.utils.SpConstant;
 import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.utils.TraUtils;
 import com.haoxi.dove.widget.BottomPopView;
@@ -83,10 +84,6 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import rx.Observable;
 import rx.functions.Action1;
-
-/**
- * Created by lifei on 2017/1/17.
- */
 
 public class OurTrailFragment extends BaseFragment implements ITraFragView, LocationSource, IGetPigeonView, MyRvItemClickListener,EasyPermissions.PermissionCallbacks {
 
@@ -153,7 +150,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     //是否进行网络请求
     private Observable<Boolean> loadObservable;
     private Observable<Integer> clickObservable;
-    private Observable<Boolean> mShowObservable;
+    private Observable<String> mShowObservable;
 
 
     private AMap mAMap;
@@ -245,13 +242,11 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
      * 需要进行检测的权限数组
      */
     protected String[] needPermissions = {
-
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.READ_PHONE_STATE
-
     };
 
     private Handler mHandler = new Handler() {
@@ -317,15 +312,16 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
         loadObservable = mRxBus.register("isLoad", Boolean.class);
 
-        mShowObservable = mRxBus.register("showTrilPop", Boolean.class);
+        mShowObservable = mRxBus.register("exit", String.class);
 
-        mShowObservable.subscribe(new Action1<Boolean>() {
+        mShowObservable.subscribe(new Action1<String>() {
             @Override
-            public void call(Boolean aBoolean) {
-                if (!aBoolean) {
+            public void call(String str) {
+                if ("trail".equals(str)) {
                     if (popView != null && popView.isShowing()) {
                         popView.dismiss();
-                        mRxBus.post("exit",30);
+                        SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,true);
+                        SpUtils.putString(getActivity(), SpConstant.OTHER_EXIT,"");
                     }
                 }
             }
@@ -755,7 +751,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     @Override
     public String getPigeonObjId() {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < isFlyingPigeonObjs.size(); i++) {
             String ids = isFlyingPigeonObjs.get(i);
@@ -1197,11 +1193,15 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
             }
 
             if (popView != null && popView.isShowing()) {
-                mRxBus.post("exit", 30);
+//                mRxBus.post("exit", 30);
+                SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,true);
+                SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,"");
                 popView.dismiss();
             } else {
 
-                mRxBus.post("exit", 40);
+//                mRxBus.post("exit", 40);
+                SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,false);
+                SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,"trail");
 
                 popShow = true;
                 popView = new BottomPopView(ll, (int) getResources().getDimension(R.dimen.DIP_330_DP), height, getContext());
