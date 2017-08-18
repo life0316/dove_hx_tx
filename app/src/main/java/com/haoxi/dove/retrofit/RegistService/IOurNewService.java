@@ -1,5 +1,6 @@
 package com.haoxi.dove.retrofit.RegistService;
 
+import com.alibaba.fastjson.JSON;
 import com.haoxi.dove.newin.bean.OurCommentBean;
 import com.haoxi.dove.newin.bean.OurFabBean;
 import com.haoxi.dove.newin.bean.OurRouteBean;
@@ -16,6 +17,7 @@ import com.haoxi.dove.newin.bean.UploadImageBean;
 import com.haoxi.dove.newin.bean.CircleBean;
 import com.haoxi.dove.newin.bean.EachCircleBean;
 import com.haoxi.dove.newin.bean.PlayerBean;
+import com.haoxi.dove.retrofit.ad.AdviewResObj;
 
 import java.util.Map;
 
@@ -27,6 +29,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PartMap;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 import rx.Observable;
@@ -291,5 +294,9 @@ public interface IOurNewService {
     @POST("gehuan/")
     @FormUrlEncoded
     Observable<EachCircleBean> getCircleDetail(@FieldMap Map<String,String> map);
+
+    //开屏广告
+    @GET("/agent/openRequest.do")
+    Observable<AdviewResObj> getOpenAd(@QueryMap Map<String,Object> params);
 
 }

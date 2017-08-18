@@ -21,16 +21,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitManager {
 
-//    private static final String BASE_OUR_URL = "http://118.178.227.194/";
-    private static final String BASE_OUR_URL = "http://111.231.54.111/";
+    private static final String BASE_OUR_URL = "http://118.178.227.194/";
+//    private static final String BASE_OUR_URL = "http://111.231.54.111/";
+    private static final String BASE_AD_URL = "http://open.adview.cn";
 
 
     private static IOurNewService ourNewService;
     private static IOurNewService ourNewService2;
+    private static IOurNewService adNewService;
 
 
     private static Retrofit ourRetrofit;
     private static Retrofit ourRetrofit2;
+    private static Retrofit adRetrofit;
 
     private RetrofitManager() {
 
@@ -63,9 +66,16 @@ public class RetrofitManager {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
+        adRetrofit = new Retrofit.Builder()
+                .client(okHttpClient2)
+                .baseUrl(BASE_AD_URL)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
 
         ourNewService = ourRetrofit.create(IOurNewService.class);
         ourNewService2 = ourRetrofit2.create(IOurNewService.class);
+        adNewService = adRetrofit.create(IOurNewService.class);
 
     }
 
@@ -74,8 +84,16 @@ public class RetrofitManager {
     }
 
 
-    public Retrofit getOurRetrofit(){return ourRetrofit;};
-    public Retrofit getOurRetrofit2(){return ourRetrofit2;};
+    public Retrofit getOurRetrofit(){return ourRetrofit;}
+    public Retrofit getOurRetrofit2(){return ourRetrofit2;}
+
+    public Retrofit getAdRetrofit() {
+        return adRetrofit;
+    }
+
+    public IOurNewService getAdNewService() {
+        return adNewService;
+    }
 
     public IOurNewService getOurNewService() {
         return ourNewService;

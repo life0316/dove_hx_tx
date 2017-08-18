@@ -3,6 +3,7 @@ package com.haoxi.dove.newin.ourcircle.presenter;
 
 import com.haoxi.dove.base.BasePresenter;
 import com.haoxi.dove.base.MyApplication;
+import com.haoxi.dove.modules.circle.IEachView;
 import com.haoxi.dove.modules.mvp.models.IGetModel;
 import com.haoxi.dove.modules.mvp.presenters.IGetPresenter;
 import com.haoxi.dove.newin.bean.InnerCircleBeanDao;
@@ -25,7 +26,7 @@ import rx.functions.Action1;
  * Created by lifei on 2017/1/17.
  */
 
-public class EachCirclePresenter extends BasePresenter<IMyCircleView,EachCircleBean> implements IGetPresenter {
+public class EachCirclePresenter extends BasePresenter<IEachView,EachCircleBean> implements IGetPresenter {
 
     private static final String TAG = "MyDynamicPresenter";
 
@@ -35,7 +36,7 @@ public class EachCirclePresenter extends BasePresenter<IMyCircleView,EachCircleB
 
     private String type = "nets";
 
-    public EachCirclePresenter(IMyCircleView mView) {
+    public EachCirclePresenter(IEachView mView) {
 
         attachView(mView);
         earchModel = new EarchCircleModel();
@@ -45,7 +46,7 @@ public class EachCirclePresenter extends BasePresenter<IMyCircleView,EachCircleB
     public void requestSuccess(EachCircleBean circleBean) {
         super.requestSuccess(circleBean);
 
-            getMvpView().updateCircleList(circleBean,"",isRefresh ? DataLoadType.TYPE_REFRESH_SUCCESS:DataLoadType.TYPE_LOAD_MORE_SUCCESS);
+            getMvpView().toUpdateEach(circleBean);
     }
 
     @Override

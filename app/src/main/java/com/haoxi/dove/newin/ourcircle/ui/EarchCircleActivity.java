@@ -39,16 +39,16 @@ import com.haoxi.dove.callback.OnHolder2Listener;
 import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.inject.DaggerOurCommentComponent;
 import com.haoxi.dove.inject.OurCommentMoudle;
+import com.haoxi.dove.modules.circle.IEachView;
 import com.haoxi.dove.newin.bean.InnerCircleBean;
 import com.haoxi.dove.newin.ourcircle.presenter.EachCirclePresenter;
 import com.haoxi.dove.newin.bean.EachCircleBean;
 import com.haoxi.dove.newin.bean.InnerComment;
-import com.haoxi.dove.newin.ourcircle.presenter.FabPresenter;
 import com.haoxi.dove.newin.ourcircle.presenter.InnerCommentPresenter;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.newin.bean.OurCommentBean;
-import com.haoxi.dove.newin.bean.OurFabBean;
 import com.haoxi.dove.retrofit.DataLoadType;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
@@ -69,12 +69,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * Created by Administrator on 2017\6\21 0021.
- */
-
 @ActivityFragmentInject(contentViewId = R.layout.activity_circle_each)
-public class EarchCircleActivity extends BaseActivity implements IMyCommentView<OurCommentBean>,IMyCircleView<EachCircleBean>,IFabView<OurFabBean>,View.OnClickListener, OnHolder2Listener<InnerComment,CommentHolder>,MyItemClickListener, OnRefreshListener {
+public class EarchCircleActivity extends BaseActivity implements IMyCommentView<OurCommentBean>,IEachView<EachCircleBean>,View.OnClickListener, OnHolder2Listener<InnerComment,CommentHolder>,MyItemClickListener, OnRefreshListener {
 
     private static final String TAG = "EarchCircleActivity";
 
@@ -147,14 +143,10 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     OurCodePresenter ourCodePresenter;
 
     @Inject
-    FabPresenter fabPresenter;
-
-    @Inject
     RxBus mRxBus;
 
     private Dialog mDialogEt;
 
-    private ActionBar actionBar;
     private InnerCircleBean innerCircleBean;
 
     private int likeCount = 0;
@@ -166,7 +158,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     private int methodType = MethodType.METHOD_TYPE_GET_COMMENT;
 
     private int PAGENUM = 1;
-    private int PAGESIZE = 10;
 
     private String circleid = "";
     private String friendid = "";
@@ -216,10 +207,8 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
                 break;
             case MethodType.METHOD_TYPE_ADD_FAB:
             case MethodType.METHOD_TYPE_REMOVE_FAB:
-
                 methodType = MethodType.METHOD_TYPE_CIRCLE_DETAIL;
                 eachCirclePresenter.getDataFromNets(getParaMap());
-
                 break;
         }
     }
@@ -238,17 +227,20 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     protected void init() {
 
         linearLayout.setVisibility(View.GONE);
-
         setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.mipmap.back_press);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.mipmap.back_press);
+        }
         Intent intent = getIntent();
         if (intent != null) {
             innerCircleBean = intent.getParcelableExtra("innerCircleBean");
             circleTag = intent.getIntExtra("circle_tag",0);
             if (innerCircleBean != null) {
-                actionBar.setTitle(innerCircleBean.getUsername());
+                if (actionBar != null) {
+                    actionBar.setTitle(innerCircleBean.getUsername());
+                }
                 likeCount = innerCircleBean.getFab_count();
                 transCount = innerCircleBean.getShare_count();
                 circleid = innerCircleBean.getCircleid();
@@ -300,27 +292,19 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-                //在 newState为滑到底部时
                 if (newState == RecyclerView.SCROLL_STATE_IDLE){
-                    //如果没有隐藏 footview ，那么最后一个条目的位置就比我们的getItemCount 少 1，
-
-                    if (myLmAdapter.isFadeTips() == false && lastVisibleItem + 1 == myLmAdapter.getItemCount()){
+                    if (!myLmAdapter.isFadeTips() && lastVisibleItem + 1 == myLmAdapter.getItemCount()){
                         mHandler.postDelayed(new Runnable() {
                             @Override
-                            public void run() {
-                                //然后调用 加载更多更新recyclerview
-                                updateRecyclerView();
+                            public void run() {updateRecyclerView();
                             }
                         },500);
                     }
 
-                    //如果隐藏了提示条，但是又是上拉加载时，那么最后一个条目就要比 getItemCount  少 2
-                    if (myLmAdapter.isFadeTips() == true && lastVisibleItem + 2 == myLmAdapter.getItemCount()){
+                    if (myLmAdapter.isFadeTips() && lastVisibleItem + 2 == myLmAdapter.getItemCount()){
                         mHandler.postDelayed(new Runnable() {
                             @Override
-                            public void run() {
-                                //然后调用 加载更多更新recyclerview
-                                updateRecyclerView();
+                            public void run() {updateRecyclerView();
                             }
                         },500);
                     }
@@ -345,19 +329,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
         String method ="";
 
         switch (methodType){
-            case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
-                //取消关注好友
-                method = "/app/attention/remove";
-                break;
-            case MethodType.METHOD_TYPE_ADD_ATTENTION:
-                //关注好友
-                method = "/app/attention/add";
-                break;
-
-            case MethodType.METHOD_TYPE_DELETE_SINGEL:
-                //删除指定朋友圈消息
-                method = "/app/circle/delete_single";
-                break;
             case MethodType.METHOD_TYPE_GET_COMMENT:
                 method = "/app/circle_comment/get_comment";
                 break;
@@ -375,9 +346,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
                 break;
             case MethodType.METHOD_TYPE_ADD_REPLY:
                 method = "/app/circle_comment/add_reply";
-                break;
-            case MethodType.METHOD_TYPE_GET_FAB:
-                method =  "/app/circle_fab/get_fab";
                 break;
             case MethodType.METHOD_TYPE_CIRCLE_DETAIL:
                 method = "/app/circle/get_circle_detail";
@@ -509,8 +477,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
                 mContentTv.setText(innerCircleBean.getContent());
             }
 
-//            Log.e("fadfebdqqqqqq",innerCircleBean.getPics().size()+"-------");
-
             if (innerCircleBean.getPics() != null && innerCircleBean.getPics().size() != 0){
 
                 final ArrayList<String> selectedPhotos = new ArrayList<>();
@@ -565,91 +531,56 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     @Override
     protected void onResume() {
         super.onResume();
-
         PAGENUM = 1;
         methodType = MethodType.METHOD_TYPE_GET_COMMENT;
         innerCommentPresenter.refreshFromNets(getParaMap());
-
-        getFabData();
-
-    }
-
-    private void getFabData() {
-        methodType = MethodType.METHOD_TYPE_GET_FAB;
-        fabPresenter.getDataFromNets(getParaMap());
     }
 
     public Map<String,String> getParaMap(){
 
         Map<String,String> map = new HashMap<>();
 
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("userid",getUserObJId());
-        map.put("token",getToken());
+        map.put(MethodParams.PARAMS_METHOD,getMethod());
+        map.put(MethodParams.PARAMS_SIGEN,getSign());
+        map.put(MethodParams.PARAMS_TIME,getTime());
+        map.put(MethodParams.PARAMS_VERSION,getVersion());
+        map.put(MethodParams.PARAMS_USER_OBJ,mUserObjId);
+        map.put(MethodParams.PARAMS_TOKEN,mToken);
 
         switch (methodType){
-            case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
-                map.put("friendid","");
-                break;
-            case MethodType.METHOD_TYPE_SINGLE_CIRCLES:
-                map.put("friendid",getUserObJId());
-                map.put("cp",String.valueOf(PAGENUM));
-                map.put("ps",String.valueOf(PAGESIZE));
-                break;
-            case MethodType.METHOD_TYPE_ADD_ATTENTION:
-                map.put("friendid",getFriendId());
-                break;
-            case MethodType.METHOD_TYPE_DELETE_SINGEL:
-            case MethodType.METHOD_TYPE_GET_FAB:
-                map.put("circleid",circleid);
-                break;
             case MethodType.METHOD_TYPE_CIRCLE_DETAIL:
-                map.put("circleid",circleid);
-                map.put("playerid",getUserObJId());
-                break;
-
             case MethodType.METHOD_TYPE_ADD_FAB:
             case MethodType.METHOD_TYPE_REMOVE_FAB:
-
-                map.put("circleid",circleid);
+                map.put(MethodParams.PARAMS_CIRCLE_ID,circleid);
                 break;
             case MethodType.METHOD_TYPE_GET_COMMENT:
-                map.put("circleid",circleid);
-                map.put("cp",String.valueOf(PAGENUM));
-                map.put("ps",String.valueOf(PAGESIZE));
+                map.put(MethodParams.PARAMS_CIRCLE_ID,circleid);
+                map.put(MethodParams.PARAMS_CP,String.valueOf(PAGENUM));
+                map.put(MethodParams.PARAMS_PS,String.valueOf(10));
                 break;
 
             case MethodType.METHOD_TYPE_ADD_COMMENT:
-                map.put("circleid",circleid);
-                map.put("content",commentContent);
+                map.put(MethodParams.PARAMS_CIRCLE_ID,circleid);
+                map.put(MethodParams.PARAMS_CONTENT,commentContent);
                 break;
             case MethodType.METHOD_TYPE_REMOVE_COMMENT:
-                map.put("commentid",commentid);
+                map.put(MethodParams.PARAMS_COMMENT_ID,commentid);
                 break;
             case MethodType.METHOD_TYPE_ADD_REPLY:
-                map.put("commentid",commentid);
-                map.put("content",commentContent);
-                map.put("circleid",circleid);
+                map.put(MethodParams.PARAMS_COMMENT_ID,commentid);
+                map.put(MethodParams.PARAMS_CONTENT,commentContent);
+                map.put(MethodParams.PARAMS_CIRCLE_ID,circleid);
                 break;
         }
 
         Log.e(TAG,map.toString()+"----"+TAG);
-        Log.e("OurCommentBean",map.toString()+"-----reply");
-
         return map;
     }
 
-    private String getFriendId(){
-        return "";
-    }
-
     private void changeRxBus(){
-        mRxBus.post("load_circle",0);
-        mRxBus.post("load_circle",1);
-        mRxBus.post("load_circle",2);
+//        mRxBus.post("load_circle",0);
+//        mRxBus.post("load_circle",1);
+//        mRxBus.post("load_circle",2);
     }
 
     @Override
@@ -741,7 +672,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
             holder.mTimeTv.setText(data.getCreate_time());
         }
 
-//        String headpic = "http://118.178.227.194:8087/";
         String headpic = ConstantUtils.HEADPIC;
         if (data.getHeadpic() != null && !"".equals(data.getHeadpic()) && !"-1".equals(data.getHeadpic())){
             if (data.getHeadpic().startsWith("http")){
@@ -775,9 +705,9 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
         InnerComment innerComment = innerComments.get(position);
 
         Log.e("innerComment",innerComment.getContent() +"----"+innerComment.getReply());
-        Log.e("innerComment",getUserObJId()+"-------"+circleUserId);
+        Log.e("innerComment",mUserObjId+"-------"+circleUserId);
 
-        if (getUserObJId().equals(circleUserId)){
+        if (mUserObjId.equals(circleUserId)){
             // 如果是自己朋友圈中的评论或者回复，可进行 回复或者删除操作，否则只能进行回复或评论
             showDownDialog(innerComment);
 
@@ -788,7 +718,7 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     }
 
     @Override
-    public void updateCircleList(EachCircleBean data, String errorMsg, @DataLoadType.DataLoadTypeChecker int type) {
+    public void toUpdateEach(EachCircleBean data) {
 
         if (data.getData() != null) {
             InnerCircleBean innerCircleBean = data.getData();
@@ -823,25 +753,9 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
         }
     }
 
-    @Override
-    public void setRefrash(boolean refrash) {
-
-    }
-
-    @Override
-    public String getUserObJId() {
-        return mUserObjId;
-    }
-
-    @Override
-    public String getToken() {
-        return mToken;
-    }
-
     public void showMyDialog(final boolean isReply, InnerComment innerComment) {
 
         mDialogEt = new Dialog(this, R.style.DialogTheme);
-//        mDialogEt.setCancelable(false);
 
         View view = getLayoutInflater().inflate(R.layout.comment_dialog, null);
         final EditText mEtDialog = (EditText) view.findViewById(R.id.pigeon_name_dialog_et);
@@ -999,46 +913,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     }
 
     @Override
-    public void updateFabList(OurFabBean data, String errorMsg, int type) {
-
-        if (data.getData() != null) {
-            fabSize = data.getData().size();
-
-
-            if (fabSize == 0){
-                iHasFab = false;
-                Drawable likeLift = getResources().getDrawable(R.mipmap.dislike);
-                likeLift.setBounds(0, 0, likeLift.getMinimumWidth(), likeLift.getMinimumHeight());
-                mLikeBtn.setCompoundDrawables(likeLift, null, null, null);
-            }
-
-            for (int i = 0; i < fabSize; i++) {
-                if (getUserObJId().equals(data.getData().get(i).getUserid())){
-                    iHasFab = true;
-                    Drawable likeLift = getResources().getDrawable(R.mipmap.like);
-                    likeLift.setBounds(0, 0, likeLift.getMinimumWidth(), likeLift.getMinimumHeight());
-                    mLikeBtn.setCompoundDrawables(likeLift, null, null, null);
-                    break;
-                }else {
-                    iHasFab = false;
-                    Drawable likeLift = getResources().getDrawable(R.mipmap.dislike);
-                    likeLift.setBounds(0, 0, likeLift.getMinimumWidth(), likeLift.getMinimumHeight());
-                    mLikeBtn.setCompoundDrawables(likeLift, null, null, null);
-                }
-            }
-            if (fabSize != likeCount){
-                likeCount = fabSize;
-                mLikeFabTv.setText(fabSize == 0?"赞":"赞 "+fabSize);
-
-                innerCircleBean.setHas_fab(iHasFab);
-                innerCircleBean.setFab_count(fabSize);
-                MyApplication.getDaoSession().getInnerCircleBeanDao().updateInTx(innerCircleBean);
-                changeRxBus();
-            }
-        }
-    }
-
-    @Override
     public void updateCommentList(OurCommentBean data, String errorMsg, @DataLoadType.DataLoadTypeChecker int type) {
 
         if (refreshLayout.isRefreshing()){
@@ -1101,11 +975,7 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     @Override
     public void onRefresh(RefreshLayout refreshLayout) {
         if (!ApiUtils.isNetworkConnected(this)) {
-
-            Log.e(TAG,"------onRefresh");
-//            mPresenter.getDatas();
         } else {
-
             methodType = MethodType.METHOD_TYPE_GET_COMMENT;
             PAGENUM = 1;
             innerCommentPresenter.refreshFromNets(getParaMap());

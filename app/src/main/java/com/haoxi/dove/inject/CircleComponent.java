@@ -2,6 +2,8 @@ package com.haoxi.dove.inject;
 
 import com.haoxi.dove.inject.scopes.PerFragment;
 import com.haoxi.dove.modules.circle.AllCircleFragment;
+import com.haoxi.dove.modules.circle.FriendCircleFragment;
+import com.haoxi.dove.modules.circle.MyCircleFragment;
 import com.haoxi.dove.newin.ourcircle.ui.CircleFragment;
 
 import dagger.Component;
@@ -14,4 +16,6 @@ import dagger.Component;
 public interface CircleComponent {
     void inject(CircleFragment circleFragment);
     void inject(AllCircleFragment allCircleFragment);
+    void inject(FriendCircleFragment allCircleFragment);
+    void inject(MyCircleFragment allCircleFragment);
 }

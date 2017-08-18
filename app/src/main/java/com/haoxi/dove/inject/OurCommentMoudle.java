@@ -46,10 +46,5 @@ public class OurCommentMoudle {
         return new OurCodePresenter(mView);
     }
 
-    @PerFragment
-    @Provides
-    public FabPresenter providePresenter(){
-        return new FabPresenter(mView);
-    }
 
 }

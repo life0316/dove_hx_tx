@@ -21,6 +21,7 @@ import com.haoxi.dove.utils.SpConstant;
 import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.utils.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import butterknife.ButterKnife;

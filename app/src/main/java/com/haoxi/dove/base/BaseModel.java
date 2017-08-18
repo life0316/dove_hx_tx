@@ -12,10 +12,9 @@ import retrofit2.Retrofit;
 public class BaseModel {
 
     public RetrofitManager retrofitManager;
-//    protected final Retrofit retrofit;
+    protected final Retrofit retrofit;
+    protected IOurNewService adNewService;
 //
-//    protected final Retrofit retrofit2;
-
     protected IOurNewService ourNewService;
     protected IOurNewService ourNewService2;
 
@@ -27,15 +26,14 @@ public class BaseModel {
         //初始化 retrofit
         retrofitManager = RetrofitManager.builder();
 
-//        retrofit = retrofitManager.getRetrofit();
+        retrofit = retrofitManager.getAdRetrofit();
+        adNewService = retrofitManager.getAdNewService();
 
         outRetrofit = retrofitManager.getOurRetrofit();
         outRetrofit2 = retrofitManager.getOurRetrofit();
 
         ourNewService = retrofitManager.getOurNewService();
         ourNewService2 = retrofitManager.getOurNewService2();
-
-//        retrofit2 = retrofitManager.getRetrofit2();
 
     }
 }

@@ -16,7 +16,16 @@
         <ImageView
             android:id="@+id/ad_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            />
+        <Button
+            android:id="@+id/ad_btn"
+            android:layout_width="@dimen/x200"
+            android:layout_height="@dimen/x100"
+            android:text="跳过广告"
+            android:layout_gravity="right"
+            android:visibility="visible"
+            />
     </FrameLayout>
 
     <LinearLayout

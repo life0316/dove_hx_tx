@@ -16,7 +16,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -42,7 +41,6 @@ import com.haoxi.dove.newin.ourcircle.ui.TransCircleActivity;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.retrofit.DataLoadType;
 import com.haoxi.dove.retrofit.MethodConstant;
-import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
@@ -67,9 +65,9 @@ import butterknife.BindView;
 import rx.Observable;
 import rx.functions.Action1;
 
-public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<CircleBean>,OnRefreshListener, OnLoadmoreListener, OnHolder2Listener, MyItemClickListener {
+public class FriendCircleFragment extends BaseSrFragment implements IMyCircleView<CircleBean>,OnRefreshListener, OnLoadmoreListener, OnHolder2Listener, MyItemClickListener {
 
-    private int methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
+    private int methodType = MethodType.METHOD_TYPE_FRIENDS_CIRCLES;
 
     private int PAGENUM = 1;  //查询起始下标，默认为0
     private int PAGESIZE = 10;//每页返回的数据，默认10
@@ -210,7 +208,6 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
     @Override
     public void setRefrash(boolean refrash) {
         refreshLayout.finishRefresh(refrash);
-        refreshLayout.finishLoadmore(refrash);
     }
 
     @Override
@@ -286,7 +283,7 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
             @Override
             public boolean onAdLoaded(NativeResource nativeResource) {
                 Log.d("Inapp","onAdLoaded " + nativeResource);
-                AllCircleFragment.this.nativeResource = nativeResource;
+                FriendCircleFragment.this.nativeResource = nativeResource;
                 List<NativeResource> list = new ArrayList<>();
                 list.add(nativeResource);
                 adCircleAdapter.updateAdList(list);
@@ -366,8 +363,8 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
     public String getMethod() {
         String method ="";
         switch (methodType){
-            case MethodType.METHOD_TYPE_ALL_CIRCLES:
-                method = MethodConstant.GET_ALL_CIRCLES;
+            case MethodType.METHOD_TYPE_FRIENDS_CIRCLES:
+                method = MethodConstant.GET_FRIENDS_CIRCLES;
                 break;
             case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
                 //取消关注好友
@@ -395,35 +392,32 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
 
     public Map<String,String> getParaMap(){
         Map<String,String> map = new HashMap<>();
-        map.put(MethodParams.PARAMS_METHOD,getMethod());
-        map.put(MethodParams.PARAMS_SIGEN,getSign());
-        map.put(MethodParams.PARAMS_TIME,getTime());
-        map.put(MethodParams.PARAMS_VERSION,getVersion());
-        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
-        map.put(MethodParams.PARAMS_TOKEN,getToken());
+        map.put("method",getMethod());
+        map.put("sign",getSign());
+        map.put("time",getTime());
+        map.put("version",getVersion());
+        map.put("userid",getUserObjId());
+        map.put("token",getToken());
 
         switch (methodType){
             case MethodType.METHOD_TYPE_ADD_ATTENTION:
             case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
-                map.put(MethodParams.PARAMS_FRIEND_ID,friendId);
+                map.put("friendid",friendId);
                 break;
-            case MethodType.METHOD_TYPE_ALL_CIRCLES:
-                map.put(MethodParams.PARAMS_CP,String.valueOf(PAGENUM));
-                map.put(MethodParams.PARAMS_PS,String.valueOf(PAGESIZE));
+            case MethodType.METHOD_TYPE_FRIENDS_CIRCLES:
+                map.put("cp",String.valueOf(PAGENUM));
+                map.put("ps",String.valueOf(PAGESIZE));
                 break;
             case MethodType.METHOD_TYPE_SHARE_CIRCLE:
             case MethodType.METHOD_TYPE_ADD_FAB:
             case MethodType.METHOD_TYPE_REMOVE_FAB:
-                map.put(MethodParams.PARAMS_CIRCLE_ID,circleid);
+                map.put("circleid",circleid);
                 break;
             case MethodType.METHOD_TYPE_ADD_COMMENT:
-                map.put(MethodParams.PARAMS_CIRCLE_ID,circleid);
-                map.put(MethodParams.PARAMS_CONTENT,commentContent);
+                map.put("circleid",circleid);
+                map.put("content",commentContent);
                 break;
         }
-
-        Log.e("faaafee",map.toString());
-
         return map;
     }
 
@@ -434,13 +428,20 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
             this.innerCircleBean = (InnerCircleBean) data;
             final InnerCircleBean curData = (InnerCircleBean) data;
 
+            //转发的
+
             if (curData.getTrans_userid() != null && !"".equals(curData.getTrans_userid()) && !"-1".equals(curData.getTrans_userid())) {
                 ((AdCircleAdapter.MyRefrashHolder)holder).transpondFl.setVisibility(View.VISIBLE);
+
                 ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.setVisibility(View.GONE);
+
                 if (!TextUtils.isEmpty(curData.getContent()) && !"".equals(curData.getContent())){
+
                     String content = curData.getContent();
+
                     String[] contents = content.split("#");
                     ((AdCircleAdapter.MyRefrashHolder)holder).mTranContentTv.setText(contents[contents.length - 1]);
+
                     Log.e("mTranContentTv",content+"--------"+curData.getUsername()+"--------"+curData.getTrans_name());
 
                     if (content.lastIndexOf("#") != -1) {
@@ -524,7 +525,9 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
                     photoAdapter.setMyItemClickListener(new MyItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
+
                             isLoad = false;
+
                             MyPhotoPreview.builder()
                                     .setPhotos(selectedPhotos)
                                     .setCurrentItem(position)
