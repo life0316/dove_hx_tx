@@ -33,7 +33,9 @@ import com.haoxi.dove.callback.OnHolder2Listener;
 import com.haoxi.dove.inject.CircleMoudle;
 import com.haoxi.dove.inject.DaggerCircleComponent;
 import com.haoxi.dove.newin.bean.CircleBean;
+import com.haoxi.dove.newin.bean.EachCircleBean;
 import com.haoxi.dove.newin.bean.InnerCircleBean;
+import com.haoxi.dove.newin.ourcircle.presenter.EachCirclePresenter;
 import com.haoxi.dove.newin.ourcircle.presenter.InnerCirclePresenter;
 import com.haoxi.dove.newin.ourcircle.ui.CircleDetialActivity;
 import com.haoxi.dove.newin.ourcircle.ui.EarchCircleActivity;
@@ -67,7 +69,7 @@ import butterknife.BindView;
 import rx.Observable;
 import rx.functions.Action1;
 
-public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<CircleBean>,OnRefreshListener, OnLoadmoreListener, OnHolder2Listener, MyItemClickListener {
+public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<CircleBean>,OnRefreshListener, OnLoadmoreListener, OnHolder2Listener, MyItemClickListener, IEachView<EachCircleBean> {
 
     private int methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
 
@@ -103,56 +105,60 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
     @Inject
     RxBus mRxBus;
 
+
+    EachCirclePresenter eachCirclePresenter;
+
     AdCircleAdapter adCircleAdapter;
     private Observable<Integer> netObservale;
-    private Observable<Boolean> isLoadObervable;
-    private Observable<Boolean> isUpdateObervable;
+//    private Observable<Boolean> isUpdateObervable;
     private NativeResource nativeResource;
+    private boolean isLoadMore = false;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        isLoadObervable = mRxBus.register("isLoad", Boolean.class);
-        isUpdateObervable = mRxBus.register("update", Boolean.class);
+//        isUpdateObervable = mRxBus.register("update", Boolean.class);
         netObservale = mRxBus.register("load_circle", Integer.class);
+        netObservale.subscribe(new Action1<Integer>() {
+            @Override
+            public void call(Integer integer) {
+                if (integer == 0 ){
+                    adCircleAdapter.getDatas().remove(currentPosition);
+                    methodType = MethodType.METHOD_TYPE_CIRCLE_DETAIL;
+                    eachCirclePresenter.getDataFromNets(getParaMap());
+                }
+            }
+        });
 
-        initObservale();
+//        initObservale();
     }
 
     private void initObservale() {
 
-        isLoadObervable.subscribe(new Action1<Boolean>() {
-            @Override
-            public void call(Boolean aBoolean) {
-                isLoad = aBoolean;
-            }
-        });
-        isUpdateObervable.subscribe(new Action1<Boolean>() {
-            @Override
-            public void call(Boolean aBoolean) {
-                if (aBoolean) {
-                    mRxBus.post("load_circle",0);
-                    mRxBus.post("load_circle",1);
-                }
-            }
-        });
-
-        netObservale.subscribe(new Action1<Integer>() {
-            @Override
-            public void call(Integer integer) {
-                if (integer == 0) {
-                    isDao = true;
-                    innerCirclePresenter.getDatasFromDao(getUserObJId(), getUserObJId(), true, 0);
-                }
-            }
-        });
+//        isUpdateObervable.subscribe(new Action1<Boolean>() {
+//            @Override
+//            public void call(Boolean aBoolean) {
+//                if (aBoolean) {
+//                    mRxBus.post("load_circle",1);
+//                }
+//            }
+//        });
+//
+//        netObservale.subscribe(new Action1<Integer>() {
+//            @Override
+//            public void call(Integer integer) {
+//                if (integer == 0) {
+//                }
+//            }
+//        });
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        eachCirclePresenter = new EachCirclePresenter(this);
 
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadmoreListener(this);
@@ -189,6 +195,9 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
                         PAGENUM += 1;
                         pageNumMap.put("all",PAGENUM);
                     }
+
+                    isLoadMore = true;
+                    nativeAd.loadAd("429");
                     adCircleAdapter.addData(data.getData());
                     innerCircleBeans.addAll(data.getData());
                 }
@@ -218,51 +227,26 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
 
         if (adCircleAdapter.getItem(currentPosition) instanceof InnerCircleBean){
 
-            InnerCircleBean innerCircleBean = (InnerCircleBean) adCircleAdapter.getItem(currentPosition);
             switch (methodType){
                 case MethodType.METHOD_TYPE_ADD_ATTENTION:
-                    innerCirclePresenter.updateCircleBy(getUserObJId(),innerCircleBean.getUserid(),true);
-                    break;
                 case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
-                    innerCirclePresenter.updateCircleBy(getUserObJId(),innerCircleBean.getUserid(),false);
+                    mRxBus.post("isLoadF",true);
                     break;
                 case MethodType.METHOD_TYPE_ADD_FAB:
-
-                    Log.e("faamap99999","点赞-------"+ innerCircleBean.getCircleid());
-                    Log.e("faamap99999","id---1----"+ innerCircleBean.getId());
-
-//                    innerCircleBean.setHas_fab(true);
-                    innerCircleBean.setFab_count(innerCircleBean.getFab_count() + 10);
-
-                    innerCirclePresenter.updateCircle(innerCircleBean);
-                    adCircleAdapter.getDatas().remove(currentPosition);
-                    adCircleAdapter.getDatas().add(currentPosition,innerCircleBean);
-                    adCircleAdapter.notifyDataSetChanged();
-
-                    //loadCircle();
-
-                    break;
                 case MethodType.METHOD_TYPE_REMOVE_FAB:
-
-                    innerCircleBean.setHas_fab(false);
-                    innerCircleBean.setFab_count(innerCircleBean.getFab_count() - 1);
-                    innerCirclePresenter.updateCircle(innerCircleBean);
-                    loadCircle();
-                    break;
-
                 case MethodType.METHOD_TYPE_ADD_COMMENT:
-                    innerCircleBean.setComment_count(innerCircleBean.getComment_count() + 1);
-                    innerCirclePresenter.updateCircle(innerCircleBean);
-                    loadCircle();
+                    adCircleAdapter.getDatas().remove(currentPosition);
+                    methodType = MethodType.METHOD_TYPE_CIRCLE_DETAIL;
+                    eachCirclePresenter.getDataFromNets(getParaMap());
                     break;
             }
         }
     }
 
     private void loadCircle(){
-        mRxBus.post("load_circle",0);
-        mRxBus.post("load_circle",1);
-        mRxBus.post("load_circle",2);
+//        mRxBus.post("load_circle",0);
+//        mRxBus.post("load_circle",1);
+//        mRxBus.post("load_circle",2);
     }
 
 
@@ -280,6 +264,8 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
         isLoad = false;
     }
 
+    private  List<NativeResource> list = new ArrayList<>();
+
     private void getAdDatas() {
 
         nativeAd = new HmNativeAd(getActivity(), new AdNativeLoadListener() {
@@ -287,12 +273,15 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
             public boolean onAdLoaded(NativeResource nativeResource) {
                 Log.d("Inapp","onAdLoaded " + nativeResource);
                 AllCircleFragment.this.nativeResource = nativeResource;
-                List<NativeResource> list = new ArrayList<>();
-                list.add(nativeResource);
+                methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
+                if (isLoadMore){
+                    list.add(nativeResource);
+                }else {
+                    list.clear();
+                    list.add(nativeResource);
+                }
                 adCircleAdapter.updateAdList(list);
-
                 adCircleAdapter.notifyDataSetChanged();
-
                 return false;
             }
 
@@ -334,13 +323,12 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
         }
         pageNumMap.put("all",PAGENUM);
         methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
+
         innerCirclePresenter.loadMoreData(getParaMap(),0);
     }
 
     public void getDatas() {
         if (!ApiUtils.isNetworkConnected(getActivity())) {
-            isDao = true;
-            innerCirclePresenter.getDatasFromDao(getUserObJId(),getUserObJId(),true,tag);
         } else {
             isDao = false;
             innerCirclePresenter.refreshFromNets(getParaMap(),tag);
@@ -356,8 +344,12 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
             PAGENUM = 1;
             pageNumMap.put("all",PAGENUM);
             isDao = false;
+
+            isLoadMore = false;
+
             //下拉刷新
             methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
+            nativeAd.loadAd("429");
             innerCirclePresenter.refreshFromNets(getParaMap(),0);
         }
     }
@@ -389,6 +381,9 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
             case MethodType.METHOD_TYPE_SHARE_CIRCLE:
                 method = MethodConstant.SHARE_CIRCLE;
                 break;
+            case MethodType.METHOD_TYPE_CIRCLE_DETAIL:
+                method = MethodConstant.GET_CIRCLE_DETAIL;
+                break;
         }
         return method;
     }
@@ -414,6 +409,7 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
             case MethodType.METHOD_TYPE_SHARE_CIRCLE:
             case MethodType.METHOD_TYPE_ADD_FAB:
             case MethodType.METHOD_TYPE_REMOVE_FAB:
+            case  MethodType.METHOD_TYPE_CIRCLE_DETAIL:
                 map.put(MethodParams.PARAMS_CIRCLE_ID,circleid);
                 break;
             case MethodType.METHOD_TYPE_ADD_COMMENT:
@@ -429,7 +425,7 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void toInitHolder(final RecyclerView.ViewHolder holder, final int position, Object data) {
+    public void toInitHolder(final RecyclerView.ViewHolder holder, final int position, final Object data) {
         if (data instanceof InnerCircleBean){
             this.innerCircleBean = (InnerCircleBean) data;
             final InnerCircleBean curData = (InnerCircleBean) data;
@@ -712,11 +708,11 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
 
             ((AdCircleAdapter.AdHolder)holder).content.setText( ((NativeResource)data).getTextForLabel("title"));
                 NativeResource.Img img =  ((NativeResource)data).getImgForLabel("ad");
-
+            ((NativeResource)data).onExposured(((AdCircleAdapter.AdHolder)holder).adImage);
             ((AdCircleAdapter.AdHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        nativeResource.onClick(((AdCircleAdapter.AdHolder)holder).adImage);
+                        ((NativeResource)data).onClick(((AdCircleAdapter.AdHolder)holder).adImage);
                     }
                 });
                 if(img != null){
@@ -733,18 +729,23 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mRxBus.unregister("isLoad", isLoadObervable);
         mRxBus.unregister("load_circle", netObservale);
-        mRxBus.unregister("update", isUpdateObervable);
+//        mRxBus.unregister("update", isUpdateObervable);
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        currentPosition = position;
-        if (innerCircleBeans.get(position) != null) {
+
+
+        int curPost = position >= 1? position - (adCircleAdapter.getAdDatas().size() / 10 + adCircleAdapter.getAdDatas().size()):position;
+        currentPosition = curPost;
+        if (innerCircleBeans.get(curPost) != null) {
+
+            circleid = innerCircleBeans.get(curPost).getCircleid();
             Intent intent = new Intent(getActivity(),EarchCircleActivity.class);
-            intent.putExtra("innerCircleBean",innerCircleBeans.get(position));
+            intent.putExtra("innerCircleBean",innerCircleBeans.get(curPost));
             intent.putExtra("circle_tag",tag);
+            intent.putExtra("circle_cur", currentPosition);
             startActivity(intent);
         }
     }
@@ -818,4 +819,16 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
             }
         }
     };
+
+    @Override
+    public void toUpdateEach(EachCircleBean data) {
+        InnerCircleBean circleBean = innerCircleBeans.get(currentPosition);
+        circleBean.setComment_count(data.getData().getComment_count());
+        circleBean.setFab_count(data.getData().getFab_count());
+        circleBean.setShare_count(data.getData().getShare_count());
+        circleBean.setHas_fab(data.getData().getHas_fab());
+
+        adCircleAdapter.getDatas().add(currentPosition,circleBean);
+        adCircleAdapter.notifyDataSetChanged();
+    }
 }

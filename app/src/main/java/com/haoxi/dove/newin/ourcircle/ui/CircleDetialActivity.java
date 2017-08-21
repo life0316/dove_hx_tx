@@ -41,6 +41,11 @@ import com.haoxi.dove.callback.OnHolder2Listener;
 import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.inject.CircleDetialMoudle;
 import com.haoxi.dove.inject.DaggerCircleDetialComponent;
+import com.haoxi.dove.modules.circle.CircleAdapter;
+import com.haoxi.dove.modules.circle.IEachView;
+import com.haoxi.dove.newin.bean.EachCircleBean;
+import com.haoxi.dove.newin.ourcircle.presenter.EachCirclePresenter;
+import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.bean.InnerCircleBean;
 import com.haoxi.dove.newin.ourcircle.presenter.InnerCirclePresenter;
@@ -51,6 +56,10 @@ import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.widget.MyPhotoPreview;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,12 +70,14 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * Created by Administrator on 2017\6\20 0020.
  */
 @ActivityFragmentInject(contentViewId = R.layout.activity_circle_detial)
-public class CircleDetialActivity extends BaseActivity implements IMyCircleView<CircleBean>,AppBarLayout.OnOffsetChangedListener, OnHolder2Listener<InnerCircleBean,MyLmAdapter.MyRefrashHolder>, MyItemClickListener {
+public class CircleDetialActivity extends BaseActivity implements IEachView<EachCircleBean>, IMyCircleView<CircleBean>,AppBarLayout.OnOffsetChangedListener, OnHolder2Listener<InnerCircleBean,CircleAdapter.MyRefrashHolder>, MyItemClickListener, OnRefreshListener, OnLoadmoreListener {
 
     private static final String TAG = "CircleDetialActivity";
 
@@ -86,9 +97,11 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
     @BindView(R.id.user_name_tv)
     TextView mUserNameIv;
 
-
     @BindView(R.id.act_circle_rv)
     RecyclerView recyclerView;
+
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
 
     @BindView(R.id.appbar)
     AppBarLayout appBarLayout;
@@ -98,6 +111,7 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
     @Inject
     OurCodePresenter ourCodePresenter;
+    EachCirclePresenter eachCirclePresenter;
 
     @Inject
     RxBus mRxBus;
@@ -116,7 +130,7 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
     private Handler mHandler = new Handler();
 
-    MyLmAdapter myLmAdapter;
+    CircleAdapter myLmAdapter;
 
     CirclePhotoAdapter photoAdapter;
     private InnerCircleBean innerCircleBean;
@@ -129,52 +143,31 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
     private String cirUserid = "";
     private String name;
+    private Observable<Integer> netObservale;
+    private boolean isLoad = true;
 
 
     @Override
     public void toDo() {
 
-        InnerCircleBean innerCircleBean = (InnerCircleBean) myLmAdapter.getItem(currentPosition);
+//        InnerCircleBean innerCircleBean = (InnerCircleBean) myLmAdapter.getItem(currentPosition);
 
         switch (methodType){
             case MethodType.METHOD_TYPE_DELETE_ALL:
 
-                innerCirclePresenter.deleteCircleBy(getUserObJId(),getUserObJId());
-
-                methodType = MethodType.METHOD_TYPE_SINGLE_CIRCLES;
-                innerCirclePresenter.getDatasFromNets(getParaMap(),2);
-                loadCircle();
+//                innerCirclePresenter.deleteCircleBy(getUserObJId(),getUserObJId());
+//
+//                methodType = MethodType.METHOD_TYPE_SINGLE_CIRCLES;
+//                innerCirclePresenter.getDatasFromNets(getParaMap(),2);
+//                loadCircle();
                 break;
 
             case MethodType.METHOD_TYPE_ADD_FAB:
-
-                innerCircleBean.setFab_count(innerCircleBean.getFab_count() + 1);
-                innerCircleBean.setHas_fab(true);
-                innerCirclePresenter.updateCircle(innerCircleBean);
-
-                loadCircle();
-
-                innerCirclePresenter.getDatasFromDao(getUserObJId(),friendId,isFriend,2);
-
-                break;
             case MethodType.METHOD_TYPE_REMOVE_FAB:
-                innerCircleBean.setFab_count(innerCircleBean.getFab_count() - 1);
-                innerCircleBean.setHas_fab(false);
-                innerCirclePresenter.updateCircle(innerCircleBean);
-                loadCircle();
-
-                innerCirclePresenter.getDatasFromDao(getUserObJId(),friendId,isFriend,2);
-                break;
-
             case MethodType.METHOD_TYPE_ADD_COMMENT:
-                innerCircleBean.setComment_count(innerCircleBean.getComment_count() + 1);
-
-                innerCirclePresenter.updateCircle(innerCircleBean);
-
-                loadCircle();
-
-                innerCirclePresenter.getDatasFromDao(getUserObJId(),friendId,isFriend,2);
-
+                myLmAdapter.getDatas().remove(currentPosition);
+                methodType = MethodType.METHOD_TYPE_CIRCLE_DETAIL;
+                eachCirclePresenter.getDataFromNets(getParaMap());
                 break;
             case MethodType.METHOD_TYPE_DELETE_SINGEL:
 
@@ -182,19 +175,18 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
                 myLmAdapter.notifyItemRemoved(currentPosition);
                 myLmAdapter.notifyDataSetChanged();
 
-                innerCirclePresenter.deleteCircle(innerCircleBean);
-
-                mRxBus.post("load_circle",0);
-                mRxBus.post("load_circle",2);
+//                innerCirclePresenter.deleteCircle(innerCircleBean);
+//                mRxBus.post("load_circle",0);
+//                mRxBus.post("load_circle",2);
 
                 break;
         }
     }
 
     private void loadCircle(){
-        mRxBus.post("load_circle",0);
-        mRxBus.post("load_circle",1);
-        mRxBus.post("load_circle",2);
+//        mRxBus.post("load_circle",0);
+//        mRxBus.post("load_circle",1);
+//        mRxBus.post("load_circle",2);
     }
 
     @Override
@@ -203,35 +195,38 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
         switch (methodType){
             case MethodType.METHOD_TYPE_SINGLE_CIRCLES:
-                method = "/app/circle/get_single_friend_circles";
+                method = MethodConstant.GET_SINGLE_FRIEND_CIRCLES;
                 break;
             case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
                 //取消关注好友
-                method = "/app/attention/remove";
+                method = MethodConstant.ATTENTTION_REMOVE;
                 break;
             case MethodType.METHOD_TYPE_ADD_ATTENTION:
                 //关注好友
-                method = "/app/attention/add";
+                method = MethodConstant.ATTENTION_ADD;
                 break;
 
             case MethodType.METHOD_TYPE_DELETE_SINGEL:
                 //删除指定朋友圈所有消息
-                method = "/app/circle/delete_single";
+                method = MethodConstant.DELETE_SINGLE_CIRCLE;
                 break;
 
             case MethodType.METHOD_TYPE_DELETE_ALL:
                 //删除自己朋友圈所有消息
-                method = "/app/circle/delete_all";
+                method = MethodConstant.DELETE_ALL_CIRCLE;
                 break;
 
             case MethodType.METHOD_TYPE_ADD_FAB:
-                method = "/app/circle_fab/add_fab";
+                method = MethodConstant.ADD_FAB;
                 break;
             case MethodType.METHOD_TYPE_REMOVE_FAB:
-                method = "/app/circle_fab/remove_fab";
+                method = MethodConstant.REMOVE_FAB;
                 break;
             case MethodType.METHOD_TYPE_ADD_COMMENT:
-                method = "/app/circle_comment/add_comment";
+                method = MethodConstant.ADD_COMMENT;
+                break;
+            case MethodType.METHOD_TYPE_CIRCLE_DETAIL:
+                method = MethodConstant.GET_CIRCLE_DETAIL;
                 break;
         }
         return method;
@@ -249,6 +244,19 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
     @Override
     protected void init() {
+        netObservale = mRxBus.register("load_circle", Integer.class);
+        netObservale.subscribe(new Action1<Integer>() {
+            @Override
+            public void call(Integer integer) {
+                if (integer == 4 ){
+                    myLmAdapter.getDatas().remove(currentPosition);
+                    methodType = MethodType.METHOD_TYPE_CIRCLE_DETAIL;
+                    eachCirclePresenter.getDataFromNets(getParaMap());
+                }
+            }
+        });
+
+        eachCirclePresenter = new EachCirclePresenter(this);
 
         setSupportActionBar(mToolbar);
         actionBar = getSupportActionBar();
@@ -279,51 +287,55 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        myLmAdapter = new MyLmAdapter<InnerCircleBean>(this,true,0);
+        refreshLayout.setOnRefreshListener(this);
+        refreshLayout.setOnLoadmoreListener(this);
+
+
+        myLmAdapter = new CircleAdapter(this,0);
 
         recyclerView.setAdapter(myLmAdapter);
 
         myLmAdapter.setOnHolderListener(this);
         myLmAdapter.setMyItemClickListener(this);
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                //在 newState为滑到底部时
-                if (newState == RecyclerView.SCROLL_STATE_IDLE){
-                    //如果没有隐藏 footview ，那么最后一个条目的位置就比我们的getItemCount 少 1，
-
-                    if (myLmAdapter.isFadeTips() == false && lastVisibleItem + 1 == myLmAdapter.getItemCount()){
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                //然后调用 加载更多更新recyclerview
-                                updateRecyclerView();
-                            }
-                        },500);
-                    }
-
-                    //如果隐藏了提示条，但是又是上拉加载时，那么最后一个条目就要比 getItemCount  少 2
-                    if (myLmAdapter.isFadeTips() == true && lastVisibleItem + 2 == myLmAdapter.getItemCount()){
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                //然后调用 加载更多更新recyclerview
-                                updateRecyclerView();
-                            }
-                        },500);
-                    }
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-            }
-        });
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//
+//                //在 newState为滑到底部时
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE){
+//                    //如果没有隐藏 footview ，那么最后一个条目的位置就比我们的getItemCount 少 1，
+//
+//                    if (myLmAdapter.isFadeTips() == false && lastVisibleItem + 1 == myLmAdapter.getItemCount()){
+//                        mHandler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                //然后调用 加载更多更新recyclerview
+//                                updateRecyclerView();
+//                            }
+//                        },500);
+//                    }
+//
+//                    //如果隐藏了提示条，但是又是上拉加载时，那么最后一个条目就要比 getItemCount  少 2
+//                    if (myLmAdapter.isFadeTips() == true && lastVisibleItem + 2 == myLmAdapter.getItemCount()){
+//                        mHandler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                //然后调用 加载更多更新recyclerview
+//                                updateRecyclerView();
+//                            }
+//                        },500);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+//            }
+//        });
 
         mciv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -343,6 +355,13 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
     // 上拉加载时调用的更新RecyclerView的方法
     private void updateRecyclerView() {
 
+//        methodType = MethodType.METHOD_TYPE_SINGLE_CIRCLES;
+//        innerCirclePresenter.loadMoreData(getParaMap(),2);
+        if (innerCircleBeans.size() % 10 != 0) {
+            PAGENUM = innerCircleBeans.size() / 10 + 2;
+        }else {
+            PAGENUM = innerCircleBeans.size() / 10 + 1;
+        }
         methodType = MethodType.METHOD_TYPE_SINGLE_CIRCLES;
         innerCirclePresenter.loadMoreData(getParaMap(),2);
     }
@@ -394,10 +413,14 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
     protected void onResume() {
         super.onResume();
 
+        if (isLoad){
+            PAGENUM = 1;
+            methodType = MethodType.METHOD_TYPE_SINGLE_CIRCLES;
+            innerCirclePresenter.refreshFromNets(getParaMap(),2);
+            isLoad = false;
+        }
         appBarLayout.addOnOffsetChangedListener(this);
-        PAGENUM = 1;
-        methodType = MethodType.METHOD_TYPE_SINGLE_CIRCLES;
-        innerCirclePresenter.refreshFromNets(getParaMap(),2);
+
     }
 
 
@@ -415,7 +438,6 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home){
-            mRxBus.post("isLoad",false);
             finish();
         }
 
@@ -460,6 +482,7 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
             case MethodType.METHOD_TYPE_ADD_FAB:
             case MethodType.METHOD_TYPE_REMOVE_FAB:
             case MethodType.METHOD_TYPE_DELETE_SINGEL:
+            case  MethodType.METHOD_TYPE_CIRCLE_DETAIL:
                 map.put("circleid",circleid);
                 break;
             case MethodType.METHOD_TYPE_ADD_COMMENT:
@@ -490,6 +513,11 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
     @Override
     public void updateCircleList(CircleBean data, String errorMsg, int type) {
+        if (refreshLayout.isRefreshing()){
+            refreshLayout.finishRefresh(false);
+        }else if (refreshLayout.isLoading()){
+            refreshLayout.finishLoadmore(false);
+        }
 
         switch (type) {
             case DataLoadType.TYPE_LOAD_MORE_FAIL:
@@ -503,11 +531,11 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
                 if (data != null && data.getData() != null && data.getData().size() != 0){
                     PAGENUM += 1;
 
-                    myLmAdapter.addData(data.getData(),false);
+                    myLmAdapter.addData(data.getData());
                     innerCircleBeans.addAll(data.getData());
 
                 }else if (data.getData().size() == 0){
-                    myLmAdapter.addData(data.getData(),false);
+                    myLmAdapter.addData(data.getData());
                 }
 
                 break;
@@ -517,7 +545,7 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
                     PAGENUM += 1;
 
-                    myLmAdapter.updateList(data.getData(),data.getData().size() >= 10 );
+                    myLmAdapter.updateList(data.getData());
 
                     innerCircleBeans.clear();
                     innerCircleBeans.addAll(data.getData());
@@ -533,7 +561,11 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
     @Override
     public void onItemClick(View view, int position) {
+        currentPosition = position;
         if (innerCircleBeans.get(position) != null) {
+
+            circleid = innerCircleBeans.get(position).getCircleid();
+
             Intent intent = new Intent(this,EarchCircleActivity.class);
             intent.putExtra("innerCircleBean",innerCircleBeans.get(position));
             intent.putExtra("circle_tag",4);
@@ -554,25 +586,25 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
 
     @Override
-    public void toInitHolder(final MyLmAdapter.MyRefrashHolder holder,final int position,final InnerCircleBean innerCircleBean) {
+    public void toInitHolder(final CircleAdapter.MyRefrashHolder holder,final int position,final InnerCircleBean data) {
 
-        this.innerCircleBean = innerCircleBean;
+        this.innerCircleBean = data;
 
         //转发的
 
-        if (innerCircleBean.getTrans_userid() != null && !"".equals(innerCircleBean.getTrans_userid()) && !"-1".equals(innerCircleBean.getTrans_userid())) {
+        if (data.getTrans_userid() != null && !"".equals(data.getTrans_userid()) && !"-1".equals(data.getTrans_userid())) {
             holder.transpondFl.setVisibility(View.VISIBLE);
 
             holder.mRecyclerView.setVisibility(View.GONE);
 
-            if (!TextUtils.isEmpty(innerCircleBean.getContent()) && !"".equals(innerCircleBean.getContent())){
+            if (!TextUtils.isEmpty(data.getContent()) && !"".equals(data.getContent())){
 
-                String content = innerCircleBean.getContent();
+                String content = data.getContent();
 
                 String[] contents = content.split("#");
                 holder.mTranContentTv.setText(contents[contents.length - 1]);
 
-                Log.e("mTranContentTv",content+"--------"+innerCircleBean.getUsername()+"--------"+innerCircleBean.getTrans_name());
+                Log.e("mTranContentTv",content+"--------"+data.getUsername()+"--------"+data.getTrans_name());
 
                 if (content.lastIndexOf("#") != -1) {
                     holder.mContentTv.setText(content.substring(0,content.lastIndexOf("#")));
@@ -582,18 +614,18 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
                 //
             }
 
-            if (!"".equals(innerCircleBean.getTrans_name()) && innerCircleBean.getTrans_name() != null ){
-                holder.mTranName.setText("@" + String.valueOf(innerCircleBean.getTrans_name()));
+            if (!"".equals(data.getTrans_name()) && data.getTrans_name() != null ){
+                holder.mTranName.setText("@" + String.valueOf(data.getTrans_name()));
             }
 
-            if (innerCircleBean.getPics() != null && innerCircleBean.getPics().size() != 0){
+            if (data.getPics() != null && data.getPics().size() != 0){
 
                 final ArrayList<String> selectedPhotos = new ArrayList<>();
                 selectedPhotos.clear();
 
-                int picCount = innerCircleBean.getPics().size();
+                int picCount = data.getPics().size();
 
-                for (String pics:innerCircleBean.getPics()) {
+                for (String pics:data.getPics()) {
                     selectedPhotos.add(pics);
                 }
 
@@ -630,18 +662,18 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
             holder.transpondFl.setVisibility(View.GONE);
 
-            if (!TextUtils.isEmpty(innerCircleBean.getContent()) && !"".equals(innerCircleBean.getContent())){
-                holder.mContentTv.setText(innerCircleBean.getContent());
+            if (!TextUtils.isEmpty(data.getContent()) && !"".equals(data.getContent())){
+                holder.mContentTv.setText(data.getContent());
             }
 
-            if (innerCircleBean.getPics() != null && innerCircleBean.getPics().size() != 0){
+            if (data.getPics() != null && data.getPics().size() != 0){
 
                 final ArrayList<String> selectedPhotos = new ArrayList<>();
                 selectedPhotos.clear();
 
-                int picCount = innerCircleBean.getPics().size();
+                int picCount = data.getPics().size();
 
-                for (String pics:innerCircleBean.getPics()) {
+                for (String pics:data.getPics()) {
                     selectedPhotos.add(pics);
                 }
 
@@ -675,7 +707,7 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
         holder.mAddFriendBtn.setVisibility(View.GONE);
         holder.mDownIv.setVisibility(View.GONE);
 
-        if (innerCircleBean.isHas_fab()) {
+        if (data.isHas_fab()) {
             Drawable likeLift = getResources().getDrawable(R.mipmap.like);
             likeLift.setBounds(0, 0, likeLift.getMinimumWidth(), likeLift.getMinimumHeight());
             holder.mPraiseBtn.setCompoundDrawables(likeLift, null, null, null);
@@ -685,36 +717,36 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
             holder.mPraiseBtn.setCompoundDrawables(likeLift, null, null, null);
         }
 
-        if (innerCircleBean.getShare_count() != 0) {
-            holder.mTranspondBtn.setText("转发 "+innerCircleBean.getShare_count());
+        if (data.getShare_count() != 0) {
+            holder.mTranspondBtn.setText("转发 "+data.getShare_count());
         }else {
             holder.mTranspondBtn.setText("转发");
         }
 
-        if (innerCircleBean.getComment_count() != 0) {
-            holder.mCommentBtn.setText("评论 "+innerCircleBean.getComment_count());
+        if (data.getComment_count() != 0) {
+            holder.mCommentBtn.setText("评论 "+data.getComment_count());
         }else {
             holder.mCommentBtn.setText("评论");
         }
-        if (innerCircleBean.getFab_count() != 0){
-            holder.mPraiseBtn.setText("赞 "+innerCircleBean.getFab_count());
+        if (data.getFab_count() != 0){
+            holder.mPraiseBtn.setText("赞 "+data.getFab_count());
         }else {
             holder.mPraiseBtn.setText("赞");
         }
 
-        if (innerCircleBean.getContent() == null || "".equals(innerCircleBean.getContent())){
+        if (data.getContent() == null || "".equals(data.getContent())){
             holder.mContentTv.setVisibility(View.GONE);
         }else {
             holder.mContentTv.setVisibility(View.VISIBLE);
         }
 
-        if (!"".equals(innerCircleBean.getUsername()) && innerCircleBean.getUsername() != null ){
-            holder.mUserName.setText(String.valueOf(innerCircleBean.getUsername()));
+        if (!"".equals(data.getUsername()) && data.getUsername() != null ){
+            holder.mUserName.setText(String.valueOf(data.getUsername()));
         }
 
         headpic = ConstantUtils.HEADPIC;
-        if (innerCircleBean.getHeadpic() != null && !"".equals(innerCircleBean.getHeadpic()) && !"-1".equals(innerCircleBean.getHeadpic())){
-            headpic += innerCircleBean.getHeadpic();
+        if (data.getHeadpic() != null && !"".equals(data.getHeadpic()) && !"-1".equals(data.getHeadpic())){
+            headpic += data.getHeadpic();
 
             String tag = (String) holder.mUserIcon.getTag(R.id.imageid);
 
@@ -753,7 +785,7 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 //            }
 //        });
 
-        if (!TextUtils.isEmpty(innerCircleBean.getCreate_time()) && !"".equals(innerCircleBean.getCreate_time())) {
+        if (!TextUtils.isEmpty(data.getCreate_time()) && !"".equals(data.getCreate_time())) {
             holder.mCreateTimeTv.setText(innerCircleBean.getCreate_time());
         }
         holder.mDownIv.setOnClickListener(new View.OnClickListener() {
@@ -762,9 +794,9 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
                 currentPosition = position;
 
-                circleid = innerCircleBean.getCircleid();
-                friendId = innerCircleBean.getUserid();
-                isFriend = innerCircleBean.isIs_friend();
+                circleid = data.getCircleid();
+                friendId = data.getUserid();
+                isFriend = data.isIs_friend();
                 showDownDialog();
             }
         });
@@ -775,11 +807,11 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
 
                 currentPosition = position;
 
-                circleid = innerCircleBean.getCircleid();
-                friendId = innerCircleBean.getUserid();
-                isFriend = innerCircleBean.isIs_friend();
+                circleid = data.getCircleid();
+                friendId = data.getUserid();
+                isFriend = data.isIs_friend();
 
-                if (innerCircleBean.isHas_fab()) {
+                if (data.isHas_fab()) {
                     methodType = MethodType.METHOD_TYPE_REMOVE_FAB;
                     ourCodePresenter.removeFab(getParaMap());
                 }else {
@@ -794,10 +826,10 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
             public void onClick(View v) {
                 currentPosition = position;
 
-                circleid = innerCircleBean.getCircleid();
+                circleid = data.getCircleid();
                 methodType = MethodType.METHOD_TYPE_ADD_COMMENT;
 
-                if (innerCircleBean.getComment_count() != 0){
+                if (data.getComment_count() != 0){
                     Intent intent = new Intent(CircleDetialActivity.this,EarchCircleActivity.class);
                     intent.putExtra("innerCircleBean",innerCircleBeans.get(currentPosition));
                     intent.putExtra("circle_tag",4);
@@ -813,9 +845,10 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
             public void onClick(View v) {
                 currentPosition = position;
 
-                circleid = innerCircleBean.getCircleid();
+                circleid = data.getCircleid();
                 Intent intent = new Intent(CircleDetialActivity.this,TransCircleActivity.class);
-                intent.putExtra("innerCircleBean",innerCircleBean);
+                intent.putExtra("innerCircleBean",data);
+                intent.putExtra("circle_tag",4);
                 startActivity(intent);
             }
         });
@@ -946,8 +979,34 @@ public class CircleDetialActivity extends BaseActivity implements IMyCircleView<
     };
 
     @Override
-    public void onBackPressed() {
-        mRxBus.post("isLoad",false);
-        super.onBackPressed();
+    public void toUpdateEach(EachCircleBean data) {
+        InnerCircleBean circleBean = innerCircleBeans.get(currentPosition);
+        circleBean.setComment_count(data.getData().getComment_count());
+        circleBean.setFab_count(data.getData().getFab_count());
+        circleBean.setShare_count(data.getData().getShare_count());
+        circleBean.setHas_fab(data.getData().getHas_fab());
+
+        myLmAdapter.getDatas().add(currentPosition,circleBean);
+        myLmAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        if (ApiUtils.isNetworkConnected(this)) {
+            PAGENUM = 1;
+            methodType = MethodType.METHOD_TYPE_SINGLE_CIRCLES;
+            innerCirclePresenter.refreshFromNets(getParaMap(),2);
+        }
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        updateRecyclerView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mRxBus.unregister("load_circle", netObservale);
     }
 }

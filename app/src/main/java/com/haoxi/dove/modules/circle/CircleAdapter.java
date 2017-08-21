@@ -14,6 +14,7 @@ import com.haoxi.dove.R;
 import com.haoxi.dove.base.BasicRvHolder;
 import com.haoxi.dove.callback.MyItemClickListener;
 import com.haoxi.dove.callback.OnHolder2Listener;
+import com.haoxi.dove.holder.CommentHolder;
 import com.haoxi.dove.newin.bean.InnerCircleBean;
 import com.ytb.logic.external.NativeResource;
 
@@ -22,8 +23,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CircleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<InnerCircleBean> datas = new ArrayList<>(); // 数据源
+public class CircleAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private List<T> datas = new ArrayList<>(); // 数据源
 
     private Context context;    // 上下文Context
     private int normalType = 0;     // 第一种ViewType，正常的item
@@ -52,11 +53,11 @@ public class CircleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return normalType;
     }
 
-    public List<InnerCircleBean> getDatas(){
+    public List<T> getDatas(){
         return datas;
     }
 
-    public InnerCircleBean getItem(int position){
+    public T getItem(int position){
         return datas.get(position);
     }
 
@@ -133,11 +134,11 @@ public class CircleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             View view = LayoutInflater.from(context).inflate(layoutRes == 0?R.layout.item_friend_circle:layoutRes, null);
 
-//            if (holdType == 1){
-//                return new CommentHolder(context,view,myItemClickListener);
-//            }else {
+            if (holdType == 1){
+                return new CommentHolder(context,view,myItemClickListener);
+            }else {
                 return new MyRefrashHolder(context,view,myItemClickListener);
-//            }
+            }
     }
 
     int layoutRes = 0;
@@ -154,20 +155,20 @@ public class CircleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public void updateList(List<InnerCircleBean> newDatas) {
+    public void updateList(List<T> newDatas) {
         if (newDatas != null) {
             this.datas = newDatas;
         }
         notifyDataSetChanged();
     }
 
-    public void addData(List<InnerCircleBean> newDatas) {
+    public void addData(List<T> newDatas) {
         if (newDatas != null) {
             datas.addAll(newDatas);
         }
         notifyDataSetChanged();
     }
-    public OnHolder2Listener<InnerCircleBean, RecyclerView.ViewHolder> onHolderListener;
+    public OnHolder2Listener<T, RecyclerView.ViewHolder> onHolderListener;
 
     public void setOnHolderListener(OnHolder2Listener onHolderListener) {
         this.onHolderListener = onHolderListener;

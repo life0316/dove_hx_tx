@@ -39,12 +39,14 @@ import com.haoxi.dove.callback.OnHolder2Listener;
 import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.inject.DaggerOurCommentComponent;
 import com.haoxi.dove.inject.OurCommentMoudle;
+import com.haoxi.dove.modules.circle.CircleAdapter;
 import com.haoxi.dove.modules.circle.IEachView;
 import com.haoxi.dove.newin.bean.InnerCircleBean;
 import com.haoxi.dove.newin.ourcircle.presenter.EachCirclePresenter;
 import com.haoxi.dove.newin.bean.EachCircleBean;
 import com.haoxi.dove.newin.bean.InnerComment;
 import com.haoxi.dove.newin.ourcircle.presenter.InnerCommentPresenter;
+import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
@@ -153,7 +155,7 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     private int transCount = 0;
 
     private Handler mHandler = new Handler();
-    MyLmAdapter myLmAdapter;
+    CircleAdapter myLmAdapter;
 
     private int methodType = MethodType.METHOD_TYPE_GET_COMMENT;
 
@@ -194,13 +196,7 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
         switch (methodType){
             case MethodType.METHOD_TYPE_ADD_COMMENT:
             case MethodType.METHOD_TYPE_ADD_REPLY:
-
-                methodType = MethodType.METHOD_TYPE_GET_COMMENT;
-                PAGENUM = 1;
-                innerCommentPresenter.refreshFromNets(getParaMap());
-                break;
             case MethodType.METHOD_TYPE_REMOVE_COMMENT:
-
                 methodType = MethodType.METHOD_TYPE_GET_COMMENT;
                 PAGENUM = 1;
                 innerCommentPresenter.refreshFromNets(getParaMap());
@@ -278,7 +274,7 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        myLmAdapter = new MyLmAdapter<InnerCircleBean>(this,true,1);
+        myLmAdapter = new CircleAdapter<InnerComment>(this,1);
 
         myLmAdapter.setLayout(R.layout.item_comments_our);
 
@@ -287,35 +283,35 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
         myLmAdapter.setOnHolderListener(this);
         myLmAdapter.setMyItemClickListener(this);
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                if (newState == RecyclerView.SCROLL_STATE_IDLE){
-                    if (!myLmAdapter.isFadeTips() && lastVisibleItem + 1 == myLmAdapter.getItemCount()){
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {updateRecyclerView();
-                            }
-                        },500);
-                    }
-
-                    if (myLmAdapter.isFadeTips() && lastVisibleItem + 2 == myLmAdapter.getItemCount()){
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {updateRecyclerView();
-                            }
-                        },500);
-                    }
-                }
-            }
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-            }
-        });
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE){
+//                    if (!myLmAdapter.isFadeTips() && lastVisibleItem + 1 == myLmAdapter.getItemCount()){
+//                        mHandler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {updateRecyclerView();
+//                            }
+//                        },500);
+//                    }
+//
+//                    if (myLmAdapter.isFadeTips() && lastVisibleItem + 2 == myLmAdapter.getItemCount()){
+//                        mHandler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {updateRecyclerView();
+//                            }
+//                        },500);
+//                    }
+//                }
+//            }
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+//            }
+//        });
     }
 
     // 上拉加载时调用的更新RecyclerView的方法
@@ -330,25 +326,25 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
 
         switch (methodType){
             case MethodType.METHOD_TYPE_GET_COMMENT:
-                method = "/app/circle_comment/get_comment";
+                method = MethodConstant.GET_COMMENT;
                 break;
             case MethodType.METHOD_TYPE_REMOVE_COMMENT:
-                method = "/app/circle_comment/remove_comment";
+                method = MethodConstant.REMOVE_COMMENT;
                 break;
             case MethodType.METHOD_TYPE_ADD_COMMENT:
-                method = "/app/circle_comment/add_comment";
+                method = MethodConstant.ADD_COMMENT;
                 break;
             case MethodType.METHOD_TYPE_ADD_FAB:
-                method = "/app/circle_fab/add_fab";
+                method = MethodConstant.ADD_FAB;
                 break;
             case MethodType.METHOD_TYPE_REMOVE_FAB:
-                method = "/app/circle_fab/remove_fab";
+                method = MethodConstant.REMOVE_FAB;
                 break;
             case MethodType.METHOD_TYPE_ADD_REPLY:
-                method = "/app/circle_comment/add_reply";
+                method = MethodConstant.ADD_REPLY;
                 break;
             case MethodType.METHOD_TYPE_CIRCLE_DETAIL:
-                method = "/app/circle/get_circle_detail";
+                method = MethodConstant.GET_CIRCLE_DETAIL;
                 break;
         }
         return method;
@@ -356,7 +352,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
 
 
     private void initCircle() {
-
         if (innerCircleBean.getUsername() != null) {
             userNameTv.setText(innerCircleBean.getUsername());
         }
@@ -523,6 +518,9 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
 
         if (item.getItemId() == android.R.id.home){
 
+            if (isChange) {
+                changeRxBus();
+            }
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -578,9 +576,7 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     }
 
     private void changeRxBus(){
-//        mRxBus.post("load_circle",0);
-//        mRxBus.post("load_circle",1);
-//        mRxBus.post("load_circle",2);
+        mRxBus.post("load_circle",circleTag);
     }
 
     @Override
@@ -588,25 +584,16 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
         switch (v.getId()){
 
             case R.id.comment_friend_comments:
-
                 // 评论 或者 回复
-
-                Log.e("fafafasdf","评论---");
-
                 showMyDialog(false,null);
-
                 break;
 
             case R.id.comment_friend_dislike:
-
                 //  点赞 或 取消赞
                 Log.e("fafafasdf","点赞---");
-
                 if (iHasFab) {
-
                     methodType = MethodType.METHOD_TYPE_REMOVE_FAB;
                     ourCodePresenter.removeFab(getParaMap());
-
                 }else {
                     methodType = MethodType.METHOD_TYPE_ADD_FAB;
                     ourCodePresenter.addFab(getParaMap());
@@ -620,6 +607,7 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
                     public void onClick(View v) {
                         Intent intent = new Intent(EarchCircleActivity.this,TransCircleActivity.class);
                         intent.putExtra("innerCircleBean",innerCircleBean);
+                        intent.putExtra("circle_tag", 3);
                         startActivity(intent);
                     }
                 });
@@ -726,11 +714,8 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
             if (fabSize != likeCount){
                 likeCount = fabSize;
                 mLikeFabTv.setText(fabSize == 0?"赞":"赞 "+fabSize);
-
                 innerCircleBean.setFab_count(fabSize);
                 MyApplication.getDaoSession().getInnerCircleBeanDao().updateInTx(innerCircleBean);
-
-                changeRxBus();
             }
 
             if (fabSize == 0){
@@ -898,7 +883,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
                 ourCodePresenter.removeComment(getParaMap());
                 dialog.dismiss();
             }
-
             @Override
             public void doCancel() {
                 dialog.dismiss();
@@ -907,8 +891,9 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     }
     @Override
     public void onBackPressed() {
-        mRxBus.post("isLoad",false);
-        changeRxBus();
+        if (isChange) {
+            changeRxBus();
+        }
         super.onBackPressed();
     }
 
@@ -937,11 +922,11 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
                 if (data != null && data.getData() != null && data.getData().size() != 0){
 
                     PAGENUM += 1;
-                    myLmAdapter.addData(data.getData(),true);
+                    myLmAdapter.addData(data.getData());
                     innerComments.addAll(data.getData());
 
                 }else if (data.getData().size() == 0){
-                    myLmAdapter.addData(data.getData(),false);
+                    myLmAdapter.addData(data.getData());
                 }
 
                 break;
@@ -951,12 +936,12 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
 
                     PAGENUM += 1;
 
-                    myLmAdapter.updateList(data.getData(),data.getData().size() >= 10 );
+                    myLmAdapter.updateList(data.getData());
 
                     innerComments.clear();
                     innerComments.addAll(data.getData());
                 }else {
-                    myLmAdapter.updateList(new ArrayList<InnerComment>(),false );
+                    myLmAdapter.updateList(new ArrayList<InnerComment>());
 
                     innerComments.clear();
                 }
@@ -965,10 +950,6 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
 
         innerCircleBean.setComment_count(innerComments.size());
 
-        Log.e("faamap99999","id---2----onItemClick----"+ innerCircleBean.getId());
-        MyApplication.getDaoSession().getInnerCircleBeanDao().updateInTx(innerCircleBean);
-
-        changeRxBus();
         mCommentTv.setText(innerComments.size() != 0? "评论 "+innerComments.size():"评论");
     }
 

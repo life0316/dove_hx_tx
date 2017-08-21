@@ -2,6 +2,7 @@ package com.haoxi.dove.modules.circle;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,10 @@ public class AdCircleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     // 根据条目位置返回ViewType，以供onCreateViewHolder方法内获取不同的Holder
     @Override
     public int getItemViewType(int position) {
-        if (position == 1 && adDatas.size() > 0) {
+
+
+        if (position % 10 == 1 && adDatas.size() > 0) {
+
             return adType;
         } else {
             return normalType;
@@ -136,7 +140,7 @@ public class AdCircleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public void onClick(View v) {
 
             if (mItemClickListener != null){
-                mItemClickListener.onItemClick(v,getPosition());
+                mItemClickListener.onItemClick(v,getAdapterPosition());
             }
         }
     }
@@ -164,12 +168,7 @@ public class AdCircleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (viewType == normalType) {
 
             View view = LayoutInflater.from(context).inflate(layoutRes == 0?R.layout.item_friend_circle:layoutRes, null);
-
-//            if (holdType == 1){
-//                return new CommentHolder(context,view,myItemClickListener);
-//            }else {
-                return new MyRefrashHolder(context,view,myItemClickListener);
-//            }
+            return new MyRefrashHolder(context,view,myItemClickListener);
         } else {
             return new AdHolder(LayoutInflater.from(context).inflate(R.layout.item_ad_native, null));
         }
@@ -183,13 +182,27 @@ public class AdCircleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+//        // 如果是正常的imte，直接设置TextView的值
+//        if (holder instanceof BasicRvHolder) {
+//            int curPost = position >= 1? position - adDatas.size():position;
+//            onHolderListener.toInitHolder(holder,curPost,datas.get(curPost));
+//        } else {
+//            onHolderListener.toInitHolder(holder,position,adDatas.get(0));
+//        }
+
         // 如果是正常的imte，直接设置TextView的值
         if (holder instanceof BasicRvHolder) {
-            int curPost = position >= 1? position - adDatas.size():position;
+//            Log.e("mafegbadsgae",position+"----------p");
+            int curPost = position >= 1? position - (adDatas.size() / 10 + adDatas.size()):position;
+//            Log.e("mafegbadsgae",curPost+"----------curPost");
             onHolderListener.toInitHolder(holder,curPost,datas.get(curPost));
-//            onHolderListener.toInitHolder(holder,position ,datas.get(position));
         } else {
-            onHolderListener.toInitHolder(holder,position,adDatas.get(0));
+
+            Log.e("mafegbadsgae",position+"----------p");
+            Log.e("mafegbadsgae",(position / 10)+"----------p------");
+            if (position / 10 < adDatas.size()){
+                onHolderListener.toInitHolder(holder,position,adDatas.get(position / 10));
+            }
         }
     }
 

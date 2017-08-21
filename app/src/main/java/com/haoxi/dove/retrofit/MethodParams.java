@@ -19,6 +19,7 @@ public class MethodParams {
     public static String PARAMS_TOKEN = "token";
 
     public static String PARAMS_FRIEND_ID = "friendid";
+    public static String PARAMS_PLAYER_ID = "playerid";
     public static String PARAMS_CP = "cp";
     public static String PARAMS_PS = "ps";
     public static String PARAMS_CIRCLE_ID = "circleid";

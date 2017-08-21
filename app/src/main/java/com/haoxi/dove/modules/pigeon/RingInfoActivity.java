@@ -27,6 +27,8 @@ import com.haoxi.dove.modules.mvp.views.IRingInfoView;
 import com.haoxi.dove.modules.mvp.presenters.RingInfoPresenter;
 import com.haoxi.dove.newin.bean.InnerDoveData;
 import com.haoxi.dove.newin.bean.InnerRing;
+import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.utils.ApiUtils;
@@ -128,10 +130,8 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
     private int mateSize;
     private BottomPopView popView;
 
-
     @Override
     protected void initInject() {
-
         DaggerRingInfoComponent.builder()
                 .appComponent(getAppComponent())
                 .ringInfoMoudle(new RingInfoMoudle(this, this))
@@ -173,21 +173,7 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
 
                 startDateTv.setText(mStartTime);
 
-//                daoSession.getMyRingBeanDao().queryBuilder()
-//                        .where(MyRingBeanDao.Properties.OBJ_ID.eq(ringBean.getOBJ_ID()))
-//                        .rx().list().subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe(new Action1<List<MyRingBean>>() {
-//                            @Override
-//                            public void call(List<MyRingBean> myRingBeen) {
-//                                if (myRingBeen.size() > 0) {
-//                                    myRingBean = myRingBeen.get(0);
-//                                }
-//                            }
-//                        });
-
                 if (!"".equals(ourOffTime) && ourOffTime != null) {
-
                     schOffTv.setText(ourOffTime);
                 }
 
@@ -240,7 +226,7 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
 
                 if (mStartStuts != null && !"".equals(mStartStuts)) {
 
-                    if ("2".equals(mStartStuts) || "关".equals(mStartStuts)) {
+                    if ("0".equals(mStartStuts) || "关".equals(mStartStuts)) {
                         startStatusTv.setText("关机");
                     } else {
                         startStatusTv.setText("开机");
@@ -255,30 +241,24 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
 
 
     @OnClick(R.id.custom_toolbar_iv)
-    void backIv(View view) {
+    void backIv() {
 
         if (isSetting || isMate) {
             RxBus.getInstance().post("isLoad", true);
-        } else {
-            RxBus.getInstance().post("isLoad", false);
         }
         this.finish();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
         if (isSetting || isMate) {
             RxBus.getInstance().post("isLoad", true);
-        } else {
-            RxBus.getInstance().post("isLoad", false);
         }
+        super.onBackPressed();
     }
 
     @Override
     public void toDo() {
-
 
         switch (methodType){
             case MethodType.METHOD_TYPE_RING_MATCH:
@@ -312,19 +292,17 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
     }
 
     public Map<String,String> getParaMap(){
-
         Map<String,String> map = new HashMap<>();
-
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("userid",getUserObjId());
-        map.put("token",getToken());
+        map.put(MethodParams.PARAMS_METHOD,getMethod());
+        map.put(MethodParams.PARAMS_SIGEN,getSign());
+        map.put(MethodParams.PARAMS_TIME,getTime());
+        map.put(MethodParams.PARAMS_VERSION,getVersion());
+        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
+        map.put(MethodParams.PARAMS_TOKEN,getToken());
 
         switch (methodType){
             case MethodType.METHOD_TYPE_DOVE_SEARCH:
-                map.put("playerid",getUserObjId());
+                map.put(MethodParams.PARAMS_PLAYER_ID,getUserObjId());
                 break;
             case MethodType.METHOD_TYPE_RING_UPDATE:
                 map.put("ringid",getRingObjId());
@@ -366,16 +344,15 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
 
         switch (methodType){
             case MethodType.METHOD_TYPE_DOVE_SEARCH:
-                method = "/app/dove/search";
+                method = MethodConstant.DOVE_SEARCH;
                 break;
             case MethodType.METHOD_TYPE_RING_UPDATE:
-                method = "/app/ring/update";
+                method = MethodConstant.RING_INFO_UPDATE;
                 break;
             case MethodType.METHOD_TYPE_RING_MATCH:
-                method = "/app/ring/match";
+                method = MethodConstant.RING_MATCH;
                 break;
         }
-
         return method;
     }
 
@@ -384,7 +361,6 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
 
         if (mateSize <= 15) {
             if ("未匹配".equals(((TextView) view).getText().toString().trim())) {
-
                 setMatePigeon();
             }
         } else {
@@ -393,28 +369,28 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
     }
 
     @OnClick(R.id.activity_ring_position)
-    void setPostModeOncli(View view) {
+    void setPostModeOncli() {
         methodType = MethodType.METHOD_TYPE_RING_UPDATE;
         posiModeTag = "POSITION_MODE";
         setLocateTime2(Thrift_TAG1);
     }
 
     @OnClick(R.id.activity_ring_reportedfreq)
-    void setRepFreqOncli(View view) {
+    void setRepFreqOncli() {
         methodType = MethodType.METHOD_TYPE_RING_UPDATE;
         posiModeTag = "REPORTED_FREQ";
         setLocateTime2(Thrift_TAG2);
     }
 
     @OnClick(R.id.activity_ring_schedule_on)
-    void setScheduleOn(View view) {
+    void setScheduleOn() {
         methodType = MethodType.METHOD_TYPE_RING_UPDATE;
         posiModeTag = TIMING_SWITCH_1;
         toSetTime(TIMING_SWITCH_1);
     }
 
     @OnClick(R.id.activity_ring_schedule_off)
-    void setScheduleOff(View view) {
+    void setScheduleOff() {
         methodType = MethodType.METHOD_TYPE_RING_UPDATE;
         posiModeTag = TIMING_SWITCH_2;
         toSetTime(TIMING_SWITCH_2);
@@ -453,8 +429,6 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
 
         if (myRingBean != null) {
             myRingBean.setLfq(Integer.parseInt(posMode));
-
-//            daoSession.getMyRingBeanDao().update(myRingBean);
         }
 
         switch (posMode) {
@@ -479,9 +453,7 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
     public void setReportFreq(String freq) {
 
         if (myRingBean != null) {
-
             myRingBean.setRfq(Integer.parseInt(freq));
-//            daoSession.getMyRingBeanDao().update(myRingBean);
         }
 
         switch (freq) {
@@ -935,7 +907,6 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
                 onMinNewVal = newVal;
             }
         });
-
         ApiUtils.setDialogWindow(dialog);
         dialog.show();
     }

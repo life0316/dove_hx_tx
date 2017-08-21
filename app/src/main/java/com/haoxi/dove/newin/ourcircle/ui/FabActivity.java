@@ -34,6 +34,7 @@ import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.newin.bean.OurFabBean;
 import com.haoxi.dove.newin.ourcircle.presenter.PlayerPresenter;
 import com.haoxi.dove.retrofit.DataLoadType;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.widget.MyPhotoPreview;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -83,7 +84,7 @@ public class FabActivity extends BaseActivity implements IPlayerInfoView<PlayerB
     RxBus mRxBus;
 
 
-    private int PAGENUM = 0;  //查询起始下标，默认为0
+    private int PAGENUM = 1;  //查询起始下标，默认为0
     private int PAGESIZE = 10;//每页返回的数据，默认10
 
 
@@ -170,7 +171,6 @@ public class FabActivity extends BaseActivity implements IPlayerInfoView<PlayerB
             fabPresenter.refreshFromNets(getParaMap());
             isLoad = false;
         }
-
     }
 
     @Override
@@ -236,23 +236,11 @@ public class FabActivity extends BaseActivity implements IPlayerInfoView<PlayerB
                 if (data != null && data.getData() != null && data.getData().size() != 0) {
 
                     PAGENUM += 1;
-                    if (data.getData().size() < 10 && refrashRvAdapter.getFooter() != null) {
-
-                    } else if (data.getData().size() == 10 && refrashRvAdapter.getFooter() == null) {
-//                        recyclerView.setFooterView(new ErvDefaultFooter(this));
-//                        recyclerView.loading();
-                    }else if (data.getData().size() == 10){
-//                        recyclerView.loading();
-                    }
 
                     refrashRvAdapter.update(data.getData());
                     innerFabList.clear();
                     innerFabList.addAll(data.getData());
                 } else if (data.getData().size() == 0) {
-                    if (refrashRvAdapter.getItemCount() != 0 && refrashRvAdapter.getData().size() == 0) {
-//                        recyclerView.removeFooter();
-                    }
-//                    recyclerView.refreshComplete();
                     refrashRvAdapter.update(data.getData());
                     innerFabList.clear();
                 }
@@ -291,7 +279,7 @@ public class FabActivity extends BaseActivity implements IPlayerInfoView<PlayerB
 
         Log.e("innerfab",data.getHeadpic()+"-----fab");
 
-        String headpic = "http://118.178.227.194:8087/";
+        String headpic = ConstantUtils.HEADPIC;
         if (data.getHeadpic() != null && !"".equals(data.getHeadpic()) && !"-1".equals(data.getHeadpic())){
 
             if (data.getHeadpic().startsWith("http")){
@@ -304,7 +292,6 @@ public class FabActivity extends BaseActivity implements IPlayerInfoView<PlayerB
             Glide.with(this)
                     .load(headpic)
                     .dontAnimate()
-                    .placeholder(R.mipmap.btn_img_photo_default)
                     .error(R.mipmap.btn_img_photo_default)
                     .into(holder.civ);
 
@@ -370,7 +357,7 @@ public class FabActivity extends BaseActivity implements IPlayerInfoView<PlayerB
         int width = getWindowManager().getDefaultDisplay().getWidth();
         ViewGroup.LayoutParams params = layout.getLayoutParams();
         params.width = (width * 62) / 72;
-        params.height = (int) ((width * 52) / 72);
+        params.height = (width * 52) / 72;
 
         layout.setLayoutParams(params);
 
@@ -437,7 +424,6 @@ public class FabActivity extends BaseActivity implements IPlayerInfoView<PlayerB
                         .start(FabActivity.this);
             }
         });
-
         mDismissIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -449,7 +435,6 @@ public class FabActivity extends BaseActivity implements IPlayerInfoView<PlayerB
 
     @Override
     public void onRefresh(RefreshLayout refreshLayout) {
-//        PAGENUM = 1;
         methodType = MethodType.METHOD_TYPE_GET_FAB;
         fabPresenter.refreshFromNets(getParaMap());
     }

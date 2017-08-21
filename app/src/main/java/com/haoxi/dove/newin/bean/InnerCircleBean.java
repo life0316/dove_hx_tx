@@ -212,7 +212,7 @@ public class InnerCircleBean implements Parcelable {
         dest.writeInt(comment_count);
         dest.writeInt(fab_count);
 
-        dest.writeLong(id);
+//        dest.writeLong(id);
 
         dest.writeString(content);
         dest.writeString(username);
@@ -271,7 +271,7 @@ public class InnerCircleBean implements Parcelable {
             innerCircleBean.comment_count = source.readInt();
             innerCircleBean.fab_count = source.readInt();
 
-            innerCircleBean.id = source.readLong();
+//            innerCircleBean.id = source.readLong();
 
             innerCircleBean.content = source.readString();
             innerCircleBean.username = source.readString();

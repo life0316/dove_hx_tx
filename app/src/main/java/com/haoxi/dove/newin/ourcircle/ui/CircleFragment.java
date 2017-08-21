@@ -1028,6 +1028,7 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
                     Intent intent = new Intent(getActivity(),EarchCircleActivity.class);
                     intent.putExtra("innerCircleBean",innerCircleBeans.get(currentPosition));
                     intent.putExtra("circle_tag",tag);
+                    intent.putExtra("circle_cur", currentPosition);
                     startActivity(intent);
                 }else {
                     showMyDialog();

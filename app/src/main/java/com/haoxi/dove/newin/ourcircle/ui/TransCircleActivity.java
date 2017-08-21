@@ -15,6 +15,9 @@ import com.haoxi.dove.base.BaseActivity;
 import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.newin.bean.InnerCircleBean;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
+import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 
 import java.util.HashMap;
@@ -59,15 +62,18 @@ public class TransCircleActivity  extends BaseActivity implements View.OnClickLi
     private String playerHead = "";
 
     private InnerCircleBean innerCircleBean;
+    private boolean isShare = false;
+    private int circleTag;
 
     @Override
     public void toDo() {
+        mRxBus.post("load_circle",circleTag);
         finish();
     }
 
     @Override
     public String getMethod() {
-        return "/app/circle_share/share";
+        return MethodConstant.SHARE_CIRCLE;
     }
 
     @Override
@@ -80,7 +86,6 @@ public class TransCircleActivity  extends BaseActivity implements View.OnClickLi
     @Override
     protected void init() {
 
-
         mLeftTv.setVisibility(View.VISIBLE);
         mRigthTv.setVisibility(View.VISIBLE);
         mRigthTv.setTextColor(Color.GRAY);
@@ -92,7 +97,6 @@ public class TransCircleActivity  extends BaseActivity implements View.OnClickLi
         mLeftTv.setOnClickListener(this);
         mRigthTv.setEnabled(true);
         mRigthTv.setTextColor(Color.WHITE);
-
 
         editText.setFocusable(true);
         editText.setFocusableInTouchMode(true);
@@ -113,6 +117,7 @@ public class TransCircleActivity  extends BaseActivity implements View.OnClickLi
         Intent intent = getIntent();
         if (intent != null) {
             innerCircleBean = intent.getParcelableExtra("innerCircleBean");
+            circleTag = intent.getIntExtra("circle_tag",0);
             if (innerCircleBean != null) {
                 circleId = innerCircleBean.getCircleid();
                 playerName = innerCircleBean.getUsername();
@@ -126,7 +131,7 @@ public class TransCircleActivity  extends BaseActivity implements View.OnClickLi
 
     private void initCircle() {
 
-        String headpic = "http://118.178.227.194:8087/";
+        String headpic = ConstantUtils.HEADPIC;
         if (playerHead != null && !"".equals(playerHead) && !"-1".equals(playerHead)){
 
             if (playerHead.startsWith("http")) {
@@ -154,13 +159,10 @@ public class TransCircleActivity  extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.custom_toolbar_left_tv:
-                mRxBus.post("isLoad",false);
                 finish();
                 break;
             case R.id.custom_toolbar_keep:
-
                 ourCodePresenter.shareCircle(getParaMap());
-
                 break;
         }
     }
@@ -168,19 +170,17 @@ public class TransCircleActivity  extends BaseActivity implements View.OnClickLi
 
         Map<String,String> map = new HashMap<>();
 
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("userid",mUserObjId);
-        map.put("token",mToken);
+        map.put(MethodParams.PARAMS_METHOD,getMethod());
+        map.put(MethodParams.PARAMS_SIGEN,getSign());
+        map.put(MethodParams.PARAMS_TIME,getTime());
+        map.put(MethodParams.PARAMS_VERSION,getVersion());
+        map.put(MethodParams.PARAMS_USER_OBJ,mUserObjId);
+        map.put(MethodParams.PARAMS_TOKEN,mToken);
 
-        map.put("circleid",circleId);
-        map.put("content",getContent());
-
+        map.put(MethodParams.PARAMS_CIRCLE_ID,circleId);
+        map.put(MethodParams.PARAMS_CONTENT,getContent());
         return map;
     }
-
     private String getContent(){
         content = editText.getText().toString().trim();
         if (content == null || "".equals(content)) {

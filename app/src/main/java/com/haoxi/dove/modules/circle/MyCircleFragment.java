@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +16,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -34,6 +33,7 @@ import com.haoxi.dove.callback.OnHolder2Listener;
 import com.haoxi.dove.inject.CircleMoudle;
 import com.haoxi.dove.inject.DaggerCircleComponent;
 import com.haoxi.dove.newin.bean.CircleBean;
+import com.haoxi.dove.newin.bean.EachCircleBean;
 import com.haoxi.dove.newin.bean.InnerCircleBean;
 import com.haoxi.dove.newin.ourcircle.presenter.EachCirclePresenter;
 import com.haoxi.dove.newin.ourcircle.presenter.InnerCirclePresenter;
@@ -67,7 +67,7 @@ import butterknife.BindView;
 import rx.Observable;
 import rx.functions.Action1;
 
-public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerCircleBean>, IMyCircleView<CircleBean>,OnRefreshListener, OnLoadmoreListener, OnHolder2Listener<InnerCircleBean,CircleAdapter.MyRefrashHolder>, MyItemClickListener {
+public class MyCircleFragment extends BaseSrFragment implements IEachView<EachCircleBean>, IMyCircleView<CircleBean>,OnRefreshListener, OnLoadmoreListener, OnHolder2Listener<InnerCircleBean,CircleAdapter.MyRefrashHolder>, MyItemClickListener {
 
     private int methodType = MethodType.METHOD_TYPE_SINGLE_CIRCLES;
 
@@ -75,7 +75,7 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
 
     private boolean isFriend = false;
     private boolean isLoad = true;
-    private int tag = 0;
+    private int tag = 2;
     private String headpic;
 
     private String circleid;
@@ -85,6 +85,8 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
     private TextView commentSub;
     private Handler mHandler = new Handler();
     private Dialog mDialogEt;
+    private Observable<Integer> netObservale;
+
 
     private List<InnerCircleBean> innerCircleBeans = new ArrayList<>();
 
@@ -103,6 +105,22 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
     CircleAdapter circleAdapter;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        netObservale = mRxBus.register("load_circle", Integer.class);
+        netObservale.subscribe(new Action1<Integer>() {
+            @Override
+            public void call(Integer integer) {
+                if (integer == 2 ){
+                    circleAdapter.getDatas().remove(currentPosition);
+                    methodType = MethodType.METHOD_TYPE_CIRCLE_DETAIL;
+                    eachCirclePresenter.getDataFromNets(getParaMap());
+                }
+            }
+        });
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -112,7 +130,7 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
         refreshLayout.setOnLoadmoreListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        circleAdapter = new CircleAdapter(getActivity(),0);
+        circleAdapter = new CircleAdapter<InnerCircleBean>(getActivity(),0);
         recyclerView.setAdapter(circleAdapter);
         circleAdapter.setOnHolderListener(this);
         circleAdapter.setMyItemClickListener(this);
@@ -157,32 +175,22 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
 
     @Override
     public void toDo() {
-        InnerCircleBean innerCircleBean = circleAdapter.getItem(currentPosition);
 
         switch (methodType){
-            case MethodType.METHOD_TYPE_ADD_ATTENTION:
-                break;
-            case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
-                break;
             case MethodType.METHOD_TYPE_ADD_FAB:
-                Log.e("faamap99999","点赞-------"+ innerCircleBean.getCircleid());
-                Log.e("faamap99999","id---1----"+ innerCircleBean.getId());
-
-//                innerCirclePresenter.updateCircle(innerCircleBean);
-                circleAdapter.getDatas().remove(currentPosition);
-//                adCircleAdapter.getDatas().add(currentPosition,innerCircleBean);
-//                adCircleAdapter.notifyDataSetChanged();
-
-                break;
             case MethodType.METHOD_TYPE_REMOVE_FAB:
-                break;
             case MethodType.METHOD_TYPE_ADD_COMMENT:
+                circleAdapter.getDatas().remove(currentPosition);
+                methodType = MethodType.METHOD_TYPE_CIRCLE_DETAIL;
+                eachCirclePresenter.getDataFromNets(getParaMap());
+                break;
+            case MethodType.METHOD_TYPE_DELETE_SINGEL:
+                circleAdapter.getDatas().remove(currentPosition);
+                circleAdapter.notifyDataSetChanged();
+                innerCircleBeans.remove(currentPosition);
                 break;
         }
-        methodType = MethodType.METHOD_TYPE_CIRCLE_DETAIL;
-        eachCirclePresenter.getDataFromNets(getParaMap());
     }
-
 
     @Override
     public void onResume() {
@@ -285,6 +293,7 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
             case MethodType.METHOD_TYPE_ADD_FAB:
             case MethodType.METHOD_TYPE_REMOVE_FAB:
             case  MethodType.METHOD_TYPE_CIRCLE_DETAIL:
+            case  MethodType.METHOD_TYPE_DELETE_SINGEL:
                 map.put(MethodParams.PARAMS_CIRCLE_ID,circleid);
                 break;
             case MethodType.METHOD_TYPE_ADD_COMMENT:
@@ -304,48 +313,33 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
                 holder.mRecyclerView.setVisibility(View.GONE);
 
                 if (!TextUtils.isEmpty(data.getContent()) && !"".equals(data.getContent())) {
-
                     String content = data.getContent();
-
                     String[] contents = content.split("#");
                     holder.mTranContentTv.setText(contents[contents.length - 1]);
-
                     if (content.lastIndexOf("#") != -1) {
                         holder.mContentTv.setText(content.substring(0, content.lastIndexOf("#")));
                     } else {
                         holder.mContentTv.setText("转发动态");
                     }
                 }
-
                 if (!"".equals(data.getTrans_name()) && data.getTrans_name() != null) {
                     holder.mTranName.setText("@" + String.valueOf(data.getTrans_name()));
                 }
-
                 if (data.getPics() != null && data.getPics().size() != 0) {
-
                     final ArrayList<String> selectedPhotos = new ArrayList<>();
                     selectedPhotos.clear();
-
                     int picCount = data.getPics().size();
-
                     selectedPhotos.addAll(data.getPics());
-
-                   holder.mTranRv.removeAllViews();
-
+                    holder.mTranRv.removeAllViews();
                     CirclePhotoAdapter photoAdapter = new CirclePhotoAdapter(getContext(), selectedPhotos);
-
                     holder.mTranRv.setVisibility(View.VISIBLE);
                     holder.mTranRv.setAdapter(photoAdapter);
                     holder.mTranRv.setLayoutManager(new StaggeredGridLayoutManager(picCount < 3 ? 2 : 3, OrientationHelper.VERTICAL));
-
                     ((SimpleItemAnimator) holder.mTranRv.getItemAnimator()).setSupportsChangeAnimations(false);
-
                     photoAdapter.setMyItemClickListener(new MyItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
-
                             isLoad = false;
-
                             MyPhotoPreview.builder()
                                     .setPhotos(selectedPhotos)
                                     .setCurrentItem(position)
@@ -364,13 +358,10 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
             } else {
 
                holder.transpondFl.setVisibility(View.GONE);
-
                 if (!TextUtils.isEmpty(data.getContent()) && !"".equals(data.getContent())) {
                    holder.mContentTv.setText(data.getContent());
                 }
-
                 if (data.getPics() != null && data.getPics().size() != 0) {
-
                     final ArrayList<String> selectedPhotos = new ArrayList<>();
                     selectedPhotos.clear();
 
@@ -378,7 +369,7 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
 
                     selectedPhotos.addAll(data.getPics());
 
-                   holder.mRecyclerView.removeAllViews();
+                    holder.mRecyclerView.removeAllViews();
 
                     CirclePhotoAdapter photoAdapter = new CirclePhotoAdapter(getContext(), selectedPhotos);
 
@@ -500,7 +491,7 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
                     circleid = data.getCircleid();
                     friendId = data.getUserid();
                     isFriend = data.isIs_friend();
-//                    showDownDialog();
+                    showDownDialog();
                 }
             });
 
@@ -550,6 +541,7 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
                     circleid = data.getCircleid();
                     Intent intent = new Intent(getActivity(), TransCircleActivity.class);
                     intent.putExtra("innerCircleBean", data);
+                    intent.putExtra("circle_tag", tag);
                     startActivity(intent);
                 }
             });
@@ -558,6 +550,9 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
     public void onItemClick(View view, int position) {
         currentPosition = position;
         if (innerCircleBeans.get(position) != null) {
+
+            circleid = innerCircleBeans.get(position).getCircleid();
+
             Intent intent = new Intent(getActivity(),EarchCircleActivity.class);
             intent.putExtra("innerCircleBean",innerCircleBeans.get(position));
             intent.putExtra("circle_tag",tag);
@@ -586,22 +581,16 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
         mEtDialog.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 if (delayRun != null) {
                     mHandler.removeCallbacks(delayRun);
                 }
-
                 editPwd = s.toString();
-
                 mHandler.postDelayed(delayRun, 500);
             }
         });
@@ -637,8 +626,77 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<InnerC
     };
 
     @Override
-    public void toUpdateEach(InnerCircleBean data) {
-        circleAdapter.getDatas().add(currentPosition,data);
+    public void toUpdateEach(EachCircleBean data) {
+
+        InnerCircleBean circleBean = innerCircleBeans.get(currentPosition);
+        circleBean.setComment_count(data.getData().getComment_count());
+        circleBean.setFab_count(data.getData().getFab_count());
+        circleBean.setShare_count(data.getData().getShare_count());
+        circleBean.setHas_fab(data.getData().getHas_fab());
+
+        circleAdapter.getDatas().add(currentPosition,circleBean);
         circleAdapter.notifyDataSetChanged();
+
+    }
+
+    private void showDownDialog(){
+        final Dialog mDialog = new Dialog(getActivity(), R.style.DialogTheme);
+        mDialog.setCancelable(false);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.personal_down_dialog,null);
+
+        mDialog.setContentView(view,new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        TextView mRemoveTv = (TextView) view.findViewById(R.id.headciv_dialog_remove_attention);
+        TextView mShouTv = (TextView) view.findViewById(R.id.headciv_dialog_shou);
+        TextView mDeleteTv = (TextView) view.findViewById(R.id.headciv_dialog_delete);
+        TextView mCancle = (TextView) view.findViewById(R.id.headciv_dialog_cancle);
+
+        if (getUserObJId().equals(friendId)){
+            mRemoveTv.setVisibility(View.GONE);
+            mShouTv.setVisibility(View.GONE);
+        }else {
+            mRemoveTv.setVisibility(View.VISIBLE);
+            mShouTv.setVisibility(View.VISIBLE);
+        }
+
+        if (isFriend){
+            mRemoveTv.setText("取消关注");
+        }else {
+            mRemoveTv.setText("添加关注");
+        }
+
+        mCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mRemoveTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                methodType = MethodType.METHOD_TYPE_REMOVE_ATTENTION;
+                ourCodePresenter.removeAttention(getParaMap());
+
+                mDialog.dismiss();
+            }
+        });
+        mShouTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDeleteTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                methodType = MethodType.METHOD_TYPE_DELETE_SINGEL;
+                ourCodePresenter.deleteSingleCircle(getParaMap());
+
+                mDialog.dismiss();
+            }
+        });
+        ApiUtils.setDialogWindow(mDialog);
+        mDialog.show();
     }
 }

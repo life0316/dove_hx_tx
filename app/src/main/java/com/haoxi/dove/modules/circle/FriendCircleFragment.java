@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +33,9 @@ import com.haoxi.dove.callback.OnHolder2Listener;
 import com.haoxi.dove.inject.CircleMoudle;
 import com.haoxi.dove.inject.DaggerCircleComponent;
 import com.haoxi.dove.newin.bean.CircleBean;
+import com.haoxi.dove.newin.bean.EachCircleBean;
 import com.haoxi.dove.newin.bean.InnerCircleBean;
+import com.haoxi.dove.newin.ourcircle.presenter.EachCirclePresenter;
 import com.haoxi.dove.newin.ourcircle.presenter.InnerCirclePresenter;
 import com.haoxi.dove.newin.ourcircle.ui.CircleDetialActivity;
 import com.haoxi.dove.newin.ourcircle.ui.EarchCircleActivity;
@@ -41,6 +44,7 @@ import com.haoxi.dove.newin.ourcircle.ui.TransCircleActivity;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.retrofit.DataLoadType;
 import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
@@ -65,7 +69,7 @@ import butterknife.BindView;
 import rx.Observable;
 import rx.functions.Action1;
 
-public class FriendCircleFragment extends BaseSrFragment implements IMyCircleView<CircleBean>,OnRefreshListener, OnLoadmoreListener, OnHolder2Listener, MyItemClickListener {
+public class FriendCircleFragment extends BaseSrFragment implements IEachView<EachCircleBean>, IMyCircleView<CircleBean>,OnRefreshListener, OnLoadmoreListener, OnHolder2Listener<InnerCircleBean,CircleAdapter.MyRefrashHolder>, MyItemClickListener {
 
     private int methodType = MethodType.METHOD_TYPE_FRIENDS_CIRCLES;
 
@@ -75,7 +79,7 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
     private boolean isFriend = false;
     private boolean isDao = false;
     private boolean isLoad = true;
-    private int tag = 0;
+    private int tag = 1;
     private String headpic;
 
 
@@ -86,7 +90,6 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
     private int currentPosition;//当前操作的 position
 
 
-    HmNativeAd nativeAd;
     private List<InnerCircleBean> innerCircleBeans = new ArrayList<>();
 
     private Map<String,Integer> pageNumMap = new HashMap<>();
@@ -98,51 +101,37 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
     InnerCirclePresenter innerCirclePresenter;
     @Inject
     OurCodePresenter ourCodePresenter;
+    EachCirclePresenter eachCirclePresenter;
+
     @Inject
     RxBus mRxBus;
 
-    AdCircleAdapter adCircleAdapter;
+    CircleAdapter circleAdapter;
     private Observable<Integer> netObservale;
     private Observable<Boolean> isLoadObervable;
-    private Observable<Boolean> isUpdateObervable;
-    private NativeResource nativeResource;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        isLoadObervable = mRxBus.register("isLoad", Boolean.class);
-        isUpdateObervable = mRxBus.register("update", Boolean.class);
         netObservale = mRxBus.register("load_circle", Integer.class);
-
-        initObservale();
-    }
-
-    private void initObservale() {
-
-        isLoadObervable.subscribe(new Action1<Boolean>() {
+        isLoadObervable = mRxBus.register("isLoadF", Boolean.class);
+        netObservale.subscribe(new Action1<Integer>() {
             @Override
-            public void call(Boolean aBoolean) {
-                isLoad = aBoolean;
-            }
-        });
-        isUpdateObervable.subscribe(new Action1<Boolean>() {
-            @Override
-            public void call(Boolean aBoolean) {
-                if (aBoolean) {
-                    mRxBus.post("load_circle",0);
-                    mRxBus.post("load_circle",1);
+            public void call(Integer integer) {
+                if (integer == 1 ){
+                    circleAdapter.getDatas().remove(currentPosition);
+                    methodType = MethodType.METHOD_TYPE_CIRCLE_DETAIL;
+                    eachCirclePresenter.getDataFromNets(getParaMap());
                 }
             }
         });
 
-        netObservale.subscribe(new Action1<Integer>() {
+        isLoadObervable.subscribe(new Action1<Boolean>() {
             @Override
-            public void call(Integer integer) {
-                if (integer == 0) {
-                    isDao = true;
-                    innerCirclePresenter.getDatasFromDao(getUserObJId(), getUserObJId(), true, 0);
+            public void call(Boolean aBoolean) {
+                if (aBoolean) {
+                    PAGENUM = 1;
+                    getDatas();
                 }
             }
         });
@@ -151,19 +140,18 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        eachCirclePresenter = new EachCirclePresenter(this);
 
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadmoreListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        adCircleAdapter = new AdCircleAdapter(getActivity(),0);
+        circleAdapter = new CircleAdapter<InnerCircleBean>(getActivity(),0);
 
-        recyclerView.setAdapter(adCircleAdapter);
-        adCircleAdapter.setOnHolderListener(this);
-        adCircleAdapter.setMyItemClickListener(this);
-
-        getAdDatas();
+        recyclerView.setAdapter(circleAdapter);
+        circleAdapter.setOnHolderListener(this);
+        circleAdapter.setMyItemClickListener(this);
 
     }
 
@@ -187,7 +175,7 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
                         PAGENUM += 1;
                         pageNumMap.put("all",PAGENUM);
                     }
-                    adCircleAdapter.addData(data.getData());
+                    circleAdapter.addData(data.getData());
                     innerCircleBeans.addAll(data.getData());
                 }
                 break;
@@ -197,7 +185,7 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
                         PAGENUM += 1;
                         pageNumMap.put("all",PAGENUM);
                     }
-                    adCircleAdapter.updateList(data.getData());
+                    circleAdapter.updateList(data.getData());
                     innerCircleBeans.clear();
                     innerCircleBeans.addAll(data.getData());
                 }
@@ -213,55 +201,22 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
     @Override
     public void toDo() {
 
-        if (adCircleAdapter.getItem(currentPosition) instanceof InnerCircleBean){
-
-            InnerCircleBean innerCircleBean = (InnerCircleBean) adCircleAdapter.getItem(currentPosition);
             switch (methodType){
-                case MethodType.METHOD_TYPE_ADD_ATTENTION:
-                    innerCirclePresenter.updateCircleBy(getUserObJId(),innerCircleBean.getUserid(),true);
-                    break;
                 case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
-                    innerCirclePresenter.updateCircleBy(getUserObJId(),innerCircleBean.getUserid(),false);
+                    methodType = MethodType.METHOD_TYPE_FRIENDS_CIRCLES;
+                    PAGENUM = 1;
+                    getDatas();
                     break;
+
                 case MethodType.METHOD_TYPE_ADD_FAB:
-
-                    Log.e("faamap99999","点赞-------"+ innerCircleBean.getCircleid());
-                    Log.e("faamap99999","id---1----"+ innerCircleBean.getId());
-
-//                    innerCircleBean.setHas_fab(true);
-                    innerCircleBean.setFab_count(innerCircleBean.getFab_count() + 10);
-
-                    innerCirclePresenter.updateCircle(innerCircleBean);
-                    adCircleAdapter.getDatas().remove(currentPosition);
-                    adCircleAdapter.getDatas().add(currentPosition,innerCircleBean);
-                    adCircleAdapter.notifyDataSetChanged();
-
-                    //loadCircle();
-
-                    break;
                 case MethodType.METHOD_TYPE_REMOVE_FAB:
-
-                    innerCircleBean.setHas_fab(false);
-                    innerCircleBean.setFab_count(innerCircleBean.getFab_count() - 1);
-                    innerCirclePresenter.updateCircle(innerCircleBean);
-                    loadCircle();
-                    break;
-
                 case MethodType.METHOD_TYPE_ADD_COMMENT:
-                    innerCircleBean.setComment_count(innerCircleBean.getComment_count() + 1);
-                    innerCirclePresenter.updateCircle(innerCircleBean);
-                    loadCircle();
+
+                    methodType = MethodType.METHOD_TYPE_CIRCLE_DETAIL;
+                    eachCirclePresenter.getDataFromNets(getParaMap());
                     break;
             }
-        }
     }
-
-    private void loadCircle(){
-        mRxBus.post("load_circle",0);
-        mRxBus.post("load_circle",1);
-        mRxBus.post("load_circle",2);
-    }
-
 
     @Override
     public void onResume() {
@@ -269,42 +224,10 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
         if (isLoad) {
             PAGENUM = 1;
             pageNumMap.put("all",1);
-            methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
+            methodType = MethodType.METHOD_TYPE_FRIENDS_CIRCLES;
             getDatas();
-
-            nativeAd.loadAd("429");
         }
         isLoad = false;
-    }
-
-    private void getAdDatas() {
-
-        nativeAd = new HmNativeAd(getActivity(), new AdNativeLoadListener() {
-            @Override
-            public boolean onAdLoaded(NativeResource nativeResource) {
-                Log.d("Inapp","onAdLoaded " + nativeResource);
-                FriendCircleFragment.this.nativeResource = nativeResource;
-                List<NativeResource> list = new ArrayList<>();
-                list.add(nativeResource);
-                adCircleAdapter.updateAdList(list);
-
-                adCircleAdapter.notifyDataSetChanged();
-
-                return false;
-            }
-
-            @Override
-            public boolean onFailed(int i, String s) {
-                Log.d("Inapp","onFailed " + i+"-------"+s);
-                return false;
-            }
-
-            @Override
-            public void onAdClosed() {
-
-            }
-        });
-
     }
 
     @Override
@@ -330,14 +253,12 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
             PAGENUM = innerCircleBeans.size() / 10 + 1;
         }
         pageNumMap.put("all",PAGENUM);
-        methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
+        methodType = MethodType.METHOD_TYPE_FRIENDS_CIRCLES;
         innerCirclePresenter.loadMoreData(getParaMap(),0);
     }
 
     public void getDatas() {
         if (!ApiUtils.isNetworkConnected(getActivity())) {
-            isDao = true;
-            innerCirclePresenter.getDatasFromDao(getUserObJId(),getUserObJId(),true,tag);
         } else {
             isDao = false;
             innerCirclePresenter.refreshFromNets(getParaMap(),tag);
@@ -347,15 +268,13 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
         if (!ApiUtils.isNetworkConnected(getActivity())) {
-            isDao = true;
-            innerCirclePresenter.getDatasFromDao(getUserObJId(),getUserObJId(),true,0);
         } else {
             PAGENUM = 1;
             pageNumMap.put("all",PAGENUM);
             isDao = false;
             //下拉刷新
-            methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
-            innerCirclePresenter.refreshFromNets(getParaMap(),0);
+            methodType = MethodType.METHOD_TYPE_FRIENDS_CIRCLES;
+            innerCirclePresenter.refreshFromNets(getParaMap(),1);
         }
     }
 
@@ -386,36 +305,40 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
             case MethodType.METHOD_TYPE_SHARE_CIRCLE:
                 method = MethodConstant.SHARE_CIRCLE;
                 break;
+            case MethodType.METHOD_TYPE_CIRCLE_DETAIL:
+                method = MethodConstant.GET_CIRCLE_DETAIL;
+                break;
         }
         return method;
     }
 
     public Map<String,String> getParaMap(){
         Map<String,String> map = new HashMap<>();
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("userid",getUserObjId());
-        map.put("token",getToken());
+        map.put(MethodParams.PARAMS_METHOD,getMethod());
+        map.put(MethodParams.PARAMS_SIGEN,getSign());
+        map.put(MethodParams.PARAMS_TIME,getTime());
+        map.put(MethodParams.PARAMS_VERSION,getVersion());
+        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
+        map.put(MethodParams.PARAMS_TOKEN,getToken());
 
         switch (methodType){
             case MethodType.METHOD_TYPE_ADD_ATTENTION:
             case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
-                map.put("friendid",friendId);
+                map.put(MethodParams.PARAMS_FRIEND_ID,friendId);
                 break;
             case MethodType.METHOD_TYPE_FRIENDS_CIRCLES:
-                map.put("cp",String.valueOf(PAGENUM));
-                map.put("ps",String.valueOf(PAGESIZE));
+                map.put(MethodParams.PARAMS_CP,String.valueOf(PAGENUM));
+                map.put(MethodParams.PARAMS_PS,String.valueOf(PAGESIZE));
                 break;
             case MethodType.METHOD_TYPE_SHARE_CIRCLE:
             case MethodType.METHOD_TYPE_ADD_FAB:
             case MethodType.METHOD_TYPE_REMOVE_FAB:
-                map.put("circleid",circleid);
+            case  MethodType.METHOD_TYPE_CIRCLE_DETAIL:
+                map.put(MethodParams.PARAMS_CIRCLE_ID,circleid);
                 break;
             case MethodType.METHOD_TYPE_ADD_COMMENT:
-                map.put("circleid",circleid);
-                map.put("content",commentContent);
+                map.put(MethodParams.PARAMS_CIRCLE_ID,circleid);
+                map.put(MethodParams.PARAMS_CONTENT,commentContent);
                 break;
         }
         return map;
@@ -423,56 +346,54 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void toInitHolder(final RecyclerView.ViewHolder holder, final int position, Object data) {
-        if (data instanceof InnerCircleBean){
-            this.innerCircleBean = (InnerCircleBean) data;
-            final InnerCircleBean curData = (InnerCircleBean) data;
+    public void toInitHolder(final CircleAdapter.MyRefrashHolder holder, final int position, final InnerCircleBean data) {
+            this.innerCircleBean = data;
 
             //转发的
 
-            if (curData.getTrans_userid() != null && !"".equals(curData.getTrans_userid()) && !"-1".equals(curData.getTrans_userid())) {
-                ((AdCircleAdapter.MyRefrashHolder)holder).transpondFl.setVisibility(View.VISIBLE);
+            if (data.getTrans_userid() != null && !"".equals(data.getTrans_userid()) && !"-1".equals(data.getTrans_userid())) {
+                holder.transpondFl.setVisibility(View.VISIBLE);
 
-                ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.setVisibility(View.GONE);
+                holder.mRecyclerView.setVisibility(View.GONE);
 
-                if (!TextUtils.isEmpty(curData.getContent()) && !"".equals(curData.getContent())){
+                if (!TextUtils.isEmpty(data.getContent()) && !"".equals(data.getContent())) {
 
-                    String content = curData.getContent();
+                    String content = data.getContent();
 
                     String[] contents = content.split("#");
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mTranContentTv.setText(contents[contents.length - 1]);
+                    holder.mTranContentTv.setText(contents[contents.length - 1]);
 
-                    Log.e("mTranContentTv",content+"--------"+curData.getUsername()+"--------"+curData.getTrans_name());
+                    Log.e("mTranContentTv", content + "--------" + data.getUsername() + "--------" + data.getTrans_name());
 
                     if (content.lastIndexOf("#") != -1) {
-                        ((AdCircleAdapter.MyRefrashHolder)holder).mContentTv.setText(content.substring(0,content.lastIndexOf("#")));
-                    }else {
-                        ((AdCircleAdapter.MyRefrashHolder)holder).mContentTv.setText("转发动态");
+                       holder.mContentTv.setText(content.substring(0, content.lastIndexOf("#")));
+                    } else {
+                       holder.mContentTv.setText("转发动态");
                     }
                 }
 
-                if (!"".equals(curData.getTrans_name()) && curData.getTrans_name() != null ){
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mTranName.setText("@" + String.valueOf(curData.getTrans_name()));
+                if (!"".equals(data.getTrans_name()) && data.getTrans_name() != null) {
+                    holder.mTranName.setText("@" + String.valueOf(data.getTrans_name()));
                 }
 
-                if (curData.getPics() != null && curData.getPics().size() != 0){
+                if (data.getPics() != null && data.getPics().size() != 0) {
 
                     final ArrayList<String> selectedPhotos = new ArrayList<>();
                     selectedPhotos.clear();
 
-                    int picCount = curData.getPics().size();
+                    int picCount = data.getPics().size();
 
-                    selectedPhotos.addAll(curData.getPics());
+                    selectedPhotos.addAll(data.getPics());
 
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.removeAllViews();
+                    holder.mTranRv.removeAllViews();
 
                     CirclePhotoAdapter photoAdapter = new CirclePhotoAdapter(getContext(), selectedPhotos);
 
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.setVisibility(View.VISIBLE);
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.setAdapter(photoAdapter);
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.setLayoutManager(new StaggeredGridLayoutManager(picCount < 3 ?2:3, OrientationHelper.VERTICAL));
+                    holder.mTranRv.setVisibility(View.VISIBLE);
+                    holder.mTranRv.setAdapter(photoAdapter);
+                    holder.mTranRv.setLayoutManager(new StaggeredGridLayoutManager(picCount < 3 ? 2 : 3, OrientationHelper.VERTICAL));
 
-                    ((SimpleItemAnimator) ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.getItemAnimator()).setSupportsChangeAnimations(false);
+                    ((SimpleItemAnimator)holder.mTranRv.getItemAnimator()).setSupportsChangeAnimations(false);
 
                     photoAdapter.setMyItemClickListener(new MyItemClickListener() {
                         @Override
@@ -487,40 +408,40 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
                                     .start(getActivity());
                         }
                     });
-                }else {
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.removeAllViews();
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.setVisibility(View.GONE);
+                } else {
+                    holder.mTranRv.removeAllViews();
+                    holder.mTranRv.setVisibility(View.GONE);
                 }
 
-                ((AdCircleAdapter.MyRefrashHolder)holder).mAddFriendBtn.setVisibility(View.GONE);
-                ((AdCircleAdapter.MyRefrashHolder)holder).mDownIv.setVisibility(View.GONE);
+                holder.mAddFriendBtn.setVisibility(View.GONE);
+                holder.mDownIv.setVisibility(View.GONE);
 
-            }else {
+            } else {
 
-                ((AdCircleAdapter.MyRefrashHolder)holder).transpondFl.setVisibility(View.GONE);
+                holder.transpondFl.setVisibility(View.GONE);
 
-                if (!TextUtils.isEmpty(innerCircleBean.getContent()) && !"".equals(innerCircleBean.getContent())){
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mContentTv.setText(innerCircleBean.getContent());
+                if (!TextUtils.isEmpty(innerCircleBean.getContent()) && !"".equals(innerCircleBean.getContent())) {
+                    holder.mContentTv.setText(innerCircleBean.getContent());
                 }
 
-                if (curData.getPics() != null && curData.getPics().size() != 0){
+                if (data.getPics() != null && data.getPics().size() != 0) {
 
                     final ArrayList<String> selectedPhotos = new ArrayList<>();
                     selectedPhotos.clear();
 
-                    int picCount = curData.getPics().size();
+                    int picCount = data.getPics().size();
 
-                    selectedPhotos.addAll(curData.getPics());
+                    selectedPhotos.addAll(data.getPics());
 
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.removeAllViews();
+                    holder.mRecyclerView.removeAllViews();
 
-                    CirclePhotoAdapter  photoAdapter = new CirclePhotoAdapter(getContext(), selectedPhotos);
+                    CirclePhotoAdapter photoAdapter = new CirclePhotoAdapter(getContext(), selectedPhotos);
 
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.setVisibility(View.VISIBLE);
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.setAdapter(photoAdapter);
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(picCount < 3 ?2:3, OrientationHelper.VERTICAL));
+                    holder.mRecyclerView.setVisibility(View.VISIBLE);
+                    holder.mRecyclerView.setAdapter(photoAdapter);
+                    holder.mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(picCount < 3 ? 2 : 3, OrientationHelper.VERTICAL));
 
-                    ((SimpleItemAnimator) ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+                    ((SimpleItemAnimator)holder.mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
                     photoAdapter.setMyItemClickListener(new MyItemClickListener() {
                         @Override
@@ -537,208 +458,186 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
                     });
 
 
-                }else {
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.removeAllViews();
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.setVisibility(View.GONE);
+                } else {
+                    holder.mRecyclerView.removeAllViews();
+                    holder.mRecyclerView.setVisibility(View.GONE);
                 }
             }
 
-            Log.e("afsdfdewf",curData.getPlayerid()+"------"+curData.getCircleid()+"-----"+curData.getIs_friend());
+            Log.e("afsdfdewf", data.getPlayerid() + "------" + data.getCircleid() + "-----" + data.getIs_friend());
 
-            if (curData.isIs_friend() || tag == 1 || tag == 2) {
-                ((AdCircleAdapter.MyRefrashHolder)holder).mAddFriendBtn.setVisibility(View.GONE);
-                ((AdCircleAdapter.MyRefrashHolder)holder).mDownIv.setVisibility(View.VISIBLE);
-            }else {
-                ((AdCircleAdapter.MyRefrashHolder)holder).mAddFriendBtn.setVisibility(View.VISIBLE);
-                ((AdCircleAdapter.MyRefrashHolder)holder).mDownIv.setVisibility(View.GONE);
+            if (data.isIs_friend() || tag == 1 || tag == 2) {
+                holder.mAddFriendBtn.setVisibility(View.GONE);
+                holder.mDownIv.setVisibility(View.VISIBLE);
+            } else {
+               holder.mAddFriendBtn.setVisibility(View.VISIBLE);
+               holder.mDownIv.setVisibility(View.GONE);
             }
-            if (curData.isHas_fab()) {
+            if (data.isHas_fab()) {
                 Drawable likeLift = getResources().getDrawable(R.mipmap.like);
                 likeLift.setBounds(0, 0, likeLift.getMinimumWidth(), likeLift.getMinimumHeight());
-                ((AdCircleAdapter.MyRefrashHolder)holder).mPraiseBtn.setCompoundDrawables(likeLift, null, null, null);
-            }else {
+                holder.mPraiseBtn.setCompoundDrawables(likeLift, null, null, null);
+            } else {
                 Drawable likeLift = getResources().getDrawable(R.mipmap.dislike);
                 likeLift.setBounds(0, 0, likeLift.getMinimumWidth(), likeLift.getMinimumHeight());
-                ((AdCircleAdapter.MyRefrashHolder)holder).mPraiseBtn.setCompoundDrawables(likeLift, null, null, null);
+                holder.mPraiseBtn.setCompoundDrawables(likeLift, null, null, null);
             }
 
-            if (curData.getShare_count() != 0) {
-                ((AdCircleAdapter.MyRefrashHolder)holder).mTranspondBtn.setText(getString(R.string.share_circle) + curData.getShare_count());
-            }else {
-                ((AdCircleAdapter.MyRefrashHolder)holder).mTranspondBtn.setText(getString(R.string.share_circle));
+            if (data.getShare_count() != 0) {
+                holder.mTranspondBtn.setText(getString(R.string.share_circle) + data.getShare_count());
+            } else {
+                holder.mTranspondBtn.setText(getString(R.string.share_circle));
             }
 
-            if (curData.getComment_count() != 0) {
-                ((AdCircleAdapter.MyRefrashHolder)holder).mCommentBtn.setText(getString(R.string.comment_circle)+curData.getComment_count());
-            }else {
-                ((AdCircleAdapter.MyRefrashHolder)holder).mCommentBtn.setText(getString(R.string.comment_circle));
+            if (data.getComment_count() != 0) {
+                holder.mCommentBtn.setText(getString(R.string.comment_circle) + data.getComment_count());
+            } else {
+                holder.mCommentBtn.setText(getString(R.string.comment_circle));
             }
-            if (curData.getFab_count() != 0){
-                ((AdCircleAdapter.MyRefrashHolder)holder).mPraiseBtn.setText(getString(R.string.fab_circle)+curData.getFab_count());
-            }else {
-                ((AdCircleAdapter.MyRefrashHolder)holder).mPraiseBtn.setText(getString(R.string.fab_circle));
-            }
-
-            if (curData.getContent() == null || "".equals(curData.getContent())){
-                ((AdCircleAdapter.MyRefrashHolder)holder).mContentTv.setVisibility(View.GONE);
-            }else {
-                ((AdCircleAdapter.MyRefrashHolder)holder).mContentTv.setVisibility(View.VISIBLE);
+            if (data.getFab_count() != 0) {
+                holder.mPraiseBtn.setText(getString(R.string.fab_circle) + data.getFab_count());
+            } else {
+                holder.mPraiseBtn.setText(getString(R.string.fab_circle));
             }
 
-            if (!"".equals(curData.getUsername()) && curData.getUsername() != null ){
-                ((AdCircleAdapter.MyRefrashHolder)holder).mUserName.setText(String.valueOf(curData.getUsername()));
+            if (data.getContent() == null || "".equals(data.getContent())) {
+                holder.mContentTv.setVisibility(View.GONE);
+            } else {
+                holder.mContentTv.setVisibility(View.VISIBLE);
+            }
+
+            if (!"".equals(data.getUsername()) && data.getUsername() != null) {
+                holder.mUserName.setText(String.valueOf(data.getUsername()));
             }
 
             headpic = ConstantUtils.HEADPIC;
-            if (curData.getHeadpic() != null && !"".equals(curData.getHeadpic()) && !"-1".equals(curData.getHeadpic())){
-                headpic += curData.getHeadpic();
+            if (data.getHeadpic() != null && !"".equals(data.getHeadpic()) && !"-1".equals(data.getHeadpic())) {
+                headpic += data.getHeadpic();
 
-                String tag = (String) ((AdCircleAdapter.MyRefrashHolder)holder).mUserIcon.getTag(R.id.imageid);
+                String tag = (String)holder.mUserIcon.getTag(R.id.imageid);
 
-                if (!TextUtils.equals(headpic,tag)){
-                    ((AdCircleAdapter.MyRefrashHolder)holder).mUserIcon.setImageResource(R.mipmap.btn_img_photo_default);
+                if (!TextUtils.equals(headpic, tag)) {
+                    holder.mUserIcon.setImageResource(R.mipmap.btn_img_photo_default);
                 }
 
-                ((AdCircleAdapter.MyRefrashHolder)holder).mUserIcon.setTag(R.id.imageid,headpic);
+                holder.mUserIcon.setTag(R.id.imageid, headpic);
                 Glide.with(getContext())
                         .load(headpic)
                         .dontAnimate()
                         .placeholder(R.mipmap.btn_img_photo_default)
                         .error(R.mipmap.btn_img_photo_default)
-                        .into(((AdCircleAdapter.MyRefrashHolder)holder).mUserIcon);
+                        .into(holder.mUserIcon);
 
-            }else {
-                ((AdCircleAdapter.MyRefrashHolder)holder).mUserIcon.setTag(R.id.imageid,"");
-                ((AdCircleAdapter.MyRefrashHolder)holder).mUserIcon.setImageResource(R.mipmap.btn_img_photo_default);
+            } else {
+                 holder.mUserIcon.setTag(R.id.imageid, "");
+                 holder.mUserIcon.setImageResource(R.mipmap.btn_img_photo_default);
             }
 
-            ((AdCircleAdapter.MyRefrashHolder)holder).mUserIcon.setOnClickListener(new View.OnClickListener() {
+            holder.mUserIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     currentPosition = position;
-                    if (curData.isIs_friend() || curData.getUserid().equals(getUserObJId())){
-                        Intent intent = new Intent(getActivity(),CircleDetialActivity.class);
-                        intent.putExtra("friendid",curData.getUserid());
-                        intent.putExtra("name",curData.getUsername());
-                        intent.putExtra("innerCircleBean",curData);
-                        intent.putExtra("current_position",curData);
-                        intent.putExtra("circle_tag",tag);
+                    if (data.isIs_friend() || data.getUserid().equals(getUserObJId())) {
+                        Intent intent = new Intent(getActivity(), CircleDetialActivity.class);
+                        intent.putExtra("friendid", data.getUserid());
+                        intent.putExtra("name", data.getUsername());
+                        intent.putExtra("innerCircleBean", data);
+                        intent.putExtra("current_position", data);
+                        intent.putExtra("circle_tag", tag);
                         startActivity(intent);
                     }
                 }
             });
 
-            if (!TextUtils.isEmpty(curData.getCreate_time()) && !"".equals(curData.getCreate_time())) {
-                ((AdCircleAdapter.MyRefrashHolder)holder).mCreateTimeTv.setText(curData.getCreate_time());
+            if (!TextUtils.isEmpty(data.getCreate_time()) && !"".equals(data.getCreate_time())) {
+                holder.mCreateTimeTv.setText(data.getCreate_time());
             }
-            ((AdCircleAdapter.MyRefrashHolder)holder).mDownIv.setOnClickListener(new View.OnClickListener() {
+            holder.mDownIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     currentPosition = position;
 
-                    circleid = curData.getCircleid();
-                    friendId = curData.getUserid();
-                    isFriend = curData.isIs_friend();
-//                    showDownDialog();
+                    circleid = data.getCircleid();
+                    friendId = data.getUserid();
+                    isFriend = data.isIs_friend();
+                    showDownDialog();
                 }
             });
 
 
-            ((AdCircleAdapter.MyRefrashHolder)holder).mAddFriendBtn.setOnClickListener(new View.OnClickListener() {
+            holder.mAddFriendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     currentPosition = position;
                     methodType = MethodType.METHOD_TYPE_ADD_ATTENTION;
 
-                    friendId = curData.getUserid();
+                    friendId = data.getUserid();
 
                     ourCodePresenter.addAttention(getParaMap());
                 }
             });
 
-            ((AdCircleAdapter.MyRefrashHolder)holder).mPraiseBtn.setOnClickListener(new View.OnClickListener() {
+             holder.mPraiseBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     currentPosition = position;
 
-                    circleid = curData.getCircleid();
-                    friendId = curData.getUserid();
-                    isFriend = curData.isIs_friend();
+                    circleid = data.getCircleid();
+                    friendId = data.getUserid();
+                    isFriend = data.isIs_friend();
 
-                    if (curData.isHas_fab()) {
+                    if (data.isHas_fab()) {
                         methodType = MethodType.METHOD_TYPE_REMOVE_FAB;
                         ourCodePresenter.removeFab(getParaMap());
-                    }else {
+                    } else {
                         methodType = MethodType.METHOD_TYPE_ADD_FAB;
                         ourCodePresenter.addFab(getParaMap());
                     }
-
                 }
             });
 
-            ((AdCircleAdapter.MyRefrashHolder)holder).mCommentBtn.setOnClickListener(new View.OnClickListener() {
+            holder.mCommentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     currentPosition = position;
 
-                    circleid = curData.getCircleid();
+                    circleid = data.getCircleid();
                     methodType = MethodType.METHOD_TYPE_ADD_COMMENT;
 
-                    if (curData.getComment_count() != 0){
-                        Intent intent = new Intent(getActivity(),EarchCircleActivity.class);
-                        intent.putExtra("innerCircleBean",innerCircleBeans.get(currentPosition));
-                        intent.putExtra("circle_tag",tag);
+                    if (data.getComment_count() != 0) {
+                        Intent intent = new Intent(getActivity(), EarchCircleActivity.class);
+                        intent.putExtra("innerCircleBean", innerCircleBeans.get(currentPosition));
+                        intent.putExtra("circle_tag", tag);
                         startActivity(intent);
-                    }else {
+                    } else {
                         showMyDialog();
                     }
                 }
             });
 
-            ((AdCircleAdapter.MyRefrashHolder)holder).mTranspondBtn.setOnClickListener(new View.OnClickListener() {
+            holder.mTranspondBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     currentPosition = position;
 
-                    circleid = curData.getCircleid();
-                    Intent intent = new Intent(getActivity(),TransCircleActivity.class);
-                    intent.putExtra("innerCircleBean",curData);
+                    circleid = data.getCircleid();
+                    Intent intent = new Intent(getActivity(), TransCircleActivity.class);
+                    intent.putExtra("innerCircleBean", data);
+                    intent.putExtra("circle_tag",tag);
                     startActivity(intent);
                 }
             });
-        }if (data instanceof NativeResource){
-
-            Log.e("ad","原生广告");
-
-            ((AdCircleAdapter.AdHolder)holder).content.setText( ((NativeResource)data).getTextForLabel("title"));
-                NativeResource.Img img =  ((NativeResource)data).getImgForLabel("ad");
-
-            ((AdCircleAdapter.AdHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        nativeResource.onClick(((AdCircleAdapter.AdHolder)holder).adImage);
-                    }
-                });
-                if(img != null){
-
-                    Glide.with(getActivity())
-                            .load(img.getUrl())
-                            .error(R.mipmap.default_pic)
-                            .into(((AdCircleAdapter.AdHolder)holder).adImage);
-            }
-        }
     }
 
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mRxBus.unregister("isLoad", isLoadObervable);
         mRxBus.unregister("load_circle", netObservale);
-        mRxBus.unregister("update", isUpdateObervable);
+        mRxBus.unregister("isLoadF", isLoadObervable);
     }
 
     @Override
@@ -760,9 +659,7 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
         View view = getActivity().getLayoutInflater().inflate(R.layout.comment_dialog, null);
         final EditText mEtDialog = (EditText) view.findViewById(R.id.pigeon_name_dialog_et);
         commentSub = (TextView) view.findViewById(R.id.comment_submit);
-
         mEtDialog.setSelection(mEtDialog.getText().length());
-
         mDialogEt.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         mDialogEt.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         mDialogEt.setContentView(view, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -785,9 +682,7 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
                 if (delayRun != null) {
                     mHandler.removeCallbacks(delayRun);
                 }
-
                 editPwd = s.toString();
-
                 mHandler.postDelayed(delayRun, 500);
             }
         });
@@ -795,13 +690,10 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
         commentSub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 commentContent = mEtDialog.getText().toString().trim();
-
                 if (!TextUtils.equals("",commentContent)) {
                     ourCodePresenter.addComment(getParaMap());
                 }
-
                 mDialogEt.dismiss();
             }
         });
@@ -821,4 +713,81 @@ public class FriendCircleFragment extends BaseSrFragment implements IMyCircleVie
             }
         }
     };
+
+    @Override
+    public void toUpdateEach(EachCircleBean data) {
+
+        circleAdapter.getDatas().remove(currentPosition);
+
+        InnerCircleBean circleBean = innerCircleBeans.get(currentPosition);
+        circleBean.setComment_count(data.getData().getComment_count());
+        circleBean.setFab_count(data.getData().getFab_count());
+        circleBean.setShare_count(data.getData().getShare_count());
+        circleBean.setHas_fab(data.getData().getHas_fab());
+
+        circleAdapter.getDatas().add(currentPosition,circleBean);
+        circleAdapter.notifyDataSetChanged();
+    }
+
+    private void showDownDialog(){
+        final Dialog mDialog = new Dialog(getActivity(), R.style.DialogTheme);
+        mDialog.setCancelable(false);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.personal_down_dialog,null);
+
+        mDialog.setContentView(view,new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        TextView mRemoveTv = (TextView) view.findViewById(R.id.headciv_dialog_remove_attention);
+        TextView mShouTv = (TextView) view.findViewById(R.id.headciv_dialog_shou);
+        TextView mDeleteTv = (TextView) view.findViewById(R.id.headciv_dialog_delete);
+        TextView mCancle = (TextView) view.findViewById(R.id.headciv_dialog_cancle);
+
+        mDeleteTv.setVisibility(View.GONE);
+        mShouTv.setVisibility(View.GONE);
+        if (getUserObJId().equals(friendId)){
+            mRemoveTv.setVisibility(View.GONE);
+            mShouTv.setVisibility(View.GONE);
+        }else {
+            mRemoveTv.setVisibility(View.VISIBLE);
+            mShouTv.setVisibility(View.VISIBLE);
+        }
+
+        if (isFriend){
+            mRemoveTv.setText("取消关注");
+        }else {
+            mRemoveTv.setText("添加关注");
+        }
+
+        mCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mRemoveTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                methodType = MethodType.METHOD_TYPE_REMOVE_ATTENTION;
+                ourCodePresenter.removeAttention(getParaMap());
+
+                mDialog.dismiss();
+            }
+        });
+        mShouTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDeleteTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                methodType = MethodType.METHOD_TYPE_DELETE_SINGEL;
+                ourCodePresenter.deleteSingleCircle(getParaMap());
+                mDialog.dismiss();
+            }
+        });
+        ApiUtils.setDialogWindow(mDialog);
+        mDialog.show();
+    }
 }
