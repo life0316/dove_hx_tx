@@ -16,6 +16,16 @@ public class PointBean implements Parcelable {
     private float height;
     private float dir;
 
+    private double battery;
+
+    public double getBattery() {
+        return battery;
+    }
+
+    public void setBattery(double battery) {
+        this.battery = battery;
+    }
+
     public float getSpeed() {
         return speed;
     }

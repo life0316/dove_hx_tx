@@ -84,6 +84,7 @@
     <string name="pigeon_mate_ring">匹配鸽环: </string>
 
     <string name="add_ringcode_null">请输入鸽环编号</string>
+    <string name="add_ringcode_15">请输入15位鸽环编号</string>
 
     <!--添加信鸽-->
     <string name="add_pigeon_code_exist">该信鸽编号已经存在,请重新输入</string>

@@ -78,11 +78,6 @@ public class AddRingActivity extends BaseActivity implements IAddRingView {
 
     @OnClick(R.id.custom_toolbar_iv)
     void backOnclic() {
-
-        if (!isAdd) {
-            mRxBus.post("isLoad",false);
-        }
-
         this.finish();
     }
 
@@ -93,7 +88,10 @@ public class AddRingActivity extends BaseActivity implements IAddRingView {
             ApiUtils.showToast(this, getString(R.string.add_ringcode_null));
             return;
         }
-
+        if (getRingCode().length() != 15) {
+            ApiUtils.showToast(this, getString(R.string.add_ringcode_15));
+            return;
+        }
         if (numMap.get("ring_num") != null && (Boolean)numMap.get("ring_num")){
 
             ApiUtils.showToast(this,"最多只能添加 15 个鸽环");
@@ -246,19 +244,12 @@ public class AddRingActivity extends BaseActivity implements IAddRingView {
     }
 
     @Override
-    public void onBackPressed() {
-        if (!isAdd) {
-            mRxBus.post("isLoad",false);
-        }
-        super.onBackPressed();
-    }
-
-    @Override
     public void toDo() {
 
         Log.e("OurCodeModel","添加鸽环成功");
 
         isAdd = true;
+        mRxBus.post("isLoad",true);
         this.finish();
     }
 

@@ -56,6 +56,8 @@ public class RealFlyBean implements Parcelable {
     String FLYING_CITY;
     String FLYING_COUNTY;
     String FLYING_ADDRESS;
+
+
 //    String FLYING_MODE;
 
 //    String ROUTE_OBJ_ID;

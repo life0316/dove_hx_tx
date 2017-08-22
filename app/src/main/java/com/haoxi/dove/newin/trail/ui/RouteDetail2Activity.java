@@ -458,7 +458,8 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
             PointBean pointBean = list.get(i);
 //            latLngs.add(ApiUtils.transform(Double.parseDouble(pointBean.getLat()), Double.parseDouble(pointBean.getLat())));
             //经纬度反了
-            latLngs.add(ApiUtils.transform(pointBean.getLng(),pointBean.getLat()));
+//            latLngs.add(ApiUtils.transform(pointBean.getLng(),pointBean.getLat()));
+            latLngs.add(ApiUtils.transform(pointBean.getLat(),pointBean.getLng()));
         }
 //        TraUtils.drawHistoryFromList(mAMap, latLngs, trailPic, Color.parseColor(trailColor), trailWidth);
         TraUtils.drawHistoryFromPointBean(mAMap, list, mTrailPicMap.get(doveid), Color.parseColor(mTrailColorMap.get(doveid)), trailWidth);
@@ -569,7 +570,8 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
                 PointBean lastPointBean = pointBeanList.get(pointBeanList.size() - 1);
 
                 //鸽子当前位置,,测试数据  经纬度反了
-                LatLng lastLatLng = ApiUtils.transform(lastPointBean.getLng(),lastPointBean.getLat());
+//                LatLng lastLatLng = ApiUtils.transform(lastPointBean.getLng(),lastPointBean.getLat());
+                LatLng lastLatLng = ApiUtils.transform(lastPointBean.getLat(),lastPointBean.getLng());
 
                 if (lastLatLng != null) {
                     cu = CameraUpdateFactory.changeLatLng(lastLatLng);

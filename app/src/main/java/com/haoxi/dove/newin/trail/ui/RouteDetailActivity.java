@@ -350,7 +350,8 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
             PointBean pointBean = list.get(i);
 //            latLngs.add(ApiUtils.transform(Double.parseDouble(pointBean.getLat()), Double.parseDouble(pointBean.getLat())));
             //经纬度反了
-            latLngs.add(ApiUtils.transform(pointBean.getLng(),pointBean.getLat()));
+//            latLngs.add(ApiUtils.transform(pointBean.getLng(),pointBean.getLat()));
+            latLngs.add(ApiUtils.transform(pointBean.getLat(),pointBean.getLng()));
         }
 //        TraUtils.drawHistoryFromList(mAMap, latLngs, trailPic, Color.parseColor(trailColor), trailWidth);
         TraUtils.drawHistoryFromPointBean(mAMap,list, trailPic, Color.parseColor(trailColor), trailWidth);

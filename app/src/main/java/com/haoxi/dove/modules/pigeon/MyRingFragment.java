@@ -237,7 +237,7 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
         super.onResume();
 
         mTagNumObservable = mRxBus.register("tagnum", Integer.class);
-//        dataObservable = mRxBus.register("isLoadData", Boolean.class);
+        dataObservable = mRxBus.register("isLoadData", Boolean.class);
 //        clickObservable = mRxBus.register("clickRadio", Integer.class);
 //        unbindObservable = mRxBus.register("refrash", Integer.class);
 
@@ -304,20 +304,23 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
     private int clickRadio = 0;
 
     public void setObservable() {
-//
-//        isLoadObservable.subscribe(new Action1<Boolean>() {
-//            @Override
-//            public void call(Boolean aIsLoad) {
-//                isLoad = aIsLoad;
-//            }
-//        });
-//
-//        dataObservable.subscribe(new Action1<Boolean>() {
-//            @Override
-//            public void call(Boolean aBoolean) {
-//                getDatas();
-//            }
-//        });
+
+        isLoadObservable.subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aIsLoad) {
+                isLoad = aIsLoad;
+            }
+        });
+
+        dataObservable.subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                if (aBoolean) {
+                    methodType = MethodType.METHOD_TYPE_RING_SEARCH;
+                    getDatas();
+                }
+            }
+        });
 //
 //        unbindObservable.subscribe(new Action1<Integer>() {
 //            @Override

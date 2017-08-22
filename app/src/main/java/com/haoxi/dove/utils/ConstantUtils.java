@@ -4,8 +4,8 @@ public class ConstantUtils {
 
     public static final String APP_SECRET = "99fcf7399865105573df904f72888f19";
 
-//    public static final String HEADPIC = "http://111.231.54.111:8087/";
-    public static final String HEADPIC  = "http://118.178.227.194:8087/";
+    public static final String HEADPIC = "http://111.231.54.111:8087/";
+//    public static final String HEADPIC  = "http://118.178.227.194:8087/";
 
     public static final int PERMISSION_REQUESTCODE_1 = 100;
     public static final int PERMISSION_REQUESTCODE_2 = 200;

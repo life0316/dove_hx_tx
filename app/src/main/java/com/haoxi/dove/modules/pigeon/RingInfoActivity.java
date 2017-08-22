@@ -47,14 +47,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-/**
- * Created by lifei on 2017/4/5.
- */
-
 @ActivityFragmentInject(contentViewId = R.layout.activity_circle_info)
 public class RingInfoActivity extends BaseActivity implements IRingInfoView {
-
-    private static final String TAG = "RingInfoActivity";
 
     private static final int UPDATE_RING_ONOFF_STATUS = 1;
     private static final int UPDATE_RING_LFQ = 2;     //定位频率
@@ -90,7 +84,6 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
     @BindView(R.id.activity_ring_power)
     ImageView mRingPower;
 
-    private AlertDialog.Builder builder;
     private Dialog dialog;
     private RecyclerView mMateRv;
 
@@ -128,7 +121,6 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
     private InnerRing ringBean;
     private InnerRing myRingBean;
     private int mateSize;
-    private BottomPopView popView;
 
     @Override
     protected void initInject() {
@@ -181,7 +173,7 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
                     schOnTv.setText(ourOnTime);
                 }
 
-                if (positionMode != 0 && !"".equals(positionMode)) {
+                if (positionMode != 0) {
                     switch (positionMode) {
                         case 1:
                             postionModeTv.setText("1分钟/次");
@@ -201,7 +193,7 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
                     }
 
                 }
-                if (reportedFreq != 0 && !"".equals(reportedFreq)) {
+                if (reportedFreq != 0) {
 
                     switch (reportedFreq) {
                         case 1:
@@ -410,13 +402,13 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
         mMateRv.setLayoutManager(linearLayoutManager);
         mMateRv.setAdapter(matePigeonAdapter);
 
-        getDoveData(false);
+        getDoveData();
 
         ApiUtils.setDialogWindow(dialog);
 
     }
 
-    public void getDoveData(boolean isReftash){
+    public void getDoveData(){
         if (!ApiUtils.isNetworkConnected(this)) {
             infoPresenter.getDatasFromDao(getUserObjId());
         } else {
@@ -815,7 +807,7 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
         NumberPicker hourPicker = (NumberPicker) view.findViewById(R.id.timing_dialog_np_year);
         NumberPicker minPicker = (NumberPicker) view.findViewById(R.id.timing_dialog_np_month);
 
-        TextView title = (TextView) view.findViewById(R.id.timing_dialog_ontime_title);
+//        TextView title = (TextView) view.findViewById(R.id.timing_dialog_ontime_title);
         TextView timingCancle = (TextView) view.findViewById(R.id.timing_dialog_cancle);
         TextView timingConfirm = (TextView) view.findViewById(R.id.timing_dialog_confirm);
 
@@ -854,12 +846,10 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
             }
         });
 
-        final Calendar calendar = Calendar.getInstance();
-
         hourPicker.setMaxValue(23);
-        hourPicker.setMinValue(00);
+        hourPicker.setMinValue(0);
         minPicker.setMaxValue(59);
-        minPicker.setMinValue(00);
+        minPicker.setMinValue(0);
 
         if (TIMING_SWITCH_1.equals(tag)) {
             hourPicker.setValue(Integer.parseInt(mOntimeStrTv.split(":")[0]));

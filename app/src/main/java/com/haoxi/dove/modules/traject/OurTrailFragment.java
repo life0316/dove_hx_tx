@@ -1,5 +1,6 @@
 package com.haoxi.dove.modules.traject;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -72,6 +73,7 @@ import com.haoxi.dove.widget.CustomDrawerLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,15 +118,10 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     @BindView(R.id.mainc_view)
     LinearLayout mMaicLv;
 
-
     @BindView(R.id.custoom_dl_show)
     TextView mShowTv;
-
     @Inject
     TraFragPresenter traFragPresenter;
-
-//    @Inject
-//    OurFragPresenter ourFragPresenter;
 
     @Inject
     OurCodePresenter ourCodePresenter;
@@ -159,24 +156,17 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     public AMapLocationClientOption mLocationClientOption = null;
     private OnLocationChangedListener mChangedListener;
 
-    private Map<String, ArrayList<LatLng>> mapLatLngs;
-
-    private Map<String, LatLng> preMapLatLng = new HashMap<>();
     private Map<String, RealFlyBean> preMapFlys = new HashMap<>();
-
 
     private Map<String,PointBean> preMapPoint = new HashMap<>();
 
     private Dialog dialog;
 
     //默认的轨迹样式
-    private int mTrailPic = R.mipmap.icon_img_3;
     private int mTrailWidth = 10;
-    private String mTrailColor = "#00ff00";
     private static final int REQUEST_CODE_TRAIL = 0x0001;
 
-
-    private List<Integer> mDataPics = new ArrayList<Integer>(Arrays.asList(
+    private List<Integer> mDataPics = Arrays.asList(
             R.mipmap.icon_img_3, R.mipmap.icon_img_2
             , R.mipmap.icon_img_4, R.mipmap.icon_img_5
             , R.mipmap.icon_img_6, R.mipmap.icon_img_7
@@ -185,9 +175,9 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
             , R.mipmap.icon_img_4, R.mipmap.icon_img_5
             , R.mipmap.icon_img_6, R.mipmap.icon_img_7
             , R.mipmap.icon_img_8
-    ));
+    );
 
-    private List<String> mTraicColorList = new ArrayList<String>();
+    private List<String> mTraicColorList = new ArrayList();
 
 
     //已经匹配的信鸽集合
@@ -249,6 +239,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
             android.Manifest.permission.READ_PHONE_STATE
     };
 
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -258,7 +249,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
                     mHandler.removeMessages(1);
 
-                    if ("".equals(lastTimes)) {
+                    if ("".equals(lastTimes.get(endflyObjID))) {
                         mAMap.clear(true);
                     }
 
@@ -275,7 +266,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     };
     private RecyclerView mRecyclerView;
     private PopupWindow mPopupWindow;
-    private TraUtils traUtils;
     private WindowManager.LayoutParams bpParams;
     private BottomPopView popView;
     private LinearLayout ll;
@@ -304,8 +294,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mapLatLngs = new HashMap<>();
 
         myPigeonBeanList = new ArrayList<>();
         notFlyList = new ArrayList<>();
@@ -337,12 +325,8 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         mAdapter = new TraAdpter(getContext());
         mAdapter2 = new TraAdpter2(getContext());
 
-        traUtils = new TraUtils();
-
         String[] trailColorArr = getResources().getStringArray(R.array.TraicColor);
-        for (String color : trailColorArr) {
-            mTraicColorList.add(color);
-        }
+        Collections.addAll(mTraicColorList, trailColorArr);
     }
 
     @Override
@@ -359,7 +343,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initView(view);
+        initView();
         mapView.onCreate(savedInstanceState);
 
         initMap();
@@ -381,8 +365,8 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         }
     }
 
-    private void initView(View view) {
-        initDrawer(view);
+    private void initView() {
+        initDrawer();
     }
 
     private void initMap() {
@@ -460,11 +444,12 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.show_marker_ll);
 
+        @SuppressWarnings("deprecation")
         int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
 
         ViewGroup.LayoutParams params = layout.getLayoutParams();
         params.width = (width * 62) / 72;
-        params.height = (int) ((width * 42) / 72);
+        params.height =(width * 42) / 72;
 
         layout.setLayoutParams(params);
 
@@ -564,7 +549,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     private boolean isMapNormal = false;
 
 
-    private void initDrawer(View view) {
+    private void initDrawer() {
 
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout, mToolbar, 0, 0) {
             @Override
@@ -580,6 +565,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
 
         mDrawerToggle.syncState();
+        //noinspection deprecation
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         mMapTypeIv.setOnClickListener(new View.OnClickListener() {
@@ -637,8 +623,8 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
                 }
             }
         });
-
-        if (isLoad) {
+        int num = SpUtils.getInt(getActivity(), SpConstant.CLICK_NUM,1);
+        if (isLoad && num == 1) {
 
             mAMap.clear(true);
 
@@ -705,16 +691,14 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     @Override
     public void deactivate() {
         mChangedListener = null;
-        if (mChangedListener != null) {
-            mLocationClient.stopLocation();
-            mLocationClient.onDestroy();
-        }
+        mLocationClient.stopLocation();
+        mLocationClient.onDestroy();
         mLocationClient = null;
     }
 
 
     @OnClick(R.id.fg_trajectory_start)
-    void startOnCli(View view) {
+    void startOnCli() {
 
         if ("开始飞行".equals(mBtnStart.getText().toString())) {
             toStartFly();
@@ -824,6 +808,8 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
 //            traFragPresenter.deleteAllFromDaoById(getUserObjId());
             setTriPresenter.deleteAllSetTriBean(getUserObjId());
+
+            mRxBus.post("isLoadData",true);
             getPigeonDatas();
         }
     }
@@ -839,159 +825,13 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     }
 
     private List<String> pigeonObjLists = new ArrayList<>();
-    private String lowserTime = "";
-
     private Map<String, Boolean> loadPre = new HashMap<>();
 
     private String fisrtStr = "";
 
-//    @Override
-//    public void trailFromDao(List<InnerRouteBean> innerRouteBeanList, String type_from) {
-//
-//        fisrtStr = getLastTime();
-//
-//
-//        if (addMarker != null) {
-//            addMarker.remove();
-//        }
-//
-//        Log.e(TAG+"----", innerRouteBeanList.size() + "-------trailFromDao -----1");
-//
-//        for (int i = 0; i < innerRouteBeanList.size(); i++) {
-//            InnerRouteBean innerRouteBean = innerRouteBeanList.get(i);
-//            Log.e(TAG+"----", innerRouteBean.getDoveid()+ "-------trailFromDao -----2");
-//            Log.e(TAG+"----", innerRouteBean.getPoints().size()+ "-------trailFromDao -----3");
-//        }
-//
-//        if (innerRouteBeanList.size() == 0 || innerRouteBeanList == null) {
-//
-//            mHandler.sendEmptyMessageDelayed(1, 1000 * 60 * mLastLocationTime);
-//            return;
-//
-//        } else {
-//
-//            pigeonObjLists.clear();
-//
-//            flyBeanMap.clear();
-//
-//            for (int i = 0; i < innerRouteBeanList.size(); i++) {
-//
-//                InnerRouteBean innerRouteBean = innerRouteBeanList.get(i);
-//
-//                if (flyBeanMap.containsKey(innerRouteBean.getDoveid())) {
-////                    flyBeanMap.get(innerRouteBean.getDoveid()).add(innerRouteBean);
-//                    flyBeanMap.put(innerRouteBean.getDoveid(),innerRouteBean);
-//
-//                    if (!pigeonObjLists.contains(innerRouteBean.getDoveid())) {
-//                        pigeonObjLists.add(innerRouteBean.getDoveid());
-//                    }
-//
-//                    firstGetTri.put(innerRouteBean.getDoveid(), false);
-//
-//                } else {
-//                    ArrayList<InnerRouteBean> beenLists = new ArrayList<>();
-//
-//                    beenLists.add(beenLists.get(i));
-//
-//                    if (!pigeonObjLists.contains(beenLists.get(i).getDoveid())) {
-//                        pigeonObjLists.add(beenLists.get(i).getDoveid());
-//                    }
-//
-//                    firstGetTri.put(beenLists.get(i).getDoveid(), true);
-//
-//                    flyBeanMap.put(beenLists.get(i).getDoveid(), beenLists);
-//                }
-//            }
-//
-//            for (int i = 0; i < pigeonObjLists.size(); i++) {
-//                loadPre.put(pigeonObjLists.get(i), true);
-//            }
-//
-//
-//            for (int p = 0; p < pigeonObjLists.size(); p++) {
-//
-//                InnerRouteBean preBean = null;
-//
-//                SetTriBean setTriBean = flySetTriMap.get(pigeonObjLists.get(p));
-//
-//                InnerRouteBean realFlyBeen = flyBeanMap.get(setTriBean.getOBJ_ID());
-//
-//                ArrayList<InnerRouteBean> flyBeens = new ArrayList<>();
-//
-//                flyBeens.clear();
-//
-//                if (realFlyBeen != null) {
-//
-//                    lowserTime = "";
-//
-//                    for (int j = 0; j < realFlyBeen..size(); j++) {
-//
-//                        InnerRouteBean realFlyBean = realFlyBeen.get(j);
-//                        InnerRouteBean lastFlyBean = realFlyBeen.get(realFlyBeen.size() - 1);
-//
-//                        latLng = ApiUtils.transform(Double.parseDouble(realFlyBean.getLATITUDE()), Double.parseDouble(realFlyBean.getLONGITUDE()));
-//                        LatLng lastlatLng = ApiUtils.transform(Double.parseDouble(lastFlyBean.getLATITUDE()), Double.parseDouble(lastFlyBean.getLONGITUDE()));
-//
-//
-//                        if (j == 0) {
-//
-//                            if (type_from.equals("FROM_NETS") && preMapFlys != null && preMapFlys.size() != 0) {
-//
-//                                if (loadPre.get(realFlyBean.getPIGEON_OBJ_ID())) {
-//
-//                                    LatLng pll = ApiUtils.transform(Double.parseDouble(preMapFlys.get(realFlyBean.getPIGEON_OBJ_ID()).getLATITUDE()),
-//                                            Double.parseDouble(preMapFlys.get(realFlyBean.getPIGEON_OBJ_ID()).getLONGITUDE()));
-//
-//                                    preBean = preMapFlys.get(realFlyBean.getPIGEON_OBJ_ID());
-//
-//                                    //latLngs.add(pll);
-//                                    flyBeens.add(preMapFlys.get(realFlyBean.getPIGEON_OBJ_ID()));
-//                                    loadPre.put(realFlyBean.getPIGEON_OBJ_ID(), false);
-//                                }
-//                            }
-//                        }
-//
-////                        latLngs.add(latLng);
-//                        flyBeens.add(realFlyBean);
-//
-//                        if (j == realFlyBeen.size() - 1) {
-//
-//                            //preMapLatLng.put(realFlyBean.getPIGEON_OBJ_ID(), latLng);
-//                            preMapFlys.put(realFlyBean.getPIGEON_OBJ_ID(), realFlyBean);
-//
-//                            if ("".equals(lowserTime)) {
-//                                lowserTime = realFlyBean.getGENERATE_TIME();
-//                                mLastTime = realFlyBean.getGENERATE_TIME();
-//                            } else {
-//                                if (!ApiUtils.careTime(lowserTime, realFlyBean.getGENERATE_TIME())) {
-//                                    lowserTime = realFlyBean.getGENERATE_TIME();
-//                                    mLastTime = realFlyBean.getGENERATE_TIME();
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                    if (flyBeens.size() != 0) {
-//
-////                        TraUtils.drawTraFromRealFly(preBean, fisrtStr, setTriBean.getOBJ_ID(),
-////                                setTriBean.getIsShowMark(), firstGetTri.get(setTriBean.getOBJ_ID()),
-////                                mAMap, flyBeens, setTriBean.getTrilPic(), Color.parseColor(setTriBean.getTrilColor()), setTriBean.getTrilWidth());
-//                    }
-//
-//                    firstGetTri.put(setTriBean.getOBJ_ID(), false);
-//                }
-//            }
-//            mHandler.sendEmptyMessageDelayed(1, 1000 * 60 * mLastLocationTime);
-//        }
-//    }
-
-
     @Override
     public void trailFromDao(List<InnerRouteBean> innerRouteBeanList, String type_from) {
-
         fisrtStr = getLastTime();
-
-
         if (addMarker != null) {
             addMarker.remove();
         }
@@ -1004,7 +844,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
             Log.e(TAG+"----", innerRouteBean.getPoints().size()+ "-------trailFromDao -----3");
         }
 
-        if (innerRouteBeanList.size() == 0 || innerRouteBeanList == null) {
+        if (innerRouteBeanList.size() == 0) {
 
             mHandler.sendEmptyMessageDelayed(1, 1000 * 60 * mLastLocationTime);
             return;
@@ -1031,9 +871,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
                     if (!pigeonObjLists.contains(innerRouteBean.getDoveid())) {
                         pigeonObjLists.add(innerRouteBean.getDoveid());
                     }
-
                     firstGetTri.put(innerRouteBean.getDoveid(), true);
-
                     flyBeanMap.put(innerRouteBean.getDoveid(), innerRouteBean);
                 }
             }
@@ -1052,17 +890,20 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
                 InnerRouteBean innerRouteBean = flyBeanMap.get(setTriBean.getOBJ_ID());
 
-                ArrayList<InnerRouteBean> flyBeens = new ArrayList<>();
+                ArrayList<InnerRouteBean> flyBeans = new ArrayList<>();
 
                 PointBean prePointBean = preMapPoint.get(innerRouteBean.getDoveid());
 
-                flyBeens.clear();
+                flyBeans.clear();
 
-                if (innerRouteBean != null && innerRouteBean.getPoints() != null && innerRouteBean.getPoints().size() > 0) {
+                if (innerRouteBean.getPoints() != null && innerRouteBean.getPoints().size() > 0) {
+
+
                         mLastTime = innerRouteBean.getPoints().get(innerRouteBean.getPoints().size() - 1).getTime();
 
                         PointBean firstPb = innerRouteBean.getPoints().get(0);
                         PointBean lastPb = innerRouteBean.getPoints().get(innerRouteBean.getPoints().size() - 1);
+                        Log.e("battery"+"----", firstPb.getBattery()+ "-------getBattery -----dianliang");
 
                     if (prePointBean != null && !prePointBean.getTime().equals(firstPb.getTime())) {
                         preMapPoint.put(innerRouteBean.getDoveid(),lastPb);
@@ -1087,7 +928,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
         Log.e(TAG, setTriBeen.size() + "------setTriMap----1");
 
-        if (setTriBeen.size() != 0 && setTriBeen != null) {
+        if (setTriBeen.size() != 0 ) {
 
             mTriPicMap.clear();
             mTriColorMap.clear();
@@ -1115,7 +956,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     @Override
     public void setTri(SetTriBean setTriBean) {
 
-        if (!triIds.contains(setTriBean.getId())) {
+        if (!triIds.contains(setTriBean.getId().toString())) {
             setTriBeanList.add(setTriBean);
         }
 
@@ -1125,7 +966,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     }
 
     @OnClick(R.id.custom_toolbar_keep)
-    void refrashOncli(View view) {
+    void refrashOncli() {
 
         methodType = MethodType.METHOD_TYPE_GET_CURTIME_POINTS;
         mLastTime = "";
@@ -1170,14 +1011,14 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     }
 
     @OnClick(R.id.new_icon_wei)
-    void addOnclick(View v) {
+    void addOnclick() {
         Log.e(TAG, "点击添加信鸽、鸽环");
-        showBottomPop2(v);
+        showBottomPop2();
     }
 
     private boolean popShow = false;
 
-    private void showBottomPop2(View v) {
+    private void showBottomPop2() {
 
         Log.e("fafaa",(mRecyclerView != null)+"-----"+myPigeonBeanList.size());
 
@@ -1187,19 +1028,13 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
             if (myPigeonBeanList.size() >= 3) {
                 height = (int) getResources().getDimension(R.dimen.DIP_60_DP) * 3;
             } else {
-//                height = (int) getResources().getDimension(R.dimen.DIP_70_DP) * myPigeonBeanList.size();
                 height = (int) getResources().getDimension(R.dimen.DIP_65_DP) * myPigeonBeanList.size() + 2 * (int)getResources().getDimension(R.dimen.x18);
-
             }
-
             if (popView != null && popView.isShowing()) {
-//                mRxBus.post("exit", 30);
                 SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,true);
                 SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,"");
                 popView.dismiss();
             } else {
-
-//                mRxBus.post("exit", 40);
                 SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,false);
                 SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,"trail");
 
@@ -1227,7 +1062,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         }
     }
 
-    private void showPop(View v) {
+    private void showPop() {
 
         Dialog popDialog = new Dialog(getContext(), R.style.DialogTheme2);
 
@@ -1241,7 +1076,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
         ViewGroup.LayoutParams params = layout.getLayoutParams();
         params.width = (width * 62) / 72;
-        params.height = (int) ((width * 42) / 72);
+        params.height = (width * 42) / 72;
 
         layout.setLayoutParams(params);
         popDialog.show();
@@ -1249,11 +1084,9 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
     @Override
     public void setPigeonData(List<InnerDoveData> list) {
-
         if (list == null) {
             return;
         }
-
         isNotFlyRingObjs.clear();
         isNotFlyPigeonObjs.clear();
         isFlyingPigeonObjs.clear();
@@ -1401,7 +1234,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         Log.e(TAG, position + "-----" + myPigeonBean1.getDoveid() + "------onItemClick");
 
         if (popView != null && popView.isShowing()) {
-            mRxBus.post("exit", 30);
+            SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,true);
             popView.dismiss();
         }
 
@@ -1418,6 +1251,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         final TextView title = (TextView) viewDialog.findViewById(R.id.status_dialog_title);
         final View line1 = (View) viewDialog.findViewById(R.id.line1);
         final View line2 = (View) viewDialog.findViewById(R.id.line2);
+        v2.setVisibility(View.GONE);
 
         TextView mThickCancel = (TextView)viewDialog.findViewById(R.id.thickness_dialog_cancel);
 
@@ -1465,10 +1299,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         v2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), NewFlyActivity.class);
-//                intent.putExtra("pigeonBean", myPigeonBean1);
-//                startActivity(intent);
-
                 if (mPopupWindow != null && mPopupWindow.isShowing()) {
                     mPopupWindow.dismiss();
                 }
@@ -1584,9 +1414,9 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
                     if (innerRouteBean != null) {
 
                         //鸽子当前位置
-//                        LatLng lastLatLng = ApiUtils.transform(innerRouteBean.getCurloc().getLat(), innerRouteBean.getCurloc().getLng());
+                        LatLng lastLatLng = ApiUtils.transform(innerRouteBean.getCurloc().getLat(), innerRouteBean.getCurloc().getLng());
                         //鸽子当前位置,,测试数据  经纬度反了
-                        LatLng lastLatLng = ApiUtils.transform(innerRouteBean.getCurloc().getLng(), innerRouteBean.getCurloc().getLat());
+//                        LatLng lastLatLng = ApiUtils.transform(innerRouteBean.getCurloc().getLng(), innerRouteBean.getCurloc().getLat());
 
                         if (addMarker != null) {
                             addMarker.remove();

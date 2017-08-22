@@ -195,19 +195,10 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 //    @Override
 //    public void onResume() {
 //        super.onResume();
-//
-//        isLoadObservable = mRxBus.register("isLoad", Boolean.class);
-//
-//        mTagNumObservable = mRxBus.register("tagnum", Integer.class);
-//
 //        dataObservable = mRxBus.register("isLoadData", Boolean.class);
 //
 //        clickObservable = mRxBus.register("clickRadio", Integer.class);
 //        unbindObservable = mRxBus.register("refrash", Integer.class);
-//
-//        setObservable2();
-//
-//        Log.e("isload-pigeon", isLoad + "-----pigeon");
 //
 //        if (isLoad) {
 //            if (longClickTag) {
@@ -240,7 +231,8 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         super.onResume();
         mTagNumObservable = mRxBus.register("tagnum", Integer.class);
         isLoadObservable = mRxBus.register("isLoad", Boolean.class);
-        setObservable2();
+        dataObservable = mRxBus.register("isLoadData", Boolean.class);
+        setObservable();
         if (isLoad) {
             getDatas();
             isLoad = false;
@@ -279,20 +271,23 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         return map;
     }
 
-    public void setObservable2() {
+    public void setObservable() {
         isLoadObservable.subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean aBoolean) {
                 isLoad = aBoolean;
             }
         });
-//
-//        dataObservable.subscribe(new Action1<Boolean>() {
-//            @Override
-//            public void call(Boolean aBoolean) {
-//                getDatas();
-//            }
-//        });
+
+        dataObservable.subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                if (aBoolean) {
+                    methodType = MethodType.METHOD_TYPE_DOVE_SEARCH;
+                    getDatas();
+                }
+            }
+        });
 //
 //        unbindObservable.subscribe(new Action1<Integer>() {
 //            @Override

@@ -203,6 +203,8 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
 
             switch (methodType){
                 case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
+                    mRxBus.post("isLoadA",true);
+
                     methodType = MethodType.METHOD_TYPE_FRIENDS_CIRCLES;
                     PAGENUM = 1;
                     getDatas();

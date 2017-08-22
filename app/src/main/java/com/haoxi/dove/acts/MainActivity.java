@@ -140,16 +140,6 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void onResume() {
         super.onResume();
-
-//        mExitObserver = mRxBus.register("exit", Integer.class);
-//
-//        mExitObserver.subscribe(new Action1<Integer>() {
-//            @Override
-//            public void call(Integer integer) {
-//                isCanExit = integer;
-//            }
-//        });
-
         setSelection(currentPos);
     }
 

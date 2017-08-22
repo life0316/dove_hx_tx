@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -110,6 +111,7 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
 
     AdCircleAdapter adCircleAdapter;
     private Observable<Integer> netObservale;
+    private Observable<Boolean> isLoadObervable;
 //    private Observable<Boolean> isUpdateObervable;
     private NativeResource nativeResource;
     private boolean isLoadMore = false;
@@ -121,6 +123,7 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
 
 //        isUpdateObervable = mRxBus.register("update", Boolean.class);
         netObservale = mRxBus.register("load_circle", Integer.class);
+        isLoadObervable = mRxBus.register("isLoadA", Boolean.class);
         netObservale.subscribe(new Action1<Integer>() {
             @Override
             public void call(Integer integer) {
@@ -131,28 +134,15 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
                 }
             }
         });
-
-//        initObservale();
-    }
-
-    private void initObservale() {
-
-//        isUpdateObervable.subscribe(new Action1<Boolean>() {
-//            @Override
-//            public void call(Boolean aBoolean) {
-//                if (aBoolean) {
-//                    mRxBus.post("load_circle",1);
-//                }
-//            }
-//        });
-//
-//        netObservale.subscribe(new Action1<Integer>() {
-//            @Override
-//            public void call(Integer integer) {
-//                if (integer == 0) {
-//                }
-//            }
-//        });
+        isLoadObervable.subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                if (aBoolean) {
+                    PAGENUM = 1;
+                    getDatas();
+                }
+            }
+        });
     }
 
     @Override
@@ -231,7 +221,6 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
                 case MethodType.METHOD_TYPE_ADD_ATTENTION:
                 case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
                     mRxBus.post("isLoadF",true);
-                    break;
                 case MethodType.METHOD_TYPE_ADD_FAB:
                 case MethodType.METHOD_TYPE_REMOVE_FAB:
                 case MethodType.METHOD_TYPE_ADD_COMMENT:
@@ -242,13 +231,6 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
             }
         }
     }
-
-    private void loadCircle(){
-//        mRxBus.post("load_circle",0);
-//        mRxBus.post("load_circle",1);
-//        mRxBus.post("load_circle",2);
-    }
-
 
     @Override
     public void onResume() {
@@ -633,7 +615,7 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
                     circleid = curData.getCircleid();
                     friendId = curData.getUserid();
                     isFriend = curData.isIs_friend();
-//                    showDownDialog();
+                    showDownDialog();
                 }
             });
 
@@ -643,6 +625,9 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
                 public void onClick(View v) {
 
                     currentPosition = position;
+
+                    circleid = curData.getCircleid();
+
                     methodType = MethodType.METHOD_TYPE_ADD_ATTENTION;
 
                     friendId = curData.getUserid();
@@ -730,7 +715,7 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
     public void onDestroy() {
         super.onDestroy();
         mRxBus.unregister("load_circle", netObservale);
-//        mRxBus.unregister("update", isUpdateObervable);
+        mRxBus.unregister("isLoadA", isLoadObervable);
     }
 
     @Override
@@ -827,8 +812,71 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
         circleBean.setFab_count(data.getData().getFab_count());
         circleBean.setShare_count(data.getData().getShare_count());
         circleBean.setHas_fab(data.getData().getHas_fab());
+        circleBean.setIs_friend(data.getData().getIs_friend());
 
         adCircleAdapter.getDatas().add(currentPosition,circleBean);
         adCircleAdapter.notifyDataSetChanged();
     }
+    private void showDownDialog(){
+        final Dialog mDialog = new Dialog(getActivity(), R.style.DialogTheme);
+        mDialog.setCancelable(false);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.personal_down_dialog,null);
+
+        mDialog.setContentView(view,new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        TextView mRemoveTv = (TextView) view.findViewById(R.id.headciv_dialog_remove_attention);
+        TextView mShouTv = (TextView) view.findViewById(R.id.headciv_dialog_shou);
+        TextView mDeleteTv = (TextView) view.findViewById(R.id.headciv_dialog_delete);
+        TextView mCancle = (TextView) view.findViewById(R.id.headciv_dialog_cancle);
+
+        mDeleteTv.setVisibility(View.GONE);
+        mShouTv.setVisibility(View.GONE);
+        if (getUserObJId().equals(friendId)){
+            mRemoveTv.setVisibility(View.GONE);
+            mShouTv.setVisibility(View.GONE);
+        }else {
+            mRemoveTv.setVisibility(View.VISIBLE);
+            mShouTv.setVisibility(View.VISIBLE);
+        }
+
+        if (isFriend){
+            mRemoveTv.setText("取消关注");
+        }else {
+            mRemoveTv.setText("添加关注");
+        }
+
+        mCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mRemoveTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                methodType = MethodType.METHOD_TYPE_REMOVE_ATTENTION;
+                ourCodePresenter.removeAttention(getParaMap());
+
+                mDialog.dismiss();
+            }
+        });
+        mShouTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDeleteTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                methodType = MethodType.METHOD_TYPE_DELETE_SINGEL;
+                ourCodePresenter.deleteSingleCircle(getParaMap());
+                mDialog.dismiss();
+            }
+        });
+        ApiUtils.setDialogWindow(mDialog);
+        mDialog.show();
+    }
+
 }

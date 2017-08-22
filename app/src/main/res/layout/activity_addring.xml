@@ -16,7 +16,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="鸽环编号"
+            android:hint="@string/add_ringcode_15"
             android:id="@+id/act_addring_ringcode"
             android:layout_margin="@dimen/x40"
             android:padding="@dimen/x20"

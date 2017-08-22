@@ -5,6 +5,10 @@ apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion 25
     buildToolsVersion '26'
+    dexOptions {
+        javaMaxHeapSize "1g"
+    }
+
     defaultConfig {
         applicationId "com.haoxi.dove"
         minSdkVersion 18
@@ -13,7 +17,7 @@ android {
         versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        multiDexEnabled = true;
+        multiDexEnabled = true
 
         ndk {
             // 设置支持的SO库架构
