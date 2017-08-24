@@ -8,10 +8,6 @@ import com.alibaba.sdk.android.push.notification.CPushMessage;
 
 import java.util.Map;
 
-/**
- * Created by lifei on 2017/5/5.
- */
-
 public class YunPuchReceiver extends MessageReceiver {
 
     private static final String TAG = "YunPuchReceiver";

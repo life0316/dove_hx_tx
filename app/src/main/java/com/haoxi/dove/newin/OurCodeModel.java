@@ -202,6 +202,7 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                         switch (codesBean.getCode()){
                             case 604:
                             case 500:
+                            case 3021:
                                 requestCallback.requestError(codesBean.getMsg());
                                 break;
                         }

@@ -25,6 +25,7 @@ import com.haoxi.dove.modules.mvp.presenters.MyRingPresenter;
 import com.haoxi.dove.modules.mvp.views.IGetRingView;
 import com.haoxi.dove.newin.bean.InnerRing;
 import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.utils.ApiUtils;
@@ -207,6 +208,7 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
                 getDatas();
             }
         });
+
     }
 
 
@@ -214,19 +216,19 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
 
         Map<String,String> map = new HashMap<>();
 
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("userid",getUserObjId());
-        map.put("token",getToken());
+        map.put(MethodParams.PARAMS_METHOD,getMethod());
+        map.put(MethodParams.PARAMS_SIGEN,getSign());
+        map.put(MethodParams.PARAMS_TIME,getTime());
+        map.put(MethodParams.PARAMS_VERSION,getVersion());
+        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
+        map.put(MethodParams.PARAMS_TOKEN,getToken());
 
         switch (methodType){
             case MethodType.METHOD_TYPE_RING_SEARCH:
-                map.put("playerid",getUserObjId());
+                map.put(MethodParams.PARAMS_PLAYER_ID,getUserObjId());
                 break;
             case MethodType.METHOD_TYPE_RING_DELETE:
-                map.put("ringid",getDeleteObjIds());
+                map.put(MethodParams.PARAMS_RING_ID,getDeleteObjIds());
                 break;
         }
         return map;
@@ -414,14 +416,12 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
             mShowAddLv.setVisibility(View.VISIBLE);
             mRxBus.post("cancle", true);
             mSelectRv.setVisibility(View.GONE);
-//            daoSession.getMyRingBeanDao().deleteAll();
             mPigeonCodes.clear();
             mSelectCb.setChecked(false);
             ringAdapter.setIsShow(false);
             ringAdapter.setLongClickTag(false);
             this.longClickTag = false;
         }
-
     }
 
     @Override

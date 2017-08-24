@@ -71,6 +71,7 @@ import com.haoxi.dove.utils.TraUtils;
 import com.haoxi.dove.widget.BottomPopView;
 import com.haoxi.dove.widget.CustomDrawerLayout;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -148,6 +149,9 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     private Observable<Boolean> loadObservable;
     private Observable<Integer> clickObservable;
     private Observable<String> mShowObservable;
+
+    private Observable<Boolean> mHomeObservable;
+    private Observable<Boolean> mScreenObservable;
 
 
     private AMap mAMap;
@@ -299,6 +303,8 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         notFlyList = new ArrayList<>();
 
         loadObservable = mRxBus.register("isLoad", Boolean.class);
+        mHomeObservable = mRxBus.register("home_back", Boolean.class);
+        mScreenObservable = mRxBus.register("screen_on_off", Boolean.class);
 
         mShowObservable = mRxBus.register("exit", String.class);
 
@@ -322,6 +328,32 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
             }
         });
 
+        mHomeObservable.subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                if (aBoolean) {
+                    if (hasFlybeans) {
+                        mHandler.removeMessages(1);
+                    }
+                }
+            }
+        });
+
+        mScreenObservable.subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                if (aBoolean) {
+                    if (hasFlybeans) {
+                        mHandler.removeMessages(1);
+                    }
+                }else{
+                    if (hasFlybeans && clickPos == 1){
+                        mHandler.sendEmptyMessage(1);
+                    }
+                }
+            }
+        });
+
         mAdapter = new TraAdpter(getContext());
         mAdapter2 = new TraAdpter2(getContext());
 
@@ -331,7 +363,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
     @Override
     protected void initInject() {
-
         DaggerOurTrailFragComponent.builder()
                 .appComponent(getAppComponent())
                 .ourTrailFragMoudle(new OurTrailFragMoudle(getActivity(), this))
@@ -395,12 +426,9 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         mAMap.setMyLocationEnabled(true);
         mAMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
         mAMap.setMapType(AMap.MAP_TYPE_NORMAL);
-
         mAMap.clear();
-
         initClient();
         initOption();
-
     }
 
     private void initClient() {
@@ -409,8 +437,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         mLocationClient = new AMapLocationClient(getContext());
         //设置定位回调监听
         mLocationClient.setLocationListener(mLocationListener);
-
-
         AMap.OnMarkerClickListener listener = new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -472,7 +498,10 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         mCreateTimeTv.setText(createTime);
         mSpeedTv.setText(eachSpeed);
         mHeightTv.setText(String.valueOf(Double.valueOf(eachHeight) - 20));
-        mLatlngTv.setText("东经" + Math.rint(Double.valueOf(eachLongitude)) + " 北纬" + Math.rint(Double.valueOf(eachLatitude)));
+
+        DecimalFormat    df   = new DecimalFormat("######0.000");
+
+        mLatlngTv.setText("东经" + df.format(Double.valueOf(eachLongitude)) + " 北纬" + df.format(Math.rint(Double.valueOf(eachLatitude))));
         mMileageTv.setText(eachDistance);
         mDirectionTv.setText("方向：" + eachDirection);
 
@@ -587,8 +616,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
     private Map<String, String> lastTimes = new HashMap<>();
 
-    private boolean isHome;
-
     private int clickPos = 1;
 
     @Override
@@ -604,21 +631,12 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
                 clickPos = integer;
 
                 if (integer == 1) {
-
-                    isHome = true;
-
                     mAMap.clear(true);
-
                     preMapFlys.clear();
-
                     mLastTime = "";
-
                     setTriPresenter.getDaoWithObjId(getUserObjId());
 
-                    isLoad = false;
-
                 } else {
-                    isHome = false;
                     mHandler.removeMessages(1);
                 }
             }
@@ -635,20 +653,18 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
             mLastTime = "";
 
         } else {
-            if (hasFlybeans && clickPos == 1) {
-                mAMap.clear(true);
-
-                preMapFlys.clear();
-                mLastTime = "";
-
-                setTriPresenter.getDaoWithObjId(getUserObjId());
-            }
+//            if (hasFlybeans && clickPos == 1) {
+//                mAMap.clear(true);
+//                preMapFlys.clear();
+//                mLastTime = "";
+//
+//                setTriPresenter.getDaoWithObjId(getUserObjId());
+//            }
         }
 
 
-        isHome = false;
-        isLoad = false;
 
+        isLoad = false;
     }
 
     @Override
@@ -681,6 +697,8 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         preMapFlys.clear();
         mRxBus.unregister("isLoad", loadObservable);
         mRxBus.unregister("showTrilPop", mShowObservable);
+        mRxBus.unregister("home_back", mHomeObservable);
+        mRxBus.unregister("screen_on_off", mScreenObservable);
     }
 
     @Override
@@ -1412,9 +1430,15 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
                     InnerRouteBean innerRouteBean = flyBeanMap.get(myPigeonBean1.getDoveid());
 
                     if (innerRouteBean != null) {
+                        if (innerRouteBean.getCurloc() == null){
+                            dialog.dismiss();
+                            ApiUtils.showToast(getContext(), "没有鸽子的最新位置");
+                            return;
+                        }
 
                         //鸽子当前位置
                         LatLng lastLatLng = ApiUtils.transform(innerRouteBean.getCurloc().getLat(), innerRouteBean.getCurloc().getLng());
+
                         //鸽子当前位置,,测试数据  经纬度反了
 //                        LatLng lastLatLng = ApiUtils.transform(innerRouteBean.getCurloc().getLng(), innerRouteBean.getCurloc().getLat());
 

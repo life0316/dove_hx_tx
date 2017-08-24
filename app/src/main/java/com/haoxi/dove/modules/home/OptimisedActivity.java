@@ -104,16 +104,7 @@ public class OptimisedActivity extends BaseActivity implements IOptView{
 
     @OnClick(R.id.custom_toolbar_iv)
     void backOnCli(){
-        mRxBus.post("isLoad",false);
-
         this.finish();
-    }
-
-    @OnClick(R.id.activity_optimised_currency)
-    void currencyOnCli(){
-
-        Intent intent = new Intent(OptimisedActivity.this,CurrencyActivity.class);
-        startActivity(intent);
     }
 
     @OnClick(R.id.activity_optimised_about)
@@ -146,16 +137,11 @@ public class OptimisedActivity extends BaseActivity implements IOptView{
         dialog.setClickListenerInterface(new CustomDialog.ClickListenerInterface() {
             @Override
             public void doConfirm() {
-
-//                codePresenter.exit(getUserPhone(),mToken);
                 ourCodePresenter.exitApp(getParaMap());
-
                 dialog.dismiss();
             }
-
             @Override
             public void doCancel() {
-
                 dialog.dismiss();
             }
         });
@@ -206,7 +192,6 @@ public class OptimisedActivity extends BaseActivity implements IOptView{
 
     @Override
     public void onBackPressed() {
-        mRxBus.post("isLoad",false);
         super.onBackPressed();
     }
 }

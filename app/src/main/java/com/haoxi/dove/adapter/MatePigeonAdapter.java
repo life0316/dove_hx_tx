@@ -79,6 +79,15 @@ public class MatePigeonAdapter extends RecyclerView.Adapter<MatePigeonAdapter.Ma
                     addItemClickListener.addItemClick(holder.pegionMate.getText().toString().trim(),position,bean);
                 }
             });
+        }else {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onItemClick(v,holder.getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 

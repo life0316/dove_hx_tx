@@ -27,7 +27,6 @@ import butterknife.ButterKnife;
 @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 public class FlyStringAdapter extends MyBaseRvAdapter<FlyStringAdapter.MyPigeonHolder> implements View.OnClickListener, View.OnLongClickListener {
 
-//    private static final String TAG = "MyPigeonAdapter";
 
     private List<FlyStringBean> datas = new ArrayList<>();
 
@@ -111,13 +110,6 @@ public class FlyStringAdapter extends MyBaseRvAdapter<FlyStringAdapter.MyPigeonH
         specialUpdate();
     }
 
-//    public void notifyDatas(List<FlyStringBean> datas) {
-//        this.datas = datas;
-//        checkPosList.clear();
-//        unCheckPosList.clear();
-//        notifyDataSetChanged();
-//    }
-
     private void specialUpdate() {
         Handler handler = new Handler();
         final Runnable r = new Runnable() {
@@ -141,7 +133,7 @@ public class FlyStringAdapter extends MyBaseRvAdapter<FlyStringAdapter.MyPigeonH
 
     @Override
     public int getItemCount() {
-        return datas == null && datas.size() == 0 ? 0 : datas.size();
+        return datas == null || datas.size() == 0 ? 0 : datas.size();
     }
 
     @Override
@@ -216,7 +208,6 @@ public class FlyStringAdapter extends MyBaseRvAdapter<FlyStringAdapter.MyPigeonH
     @Override
     public boolean onLongClick(View v) {
 
-        Log.e("longClickTag", longClickTag + "-----onLongClick");
         if (longClickTag) {
             longIntTag = 1;
         }

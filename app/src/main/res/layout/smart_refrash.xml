@@ -78,6 +78,7 @@
                 android:gravity="center"
                 android:layout_alignParentTop="true"
                 android:textColor="#fff"
+                android:visibility="gone"
                 android:layout_toStartOf="@+id/mypigeon_select_delete"/>
 
             <TextView

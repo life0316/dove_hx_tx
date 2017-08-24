@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.haoxi.dove.R;
 import com.haoxi.dove.acts.ForgetActivity;
 import com.haoxi.dove.acts.MainActivity;
-import com.haoxi.dove.acts.PhoneLoginActivity;
 import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.base.BaseActivity;
 import com.haoxi.dove.modules.loginregist.model.LoginModel;
@@ -26,7 +25,6 @@ import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.bean.OurUser;
 import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.utils.ApiUtils;
-import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.MD5Tools;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.utils.SpConstant;
@@ -203,11 +201,6 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
     @OnClick(R.id.act_login_forget_password)
     void forget(){
         Intent intent = new Intent(this, ForgetActivity.class);
-        startActivity(intent);
-    }
-    @OnClick(R.id.act_login_phone_login)
-    void phoneLogin(){
-        Intent intent = new Intent(this, PhoneLoginActivity.class);
         startActivity(intent);
     }
     void doLoginImpl() {

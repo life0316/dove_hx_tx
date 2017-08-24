@@ -49,8 +49,6 @@ public class TraUtils {
     private static EachInfoClickListener eachInfoListener;
     private static Marker newMarker;
 
-    private static HistoryBean firstBean;
-    private static HistoryBean lastBean;
     private static String lastDir;
 
     public void setEachInfoListener(EachInfoClickListener eachInfoListener) {
@@ -626,7 +624,6 @@ public class TraUtils {
 
 //        LatLng endLatLng = ApiUtils.transform(lastPointBean.getLng(),lastPointBean.getLat());
         LatLng endLatLng = ApiUtils.transform(lastPointBean.getLat(),lastPointBean.getLng());
-
 
         for (int i = 0; i < innerRouteBean.getPoints().size() - 1; i++) {
             //创建markeroptions对象

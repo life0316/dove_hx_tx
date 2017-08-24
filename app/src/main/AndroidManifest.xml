@@ -148,9 +148,6 @@
         <activity
             android:name="com.haoxi.dove.acts.PigeonActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.haoxi.dove.acts.OrbitActivity"
-            android:screenOrientation="portrait"/>
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -160,9 +157,6 @@
             android:value="@integer/google_play_services_version"/>
         <activity
             android:name="com.haoxi.dove.acts.ForgetActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.haoxi.dove.acts.PhoneLoginActivity"
             android:screenOrientation="portrait"/>
 
         <activity android:name="com.haoxi.dove.acts.MainActivity" android:screenOrientation="portrait"/>
@@ -178,8 +172,6 @@
         <activity android:name="com.haoxi.dove.modules.home.MyPigeonActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.modules.home.MyRingActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.modules.home.OptimisedActivity" android:screenOrientation="portrait"/>
-
-        <activity android:name="com.haoxi.dove.modules.home.CurrencyActivity" android:screenOrientation="portrait"/>
 
         <activity android:name="com.haoxi.dove.modules.home.PersonalActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.modules.pigeon.MateActivity" android:screenOrientation="portrait"/>
@@ -266,63 +258,63 @@
         </receiver>
         <!--&lt;!&ndash;阿里云推送&ndash;&gt;-->
         <!--&lt;!&ndash; 通道保持服务 &ndash;&gt;-->
-        <service android:name="com.alibaba.sdk.android.push.ChannelService"
-            android:exported="true" android:process=":channel">
-            <intent-filter>
-                <action android:name="com.taobao.accs.intent.action.SERVICE"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="org.agoo.android.intent.action.PING_V4" />
-                <category android:name="taobao" />
-            </intent-filter>
-        </service>
-        <!-- 消息接收服务 -->
-        <service android:name="com.alibaba.sdk.android.push.MsgService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.taobao.accs.intent.action.RECEIVE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.alibaba.sdk.android.push.NOTIFY_ACTION" />
-            </intent-filter>
-        </service>
-        <!-- 消息接收增强服务（可提高通知/消息达到率）-->
-        <service android:name="com.alibaba.sdk.android.push.channel.TaobaoRecvService" android:exported="true">
-            <intent-filter>
-                <action android:name="org.android.agoo.client.MessageReceiverService"/>
-            </intent-filter>
-        </service>
-        <!--消息接收监听器-->
-        <receiver android:name="com.haoxi.dove.receiver.YunPuchReceiver">
-            <intent-filter>
-                <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.taobao.accs.intent.action.COMMAND" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.taobao.taobao.intent.action.COMMAND" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="org.agoo.android.intent.action.RECEIVE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-                <data android:scheme="package"/>
-            </intent-filter>
-        </receiver>
+        <!--<service android:name="com.alibaba.sdk.android.push.ChannelService"-->
+            <!--android:exported="true" android:process=":channel">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.taobao.accs.intent.action.SERVICE"/>-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="org.agoo.android.intent.action.PING_V4" />-->
+                <!--<category android:name="taobao" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
+        <!--&lt;!&ndash; 消息接收服务 &ndash;&gt;-->
+        <!--<service android:name="com.alibaba.sdk.android.push.MsgService"-->
+            <!--android:exported="false">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.taobao.accs.intent.action.RECEIVE" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.alibaba.sdk.android.push.NOTIFY_ACTION" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
+        <!--&lt;!&ndash; 消息接收增强服务（可提高通知/消息达到率）&ndash;&gt;-->
+        <!--<service android:name="com.alibaba.sdk.android.push.channel.TaobaoRecvService" android:exported="true">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="org.android.agoo.client.MessageReceiverService"/>-->
+            <!--</intent-filter>-->
+        <!--</service>-->
+        <!--&lt;!&ndash;消息接收监听器&ndash;&gt;-->
+        <!--<receiver android:name="com.haoxi.dove.receiver.YunPuchReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED"/>-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED"/>-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.taobao.accs.intent.action.COMMAND" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.taobao.taobao.intent.action.COMMAND" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="org.agoo.android.intent.action.RECEIVE" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.USER_PRESENT" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.PACKAGE_REMOVED"/>-->
+                <!--<data android:scheme="package"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
 
 

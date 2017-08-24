@@ -67,9 +67,6 @@ import butterknife.OnClick;
 import rx.Observable;
 import rx.Subscriber;
 
-/**
- * Created by lifei on 2017/1/10.
- */
 @ActivityFragmentInject(contentViewId = R.layout.activity_new_fly)
 public class NewFlyActivity extends BaseActivity implements ITrajectoryView, LocationSource {
 

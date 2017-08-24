@@ -14,6 +14,8 @@ import com.haoxi.dove.R;
 import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.base.BaseActivity;
 import com.haoxi.dove.newin.IForgetView;
+import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.bean.OurCode;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
@@ -43,8 +45,6 @@ public class ForgetActivity extends BaseActivity implements IForgetView {
 
     private OurCodePresenter codePresenter;
 
-//    private String mUserPhone;
-
     public  boolean isChange = false;
     private boolean tag      = true;
     private int     i        = 60;
@@ -52,13 +52,6 @@ public class ForgetActivity extends BaseActivity implements IForgetView {
     private int type =MethodType.METHOD_TYPE_VALID_VER_CODE;
 
     Thread mThread = null;
-
-//    //客户端输入的验证码
-//    private        String valicationCode;
-//    //服务器端获取的验证码
-//    private static String serverValicationCode;
-//    //获取验证码时所带的参数
-//    private Map<String, Object> codeParams = new HashMap<String, Object>();
 
     private static Handler mHandler = new Handler();
     private Observable<Boolean> finishObservable;
@@ -97,15 +90,34 @@ public class ForgetActivity extends BaseActivity implements IForgetView {
 
         type = MethodType.METHOD_TYPE_VALID_VER_CODE;
 
+//        Map<String,String> map = new HashMap<>();
+//        map.put("method",getMethod());
+//        map.put("telephone",getTelephone());
+//        map.put("sign",getSign());
+//        map.put("ver_code",getVerCode());
+//        map.put("time",getTime());
+//        map.put("version",getVersion());
+
+        codePresenter.getValidCode(getParamMap());
+    }
+    private Map<String,String> getParamMap(){
+
         Map<String,String> map = new HashMap<>();
         map.put("method",getMethod());
         map.put("telephone",getTelephone());
         map.put("sign",getSign());
-        map.put("ver_code",getVerCode());
         map.put("time",getTime());
         map.put("version",getVersion());
 
-        codePresenter.getValidCode(map);
+        switch (type){
+            case MethodType.METHOD_TYPE_VALID_VER_CODE:
+                map.put("ver_code",getVerCode());
+                break;
+            case MethodType.METHOD_TYPE_REQUEST_VER_CODE:
+                map.put(MethodParams.USER_TELEPHONE,getTelephone());
+                break;
+        }
+        return map;
     }
 
     private boolean isValidate(){
@@ -165,10 +177,6 @@ public class ForgetActivity extends BaseActivity implements IForgetView {
         mThread.start();
 
     }
-
-    /**
-     * 说明：获取验证码
-     */
     private void getValidateCode() {
 
         String phone = mEtPhone.getText().toString().trim();
@@ -178,14 +186,14 @@ public class ForgetActivity extends BaseActivity implements IForgetView {
             mUserPhone = phone;
             type = MethodType.METHOD_TYPE_REQUEST_VER_CODE;
 
-            Map<String,String> map = new HashMap<>();
-            map.put("method",getMethod());
-            map.put("telephone",getTelephone());
-            map.put("sign",getSign());
-            map.put("time",getTime());
-            map.put("version",getVersion());
+//            Map<String,String> map = new HashMap<>();
+//            map.put(MethodParams.PARAMS_METHOD,getMethod());
+//            map.put(MethodParams.USER_TELEPHONE,getTelephone());
+//            map.put(MethodParams.PARAMS_SIGEN,getSign());
+//            map.put(MethodParams.PARAMS_TIME,getTime());
+//            map.put(MethodParams.PARAMS_VERSION,getVersion());
 
-            codePresenter.getRequestCode(map);
+            codePresenter.getRequestCode(getParamMap());
         }
     }
 
@@ -210,15 +218,6 @@ public class ForgetActivity extends BaseActivity implements IForgetView {
                 }
             }
         });
-
-        Intent intent = getIntent();
-        if (intent != null && "PhoneLoginActivity".equals(intent.getAction())) {
-            String phone = intent.getStringExtra("phone");
-            if (!phone.equals("")) {
-                mEtPhone.setText(phone);
-                mEtPhone.setSelection(phone.length());
-            }
-        }
 
         mEtVerCode.addTextChangedListener(new TextWatcher() {
             @Override
@@ -292,34 +291,28 @@ public class ForgetActivity extends BaseActivity implements IForgetView {
         String method = "";
         switch (type){
             case MethodType.METHOD_TYPE_VALID_VER_CODE:
-                method = "/app/user/valid_ver_code";
+                method = MethodConstant.VALID_VER_CODE;
                 break;
             case MethodType.METHOD_TYPE_REQUEST_VER_CODE:
-                method = "/app/user/request_ver_code";
+                method = MethodConstant.REQUEST_VER_CODE;
                 break;
         }
-
         return method;
     }
 
     @Override
     public String getTelephone() {
-
         return mEtPhone.getText().toString().trim();
     }
 
     @Override
     public String getVerCode() {
-
         return mEtVerCode.getText().toString().trim();
     }
 
     @Override
     public void getCodeSussess(OurCode ourCode) {
-//        Intent intent = new Intent(this, ResetActivity.class);
         ApiUtils.showToast(ForgetActivity.this,"验证码正确");
-//        intent.putExtra("userphone", getTelephone());
-//        startActivity(intent);
     }
 
     @Override

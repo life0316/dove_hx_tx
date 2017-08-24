@@ -7,12 +7,6 @@ import android.view.View;
 import com.haoxi.dove.callback.MyItemClickListener;
 import com.haoxi.dove.callback.MyItemLongClickListener;
 
-
-/**
- * @创建者 Administrator
- * @创建时间 2016/9/9 11:28
- * @描述
- */
 public class BasicRvHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
 
     public MyItemClickListener mItemClickListener;

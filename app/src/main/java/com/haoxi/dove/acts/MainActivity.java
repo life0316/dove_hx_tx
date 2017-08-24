@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
@@ -61,27 +62,26 @@ public class MainActivity extends BaseActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+
+            Log.e("homeememme",action+"-------action");
             switch (action) {
                 case Intent.ACTION_CLOSE_SYSTEM_DIALOGS:
                     String reason = intent.getStringExtra(SYSTEM_REASON);
+                    Log.e("homeememme",reason+"-------reason");
+
                     if (TextUtils.equals(reason, SYSTEM_HOME_KEY)) {
                         //表示按了home键,程序到了后台
-                        mRxBus.post("isLoad", false);
-                        mRxBus.post("load_dynamic", false);
+                        mRxBus.post("home_back",true);
                     }
                     break;
                 case Intent.ACTION_SCREEN_OFF:
-                    //表示按了home键,程序到了后台
+                    //息屏、锁屏
 
-                    mRxBus.post("isLoad", false);
-                    mRxBus.post("isScreen", false);
-                    mRxBus.post("load_dynamic", false);
+                    mRxBus.post("screen_on_off",true);
                     break;
                 case Intent.ACTION_SCREEN_ON:
-                    //表示按了home键,程序到了后台
-
-                    mRxBus.post("isScreen", true);
-                    mRxBus.post("load_dynamic", false);
+                    //亮屏
+                    mRxBus.post("screen_on_off",false);
                     break;
             }
         }

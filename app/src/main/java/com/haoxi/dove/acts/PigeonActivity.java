@@ -137,10 +137,7 @@ public class PigeonActivity extends BaseActivity implements IUpdateDoveView {
 
         if (isSetting) {
             RxBus.getInstance().post("isLoad", true);
-        } else {
-            RxBus.getInstance().post("isLoad", false);
         }
-
         this.finish();
     }
 
@@ -149,10 +146,7 @@ public class PigeonActivity extends BaseActivity implements IUpdateDoveView {
 
         if (isSetting) {
             RxBus.getInstance().post("isLoad", true);
-        } else {
-            RxBus.getInstance().post("isLoad", false);
         }
-
         super.onBackPressed();
     }
 

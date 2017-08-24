@@ -17,28 +17,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AttentionRvAdapter extends CommonAdapter<InnerAttention,AttentionRvAdapter.MyRefrashHolder> {
 
-
     private MyItemClickListener myItemClickListener;
-
     public void setMyItemClickListener(MyItemClickListener myItemClickListener) {
         this.myItemClickListener = myItemClickListener;
     }
 
     @Override
     public MyRefrashHolder createCustomViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_attention, null);
-
-
         return new MyRefrashHolder(getContext(),view,myItemClickListener);
     }
 
     @Override
     public void bindCustomViewHolder(MyRefrashHolder holder, InnerAttention innerAttention, int position) {
-
-
         onHolderListener.toInitHolder(holder,position,innerAttention);
-
     }
 
     public class MyRefrashHolder extends BaseViewHolder implements View.OnClickListener{
@@ -67,20 +59,14 @@ public class AttentionRvAdapter extends CommonAdapter<InnerAttention,AttentionRv
 
         @Override
         public void onClick(View v) {
-
             if (mItemClickListener != null){
-                //noinspection deprecation
-//                mItemClickListener.onItemClick(v,getPosition());
                 mItemClickListener.onItemClick(v,getAdapterPosition());
             }
         }
     }
 
-
     private OnHolderListener<InnerAttention,AttentionRvAdapter.MyRefrashHolder> onHolderListener;
-
     public void setOnHolderListener(OnHolderListener onHolderListener) {
         this.onHolderListener = onHolderListener;
     }
-
 }

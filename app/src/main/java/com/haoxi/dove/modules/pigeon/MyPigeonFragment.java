@@ -25,6 +25,8 @@ import com.haoxi.dove.inject.MyPigeonMoudle;
 import com.haoxi.dove.modules.mvp.views.IGetPigeonView;
 import com.haoxi.dove.modules.mvp.presenters.MyPigeonPresenter;
 import com.haoxi.dove.newin.bean.InnerDoveData;
+import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.utils.ApiUtils;
@@ -252,20 +254,19 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 
         Map<String,String> map = new HashMap<>();
 
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-
-        map.put("userid",getUserObjId());
-        map.put("token",getToken());
+        map.put(MethodParams.PARAMS_METHOD,getMethod());
+        map.put(MethodParams.PARAMS_SIGEN,getSign());
+        map.put(MethodParams.PARAMS_TIME,getTime());
+        map.put(MethodParams.PARAMS_VERSION,getVersion());
+        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
+        map.put(MethodParams.PARAMS_TOKEN,getToken());
 
         switch (methodType){
             case MethodType.METHOD_TYPE_DOVE_SEARCH:
-                map.put("playerid",getUserObjId());
+                map.put(MethodParams.PARAMS_PLAYER_ID,getUserObjId());
                 break;
             case MethodType.METHOD_TYPE_DOVE_DELETE:
-                map.put("doveid",getDeleteObjIds());
+                map.put(MethodParams.PARAMS_DOVE_ID,getDeleteObjIds());
                 break;
         }
         return map;
@@ -360,29 +361,23 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 
     @Override
     public void toDo() {
-
         mPresenter.deleteDatasFromData(getUserObjId());
-
         methodType = MethodType.METHOD_TYPE_DOVE_SEARCH;
-
         //删除成功刷新界面
         mPresenter.getDataFromNets(getParaMap());
-
     }
 
     @Override
     public String getMethod() {
         String method = "";
-
         switch (methodType){
             case MethodType.METHOD_TYPE_DOVE_SEARCH:
-                method = "/app/dove/search";
+                method = MethodConstant.DOVE_SEARCH;
                 break;
             case MethodType.METHOD_TYPE_DOVE_DELETE:
-                method = "/app/dove/delete";
+                method = MethodConstant.DOVE_DELETE;
                 break;
         }
-
         return method;
     }
 
@@ -516,7 +511,6 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 
                 @Override
                 public void doCancel() {
-                    //initData();
                     dialog.dismiss();
                 }
             });
