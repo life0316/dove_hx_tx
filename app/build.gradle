@@ -44,6 +44,13 @@ android {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 
+//    lintOptions {
+//        checkReleaseBuilds false
+//        // Or, if you prefer, you can continue to check for errors in release builds,
+//        // but continue the build even when errors are found:
+//        abortOnError false
+//    }
+
 
     greendao {
         schemaVersion 1
@@ -111,7 +118,8 @@ dependencies {
     compile 'com.android.support:design:25.+'
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.2-alpha-7'
     compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.2-alpha-7'
-    compile files('libs/stats_assis_sdk_4pigeon.jar')
-    compile files('libs/zhys_sdk_4gequan_67111001_170221.jar')
-    compile files('libs/1.1.4.jar')
+    //    compile files('libs/stats_assis_sdk_4pigeon.jar')
+//    compile files('libs/zhys_sdk_4gequan_67111001_170221.jar')
+    //    compile files('libs/sdk_v1.1.11.jar')
+    compile files('libs/sdk_v1.1.11.jar')
 }

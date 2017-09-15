@@ -299,7 +299,7 @@ public class PigeonActivity extends BaseActivity implements IUpdateDoveView {
         tvCancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDialog.dismiss();
+                mEyeDialog.dismiss();
             }
         });
         tvConfirm.setOnClickListener(new View.OnClickListener() {

@@ -3,10 +3,12 @@ package com.haoxi.dove.modules.loginregist;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -24,6 +26,7 @@ import com.haoxi.dove.modules.loginregist.ui.ILoginView;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.bean.OurUser;
 import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.ad.AdUtils;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.MD5Tools;
 import com.haoxi.dove.utils.RxBus;
@@ -93,6 +96,14 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
                 }
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            Log.e("fafdwwwwwwwwww","mac------------"+ AdUtils.getMachineHardwareAddress());
+        }else {
+
+            Log.e("fafdwwwwwwwwww","mac---------1---"+ AdUtils.getLocalMacAddress(this));
+        }
 
         String usernamesp = SpUtils.getString(this, SpConstant.USER_TELEPHONE);
         String pwdsp = SpUtils.getString(this,SpConstant.USER_PWD);

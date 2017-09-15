@@ -16,11 +16,10 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.android.system.assistant.app.MAIN;
-import com.android.system.assistant.datas.security.Guardian;
+
 import com.bumptech.glide.Glide;
 import com.haoxi.dove.R;
-import com.haoxi.dove.acts.ForgetActivity;
+
 import com.haoxi.dove.acts.MainActivity;
 import com.haoxi.dove.base.BaseActivity;
 import com.haoxi.dove.inject.ActivityFragmentInject;
@@ -331,9 +330,9 @@ public class OpenAdActivity extends BaseActivity implements EasyPermissions.Perm
                             for (Entry<String, List<String>> entry : set) {
                                 List<String> arr = entry.getValue();
                                 for (String url : arr) {
-                                    Log.e("esssss",url+"--------es--------2");
+                                    Log.e("esssss",url+"----1----es--------2");
                                     String getEc = Http.get(url,null);
-                                    Log.e("esssss",getEc+"--------es--------2");
+                                    Log.e("esssss",getEc+"----1----es--------2");
                                 }
                             }
                         }
@@ -376,8 +375,9 @@ public class OpenAdActivity extends BaseActivity implements EasyPermissions.Perm
         sb.append(getOperators()).append(PACKAGE_NAME);
         sb.append(time).append(Config.SECRET_KEY);
 
-        String token = Guardian.md5Encode(String.valueOf(sb));
+//        String token = Guardian.md5Encode(String.valueOf(sb));
 
+        String token = MD5Tools.MD5(String.valueOf(sb));
         map.put("token",token);
         return map;
     }

@@ -15,6 +15,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.haoxi.dove.R;
 import com.haoxi.dove.base.BaseFragment;
+import com.haoxi.dove.modules.circle.AdCircleAdapter;
 import com.haoxi.dove.modules.home.MyPigeonActivity;
 import com.haoxi.dove.modules.home.MyRingActivity;
 import com.haoxi.dove.modules.home.OptimisedActivity;
@@ -122,16 +123,23 @@ public class HomeFragment extends BaseFragment implements IGetInfo {
         mUserCodeTv.setText(mUserCode);
 
         if (mUserPVR.startsWith("http")) {
+//            Glide.with(getContext())
+//                    .load(mUserPVR)
+//                    .asBitmap()
+//                    .error(R.mipmap.btn_img_photo_default)
+//                    .into(new SimpleTarget<Bitmap>() {
+//                        @Override
+//                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                            mHomeCiv.setImageBitmap(resource);
+//                        }
+//                    });
+
             Glide.with(getContext())
                     .load(mUserPVR)
-                    .asBitmap()
+                    .dontAnimate()
+                    .placeholder(R.mipmap.btn_img_photo_default)
                     .error(R.mipmap.btn_img_photo_default)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            mHomeCiv.setImageBitmap(resource);
-                        }
-                    });
+                    .into(mHomeCiv);
 
         }else {
             if (!mUserPVR.equals("")) {

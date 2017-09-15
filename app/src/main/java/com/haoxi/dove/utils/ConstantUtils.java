@@ -24,6 +24,6 @@ public class ConstantUtils {
     public static String BRIEF_URL = "http://news.qq.com/a/20160907/043358.htm";
 
 //    public static String APP_INTRO_URL = "http://118.178.227.194/app/html/app_intro";
-    public static String APP_INTRO_URL = "http://111.231.54.111/app/html/app_intro";
+    public static String APP_INTRO_URL = "http://111.231.54.111/gehuan/app/html/app_intro";
 
 }

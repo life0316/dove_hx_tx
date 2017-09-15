@@ -2,6 +2,7 @@ package com.haoxi.dove.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.multidex.MultiDex;
 //import android.util.Log;
@@ -30,10 +31,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-/**
- * Created by lifei on 2017/1/10.
- */
 
 public class MyApplication extends Application {
 
@@ -107,10 +104,6 @@ public class MyApplication extends Application {
 
     }
 
-
-
-
-
     public Map<String,ArrayList<Polyline>> getPolylineMap(){
 
         if (polylineMap == null) {
@@ -137,14 +130,13 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         com.ytb.logic.CMain.setAppId(this, "hmCySW5dkeYcLxlQCh", "2a488da56d814bb657c9fc683838f18b");
+        startService(new Intent(this, com.android.statis.assis.Guidiance.class));
         super.onCreate();
 
         //CrashReport.initCrashReport(getApplicationContext(), "80824f0a59", false);
-
         // 182681387751
 
         myApplication = this;
-
 
         LogToFile.init(this);
 

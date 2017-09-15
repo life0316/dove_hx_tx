@@ -3,10 +3,6 @@ package com.haoxi.dove.retrofit.ad;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Administrator on 2017\8\18 0018.
- */
-
 public class AdviewResObj {
 
     int res;                //广告回应情况标识
@@ -48,7 +44,7 @@ public class AdviewResObj {
         this.ad = ad;
     }
 
-    class AdBody{
+    public class AdBody{
 
         String posId;       //广告位 id
         int act;            //广告动作类型 1广告页
@@ -64,6 +60,26 @@ public class AdviewResObj {
         List<String> ec;    // 点击监控url
 
         Map<String,List<String>> es;
+
+        @Override
+        public String toString() {
+
+            StringBuffer sb = new StringBuffer();
+
+            sb.append("posid = "+posId).append("\n").
+                    append("act = "+ act).append("\n").
+                    append("at = "+ at).append("\n").
+                    append("as = "+ as).append("\n").
+                    append("aic = "+ aic).append("\n").
+                    append("ate = "+ ate).append("\n").
+                    append("ast = "+ ast).append("\n").
+                    append("ati = "+ ati).append("\n").
+                    append("api = "+ api.toString()).append("\n").
+                    append("adIcon = "+ adIcon).append("\n").
+                    append("al = "+ al).append("\n").
+                    append("ec = "+ ec);
+            return sb.toString();
+        }
 
         public Map<String, List<String>> getEs() {
             return es;

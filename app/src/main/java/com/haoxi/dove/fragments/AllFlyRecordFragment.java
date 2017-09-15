@@ -318,7 +318,6 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
 
     @Override
     public String getMethod() {
-
         String method = "";
         switch (methodType){
             case MethodType.METHOD_TYPE_FLY_SEARCH:

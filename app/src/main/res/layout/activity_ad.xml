@@ -24,7 +24,7 @@
             android:layout_height="@dimen/x100"
             android:text="跳过广告"
             android:layout_gravity="right"
-            android:visibility="visible"
+            android:visibility="gone"
             />
     </FrameLayout>
 

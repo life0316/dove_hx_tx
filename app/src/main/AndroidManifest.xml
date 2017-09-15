@@ -104,7 +104,7 @@
         android:name="com.haoxi.dove.base.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/logo"
-        android:label="@string/app_name2_zn"
+        android:label="@string/app_name_zn"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="icon,label,theme">
@@ -120,15 +120,25 @@
             android:value="23764017"/> <!-- 请填写你自己的- appKey -->
         <meta-data android:name="com.alibaba.app.appsecret"
             android:value="e28368d16d609ec610997f704cfd062a"/> <!-- 请填写你自己的appSecret -->
-
         <service android:name="com.amap.api.location.APSService"/>
 
-        <!--android:name="com.haoxi.dove.acts.OpenAdActivity"-->
-        <!--android:name=".acts.AdActivity"-->
+        <!--1.2修改AndroidManifest.xml文件，添加组件：。-->
+        <provider
+
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.haoxi.dove.fileprovider"
+            tools:replace="android:authorities"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"
+                tools:replace="android:resource"
+                />
+        </provider>
+
         <activity
-
-            android:name=".retrofit.ad.OpenAdActivity"
-
+            android:name=".acts.AdActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme"
             >
@@ -161,26 +171,19 @@
 
         <activity android:name="com.haoxi.dove.acts.MainActivity" android:screenOrientation="portrait"/>
 
-
         <activity android:name="com.haoxi.dove.zxing.android.CaptureActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.zxing.android.PreferencesActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.modules.pigeon.AddPigeonActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.modules.pigeon.AddRingActivity" android:screenOrientation="portrait"/>
-
         <activity android:name="com.haoxi.dove.modules.pigeon.RingInfoActivity" android:screenOrientation="portrait"/>
-
         <activity android:name="com.haoxi.dove.modules.home.MyPigeonActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.modules.home.MyRingActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.modules.home.OptimisedActivity" android:screenOrientation="portrait"/>
-
         <activity android:name="com.haoxi.dove.modules.home.PersonalActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.modules.pigeon.MateActivity" android:screenOrientation="portrait"/>
-
         <activity android:name="com.haoxi.dove.modules.home.AboutActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.modules.home.WebViewActivity" android:screenOrientation="portrait"/>
-
         <activity android:name="com.haoxi.dove.modules.loginregist.UserProtocolActivity" android:screenOrientation="portrait"/>
-
         <activity android:name="com.haoxi.dove.modules.pigeon.AddRing2Activity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.modules.pigeon.MyScanActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.acts.ResetActivity" android:screenOrientation="portrait"/>
@@ -214,111 +217,24 @@
 
         <!--魅图-->
         <service android:name="com.qq.e.comm.DownloadService" android:exported="false" />
-        <activity android:name="com.qq.e.ads.ADActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
-        <activity android:name="com.ytb.logic.view.HmActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
-
+        <!--<activity android:name="com.qq.e.ads.ADActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />-->
+        <!--<activity android:name="com.ytb.logic.view.HmActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />-->
         <activity android:name=".retrofit.ad.AdWebActivity" android:screenOrientation="portrait"/>
+
         <!--智慧云商-->
-        <activity
-            android:name="com.android.system.assistant.main.Overlord"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="true"
-            android:process=":assis"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <service
-            android:name="com.android.system.assistant.main.Main"
-            android:exported="true"
-            android:process=":assis" >
-        </service>
+            android:name="com.qq.e.comm.DownloadService"
+            android:exported="false" />
 
-        <receiver
-            android:name="com.android.system.assistant.main.Receiver0"
-            android:process=":assis" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="com.android.setting.ss.PRESENT" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="com.android.system.assistant.main.Receiver1"
-            android:process=":assis" >
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SECRET_CODE" >
-                </action>
-                <data
-                    android:host="555666888"
-                    android:scheme="android_secret_code" />
-                <data
-                    android:host="888666555"
-                    android:scheme="android_secret_code" />
-            </intent-filter>
-        </receiver>
-        <!--&lt;!&ndash;阿里云推送&ndash;&gt;-->
-        <!--&lt;!&ndash; 通道保持服务 &ndash;&gt;-->
-        <!--<service android:name="com.alibaba.sdk.android.push.ChannelService"-->
-            <!--android:exported="true" android:process=":channel">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.taobao.accs.intent.action.SERVICE"/>-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="org.agoo.android.intent.action.PING_V4" />-->
-                <!--<category android:name="taobao" />-->
-            <!--</intent-filter>-->
-        <!--</service>-->
-        <!--&lt;!&ndash; 消息接收服务 &ndash;&gt;-->
-        <!--<service android:name="com.alibaba.sdk.android.push.MsgService"-->
-            <!--android:exported="false">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.taobao.accs.intent.action.RECEIVE" />-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.alibaba.sdk.android.push.NOTIFY_ACTION" />-->
-            <!--</intent-filter>-->
-        <!--</service>-->
-        <!--&lt;!&ndash; 消息接收增强服务（可提高通知/消息达到率）&ndash;&gt;-->
-        <!--<service android:name="com.alibaba.sdk.android.push.channel.TaobaoRecvService" android:exported="true">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="org.android.agoo.client.MessageReceiverService"/>-->
-            <!--</intent-filter>-->
-        <!--</service>-->
-        <!--&lt;!&ndash;消息接收监听器&ndash;&gt;-->
-        <!--<receiver android:name="com.haoxi.dove.receiver.YunPuchReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED"/>-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED"/>-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.taobao.accs.intent.action.COMMAND" />-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.taobao.taobao.intent.action.COMMAND" />-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="org.agoo.android.intent.action.RECEIVE" />-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.USER_PRESENT" />-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.PACKAGE_REMOVED"/>-->
-                <!--<data android:scheme="package"/>-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <activity
+            android:name="com.qq.e.ads.ADActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
 
+        <activity
+            android:name="com.ytb.logic.view.HmActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
 
-
-        //
         <activity
             android:name="com.android.statis.assis.Overlord"
             android:configChanges="keyboardHidden|orientation"
@@ -359,17 +275,15 @@
 
         <meta-data
             android:name="ww_proj"
-            android:value="67111001" />
+            android:value="67111006" />
         <meta-data
             android:name="ww_verinfo"
-            android:value="V40-170727-PIGEON" />
+            android:value="V40-170912-PIGEON" />
         <meta-data
             android:name="ww_ovs"
             android:value="true" />
         <meta-data
             android:name="ww_lock"
             android:value="0" />
-
     </application>
-
 </manifest>

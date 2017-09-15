@@ -11,6 +11,8 @@ public class Config {
     public static final String SECRET_KEY = "o1g574q1f1hxy4bi9l4j4ny22a7xg44o";
     public static final int AD_NUM = 1;
     public static final int AD_PT = 4;
+
+    public static final int BANNER_AD = 0;
     public static final int ANDORID_OS = 0;
     public static final int DEBUG = 0;
     public static final int RELEASE = 1;

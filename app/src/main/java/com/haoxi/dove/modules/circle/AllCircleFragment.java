@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -22,9 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.haoxi.dove.R;
 import com.haoxi.dove.adapter.CirclePhotoAdapter;
@@ -47,14 +51,25 @@ import com.haoxi.dove.retrofit.DataLoadType;
 import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
+import com.haoxi.dove.retrofit.ad.AdUtils;
+import com.haoxi.dove.retrofit.ad.AdviewResObj;
+import com.haoxi.dove.retrofit.ad.Config;
+import com.haoxi.dove.retrofit.ad.Http;
+import com.haoxi.dove.retrofit.ad.IAdView;
+import com.haoxi.dove.retrofit.ad.OpenAdActivity;
+import com.haoxi.dove.retrofit.ad.OpenAdPresenter;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
+import com.haoxi.dove.utils.MD5Tools;
 import com.haoxi.dove.utils.RxBus;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.widget.MyPhotoPreview;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.ytb.inner.logic.vo.Ad;
 import com.ytb.logic.external.NativeResource;
 import com.ytb.logic.interfaces.AdNativeLoadListener;
 import com.ytb.logic.view.HmNativeAd;
@@ -63,14 +78,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import rx.Observable;
 import rx.functions.Action1;
 
-public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<CircleBean>,OnRefreshListener, OnLoadmoreListener, OnHolder2Listener, MyItemClickListener, IEachView<EachCircleBean> {
+public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCircleView<CircleBean>,OnRefreshListener, OnLoadmoreListener, OnHolder2Listener, MyItemClickListener, IEachView<EachCircleBean> {
 
     private int methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
 
@@ -98,6 +115,8 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
 
     @BindView(R.id.refreshLayout) SmartRefreshLayout refreshLayout;
     @BindView(R.id.bsr_rv) RecyclerView recyclerView;
+    @BindView(R.id.bannerIv)
+    ImageView bannerIv;
 
     @Inject
     InnerCirclePresenter innerCirclePresenter;
@@ -109,12 +128,18 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
 
     EachCirclePresenter eachCirclePresenter;
 
+    private OpenAdPresenter adPresenter;
+
     AdCircleAdapter adCircleAdapter;
     private Observable<Integer> netObservale;
     private Observable<Boolean> isLoadObervable;
 //    private Observable<Boolean> isUpdateObervable;
     private NativeResource nativeResource;
     private boolean isLoadMore = false;
+
+    private boolean isLoadBanner = true;
+    private int width;
+    private int height;
 
 
     @Override
@@ -148,7 +173,12 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        width = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        height = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+
         eachCirclePresenter = new EachCirclePresenter(this);
+        adPresenter = new OpenAdPresenter(this);
 
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadmoreListener(this);
@@ -244,6 +274,11 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
             nativeAd.loadAd("429");
         }
         isLoad = false;
+
+//        if (isLoadBanner) {
+            adPresenter.getOpenAd(getParamsMap());
+            isLoadBanner = false;
+//        }
     }
 
     private  List<NativeResource> list = new ArrayList<>();
@@ -326,9 +361,7 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
             PAGENUM = 1;
             pageNumMap.put("all",PAGENUM);
             isDao = false;
-
             isLoadMore = false;
-
             //下拉刷新
             methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
             nativeAd.loadAd("429");
@@ -401,7 +434,6 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
         }
 
         Log.e("faaafee",map.toString());
-
         return map;
     }
 
@@ -629,7 +661,6 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
                     circleid = curData.getCircleid();
 
                     methodType = MethodType.METHOD_TYPE_ADD_ATTENTION;
-
                     friendId = curData.getUserid();
 
                     ourCodePresenter.addAttention(getParaMap());
@@ -720,8 +751,6 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
 
     @Override
     public void onItemClick(View view, int position) {
-
-
         int curPost = position >= 1? position - (adCircleAdapter.getAdDatas().size() / 10 + adCircleAdapter.getAdDatas().size()):position;
         currentPosition = curPost;
         if (innerCircleBeans.get(curPost) != null) {
@@ -780,11 +809,9 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
             public void onClick(View v) {
 
                 commentContent = mEtDialog.getText().toString().trim();
-
                 if (!TextUtils.equals("",commentContent)) {
                     ourCodePresenter.addComment(getParaMap());
                 }
-
                 mDialogEt.dismiss();
             }
         });
@@ -857,7 +884,6 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
 
                 methodType = MethodType.METHOD_TYPE_REMOVE_ATTENTION;
                 ourCodePresenter.removeAttention(getParaMap());
-
                 mDialog.dismiss();
             }
         });
@@ -878,5 +904,183 @@ public class AllCircleFragment extends BaseSrFragment implements IMyCircleView<C
         ApiUtils.setDialogWindow(mDialog);
         mDialog.show();
     }
+    private final static String PACKAGE_NAME = "com.haoxi.dove";
 
+    @Override
+    public Map<String,Object> getParamsMap() {
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("n", Config.AD_NUM);
+        map.put("appid",Config.APP_ID);
+        map.put("pt",Config.BANNER_AD);
+        map.put("w",width);
+        map.put("h",height);
+        map.put("os",Config.ANDORID_OS);
+        map.put("bdr", Build.VERSION.RELEASE);
+        map.put("tp", Build.MODEL);
+        map.put("brd",Build.BRAND);
+        map.put("sn", AdUtils.getIMEI(getActivity()));
+        map.put("nop",AdUtils.getOperators(getActivity()));
+
+        map.put("andid",AdUtils.getAndroidId(getActivity()));
+        map.put("nt",AdUtils.getNetworkType(getActivity()));
+        map.put("tab",0);
+        map.put("tm",Config.DEBUG);
+        map.put("pack",PACKAGE_NAME);
+
+        map.put("sw",AdUtils.getDisplayWidth(getActivity()));
+        map.put("sh",AdUtils.getDisplayHeight(getActivity()));
+        map.put("tp", Build.MODEL);
+        map.put("brd",Build.BRAND);
+        map.put("deny",AdUtils.getDisplayDensity(getActivity()));
+        map.put("mc",AdUtils.getLocalMacAddress(getActivity()));
+
+        String time = String.valueOf(System.currentTimeMillis());
+        map.put("time",time);
+        StringBuilder sb = new StringBuilder(Config.APP_ID);
+        sb.append( AdUtils.getIMEI(getActivity())).append(Config.ANDORID_OS);
+        sb.append(AdUtils.getOperators(getActivity())).append(PACKAGE_NAME);
+        sb.append(time).append(Config.SECRET_KEY);
+
+//        String token = Guardian.md5Encode(String.valueOf(sb));
+        String token = MD5Tools.MD5(String.valueOf(sb));
+
+        map.put("token",token);
+        Log.e("getAdData", map.toString() + "--------获取广告请求参数");
+        testAD();
+
+        return map;
+    }
+
+
+    public void testAD(){
+
+        JSONObject object = new JSONObject();
+
+        object.put("n", Config.AD_NUM);
+        object.put("appid",Config.APP_ID);
+        object.put("pt",Config.BANNER_AD);
+        object.put("w",width);
+        object.put("h",height);
+        object.put("os",Config.ANDORID_OS);
+        object.put("bdr", Build.VERSION.RELEASE);
+        object.put("tp", Build.MODEL);
+        object.put("brd",Build.BRAND);
+        object.put("sn", AdUtils.getIMEI(getActivity()));
+        object.put("nop",AdUtils.getOperators(getActivity()));
+
+        object.put("andid",AdUtils.getAndroidId(getActivity()));
+        object.put("nt",AdUtils.getNetworkType(getActivity()));
+        object.put("tab",0);
+        object.put("tm",Config.DEBUG);
+        object.put("pack",PACKAGE_NAME);
+
+        object.put("sw",AdUtils.getDisplayWidth(getActivity()));
+        object.put("sh",AdUtils.getDisplayHeight(getActivity()));
+        object.put("tp", Build.MODEL);
+        object.put("brd",Build.BRAND);
+        object.put("deny",AdUtils.getDisplayDensity(getActivity()));
+        object.put("mc",AdUtils.getLocalMacAddress(getActivity()));
+
+        String time = String.valueOf(System.currentTimeMillis());
+        object.put("time",time);
+        StringBuilder sb = new StringBuilder(Config.APP_ID);
+        sb.append( AdUtils.getIMEI(getActivity())).append(Config.ANDORID_OS);
+        sb.append(AdUtils.getOperators(getActivity())).append(PACKAGE_NAME);
+        sb.append(time).append(Config.SECRET_KEY);
+
+//        String token = Guardian.md5Encode(String.valueOf(sb));
+        String token = MD5Tools.MD5(String.valueOf(sb));
+
+        object.put("token",token);
+
+        String str = object.toString().replace("\"", "%22").replace("{", "%7b").replace("}", "%7d").replace("[", "%5b").replace("]", "%5d").replace(" ","%20");
+        String BASE_AD_URL = "http://open.adview.cn/agent/openRequest.do?"+str;
+
+        Log.e("getAdData", BASE_AD_URL + "-----请求广告资源数据---url");
+    }
+
+    @Override
+    public void setOpenAd(AdviewResObj resObj) {
+        adviewResObj = resObj;
+
+        Log.e("getAdData", resObj.getRes() + "-----获取到的广告资源数据---Res");
+        Log.e("getAdData", resObj.getMg() + "-----获取到的广告资源数据---mg");
+//        Log.e("getAdData", resObj.getAd().toString() + "-----获取到的广告资源数据---getAd");
+        List<AdviewResObj.AdBody> adBodyList = resObj.getAd();
+        if (adBodyList != null) {
+            Log.e("getAdData", adBodyList.toString() + "-----获取到的广告资源数据");
+            Log.e("getAdData", adBodyList.get(0).getApi().size() + "--------获取到的广告数量");
+            if (adBodyList.size() != 0 && adBodyList.get(0).getApi().size() != 0) {
+                String imgUrl = adBodyList.get(0).getApi().get(0);
+                String al = adBodyList.get(0).getAl();
+
+                if (!TextUtils.isEmpty(al)) {
+                    bannerIv.setVisibility(View.VISIBLE);
+                    clickAdImg = al;
+                }
+                final Map<String, List<String>> map = resObj.getAd().get(0).getEs();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (map != null && map.size() > 0) {
+                            Set<Map.Entry<String, List<String>>> set = map.entrySet();
+                            for (Map.Entry<String, List<String>> entry : set) {
+                                List<String> arr = entry.getValue();
+                                for (String url : arr) {
+                                    Log.e("getAdData", url + "--------es--------2");
+                                    String getEc = Http.get(url, null);
+                                }
+                            }
+                        }
+                    }
+                }).start();
+
+                Glide.with(getActivity())
+                        .load(imgUrl)
+                        .into(bannerIv);
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        bannerIv.setVisibility(View.GONE);
+                    }
+                },20 * 1000);
+            }
+        }
+    }
+
+    private String clickAdImg = "";
+    private AdviewResObj adviewResObj;
+
+    @OnClick(R.id.bannerIv)
+    void banner(){
+                if (!TextUtils.isEmpty(clickAdImg) && clickAdImg.startsWith("http")){
+
+//                    isClick = true;
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (adviewResObj != null) {
+                                List<String> ec =  adviewResObj.getAd().get(0).getEc();
+                                if (ec != null && ec.size() > 0) {
+                                    for (String url:ec) {
+                                        String getEc = Http.get(url,null);
+                                        Log.e("esssss",getEc+"--------ec---------1");
+                                    }
+                                }
+                            }
+                        }
+                    }).start();
+
+//                    SpUtils.putBoolean(getActivity(), SpConstant.CLICK_AD,true);
+                    Intent intent = new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri contentUri = Uri.parse(clickAdImg);
+                    intent.setData(contentUri);
+                    startActivity(intent);
+        }
+    }
 }

@@ -263,6 +263,7 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
         if (!ApiUtils.isNetworkConnected(getActivity())) {
         } else {
             isDao = false;
+            methodType = MethodType.METHOD_TYPE_FRIENDS_CIRCLES;
             innerCirclePresenter.refreshFromNets(getParaMap(),tag);
         }
     }

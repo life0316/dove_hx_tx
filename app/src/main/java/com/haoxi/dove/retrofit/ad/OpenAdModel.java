@@ -16,6 +16,9 @@ import rx.schedulers.Schedulers;
 public class OpenAdModel extends BaseModel {
     public void getDatasFromNets(Map<String, Object> map, final RequestCallback<AdviewResObj> requestCallback) {
 
+//        String str = object.toString().replace("\"", "%22").replace("{", "%7b").replace("}", "%7d").replace("[", "%5b").replace("]", "%5d").replace(" ","%20");
+//        String BASE_AD_URL = "http://open.adview.cn/agent/openRequest.do?";
+
         adNewService.getOpenAd(map)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

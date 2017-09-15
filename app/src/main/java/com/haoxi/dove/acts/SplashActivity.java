@@ -1,8 +1,6 @@
 package com.haoxi.dove.acts;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
 
 import com.haoxi.dove.R;
@@ -12,14 +10,10 @@ import com.haoxi.dove.base.BaseActivity;
 import com.haoxi.dove.modules.loginregist.LoginActivity;
 import com.haoxi.dove.modules.loginregist.model.LoginModel;
 import com.haoxi.dove.modules.loginregist.presenter.LoginPresenter;
-import com.haoxi.dove.modules.loginregist.model.UserInfoModel;
-import com.haoxi.dove.modules.loginregist.presenter.UserInfoPresenter;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.bean.OurUser;
-import com.haoxi.dove.newin.bean.OurUserInfo;
 import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.utils.ApiUtils;
-import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.MD5Tools;
 import com.haoxi.dove.utils.SpConstant;
 import com.haoxi.dove.utils.SpUtils;

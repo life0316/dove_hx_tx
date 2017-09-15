@@ -172,17 +172,24 @@ public class PersonalActivity extends BaseActivity implements IPersonalView,IUpd
         if (!"".equals(userHeadpic)) {
 
             if (userHeadpic.startsWith("http")){
+//                Glide.with(this)
+//                        .load(userHeadpic)
+//                        .asBitmap()
+//                        .placeholder(R.mipmap.btn_img_photo_default)
+//                        .error(R.mipmap.btn_img_photo_default)
+//                        .into(new SimpleTarget<Bitmap>() {
+//                            @Override
+//                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                                mCiv.setImageBitmap(resource);
+//                            }
+//                        });
+
                 Glide.with(this)
                         .load(userHeadpic)
-                        .asBitmap()
+                        .dontAnimate()
                         .placeholder(R.mipmap.btn_img_photo_default)
                         .error(R.mipmap.btn_img_photo_default)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                mCiv.setImageBitmap(resource);
-                            }
-                        });
+                        .into(mCiv);
             }else {
                 if (!userHeadpic.equals("")) {
                     byte[] byteArray = Base64.decode(userHeadpic, Base64.DEFAULT);

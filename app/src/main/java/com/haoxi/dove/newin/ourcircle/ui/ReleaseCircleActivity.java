@@ -284,11 +284,11 @@ public class ReleaseCircleActivity extends BaseActivity implements IAddDynamicVi
     }
 
     @OnClick(R.id.custom_toolbar_keep)
-    void releaseMsg(View v) {
+    void releaseMsg() {
 
         Log.e("photoadapter",photoAdapter.getItemCount()+"------图片数量");
 
-        if (TextUtils.isEmpty(getContent()) || TextUtils.equals("",getContent()) && selectedPhotos.size() == 0){
+        if (TextUtils.equals("",getContent()) && selectedPhotos.size() == 0){
             return;
         }
 

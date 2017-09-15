@@ -1,6 +1,7 @@
 package com.haoxi.dove.acts;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -83,10 +85,8 @@ public class AdActivity extends BaseActivity implements EasyPermissions.Permissi
         }
     }
 
-
     @AfterPermissionGranted(REQUEST_CODE_AD)
     private void requestCodeQRCodePermissions(){
-
         if (!EasyPermissions.hasPermissions(this,needPermissions)) {
             EasyPermissions.requestPermissions(this,"需要的权限",REQUEST_CODE_AD,needPermissions);
         }else {
@@ -94,18 +94,25 @@ public class AdActivity extends BaseActivity implements EasyPermissions.Permissi
         }
     }
 
+    @OnClick(R.id.ad_btn)
+    void adBtn(){
+        toDo(100);
+    }
+
     private void loadAd(){
         new HmSplashAd(this,mAdFl,new AdSplashListener() {
             @Override
             public void onNoAD(int i) {
                 Log.e("addd",i+"---------onNoAD");
-                switch (i){
-                    case 1:
-                    case 2:
-                    case 3:
-                        toDo(3000);
-                        break;
-                }
+
+                toDo(100);
+//                switch (i){
+//                    case 1:
+//                    case 2:
+//                    case 3:
+//                        toDo(3000);
+//                        break;
+//                }
             }
             @Override
             public void onADDismissed() {
@@ -145,13 +152,10 @@ public class AdActivity extends BaseActivity implements EasyPermissions.Permissi
     }
 
     public void toDo(int time) {
-
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
                     if (ApiUtils.isNetworkConnected(AdActivity.this)) {
-
                         if (isAutoCb) {
                             presenter.getDataFromNets(getParaMap());
                         } else {
