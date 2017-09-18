@@ -36,22 +36,13 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-
-/**
- * Created by Administrator on 2017\7\6 0006.
- */
-
 public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView, ToSetHolderListener<InnerDoveData>,MyItemClickListener, OnRefreshListener {
 
-
     private int methodType = MethodType.METHOD_TYPE_DOVE_SEARCH;
-
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
-
     @BindView(R.id.fragment_mypigeon_swiprv)
     RecyclerView mRecyclerView;
-
     @BindView(R.id.fragment_mypigeon_show_add)
     LinearLayout mShowAddLv;
     @BindView(R.id.fragment_mypigeon_show_add_tv1)
@@ -64,13 +55,10 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
 
     @Inject
     MyDoveAdapter doveAdapter;
-
     @Inject
     RxBus mRxBus;
-
     @Inject
     MyPigeonPresenter mPresenter;
-
 
     public static RouteDoveFragment newInstance(String content) {
         Bundle args = new Bundle();
@@ -88,13 +76,9 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
 
         mShowAddTv2.setVisibility(View.GONE);
-
         mRecyclerView.setAdapter(doveAdapter);
-
         refreshLayout.setEnableLoadmore(false);
-
         refreshLayout.setOnRefreshListener(this);
-
         doveAdapter.setToSetHolderListener(this);
         doveAdapter.setOnItemClickListener(this);
     }
@@ -105,7 +89,6 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
         if (isLoad) {
             getDatas();
         }
-
         isLoad = false;
     }
     public void getDatas() {
@@ -118,17 +101,13 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
     }
 
     public Map<String,String> getParaMap(){
-
         Map<String,String> map = new HashMap<>();
-
         map.put("method",getMethod());
         map.put("sign",getSign());
         map.put("time",getTime());
         map.put("version",getVersion());
-
         map.put("userid",getUserObjId());
         map.put("token",getToken());
-
         switch (methodType){
             case MethodType.METHOD_TYPE_DOVE_SEARCH:
                 map.put("playerid",getUserObjId());
@@ -136,11 +115,6 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
         }
         return map;
     }
-
-//    @Override
-//    public void onRefresh() {
-//        getDatas();
-//    }
 
     @Override
     public void toSetHolder(MyRouteHolder holder, InnerDoveData data, int position) {
@@ -150,7 +124,6 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
     @Override
     public void onItemClick(View view, int position) {
         InnerDoveData doveData = doveDatas.get(position);
-
         Intent intent = new Intent(getActivity(),RouteTitleActivity.class);
         intent.putExtra("dove",doveData);
         startActivity(intent);
@@ -158,9 +131,7 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
 
     @Override
     public String getMethod() {
-
         String method = "";
-
         switch (methodType){
             case MethodType.METHOD_TYPE_DOVE_SEARCH:
                 method = MethodConstant.DOVE_SEARCH;
@@ -171,7 +142,6 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
 
     @Override
     public void setPigeonData(List<InnerDoveData> pigeonData) {
-//        mSrl.setRefreshing(false);
         refreshLayout.finishRefresh(false);
         if (pigeonData != null && pigeonData.size() != 0){
             doveDatas.clear();
@@ -189,13 +159,11 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
 
     @Override
     public void setRefrash(boolean isRefrash) {
-//        mSrl.setRefreshing(isRefrash);
         refreshLayout.finishRefresh(isRefrash);
     }
 
     @Override
     protected void inject() {
-
         DaggerRouteDFComponent.builder()
                 .appComponent(getAppComponent())
                 .routeDFMoudle(new RouteDFMoudle(getContext(),this))

@@ -32,10 +32,6 @@ import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by lifei on 2017/1/12.
- */
-
 public class AboutModel extends BaseModel implements IAboutModel<OurVerBean> {
 
     private Context mContext;
@@ -104,7 +100,7 @@ public class AboutModel extends BaseModel implements IAboutModel<OurVerBean> {
                     is = response.body().byteStream();
                     long total = response.body().contentLength();
                     progressCallback.onProgressMax(100);
-                    File file = new File(SDPath, "test.apk");
+                    File file = new File(SDPath, "dove.apk");
                     fos = new FileOutputStream(file);
                     long sum = 0;
                     while ((len = is.read(buf)) != -1) {
@@ -142,7 +138,6 @@ public class AboutModel extends BaseModel implements IAboutModel<OurVerBean> {
                 progressCallback.onFailure("下载失败");
             }
         });
-
     }
 
     @Override
@@ -168,13 +163,10 @@ public class AboutModel extends BaseModel implements IAboutModel<OurVerBean> {
                                 requestCallback.requestError(codesBean.getMsg());
                                 break;
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseSubscriber<OurVerBean>(requestCallback));
-
+                .subscribe(new BaseSubscriber<>(requestCallback));
     }
-
 }

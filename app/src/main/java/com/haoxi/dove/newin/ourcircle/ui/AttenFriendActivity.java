@@ -46,47 +46,34 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-/**
- * Created by Administrator on 2017\6\16 0016.
- */
-
 @ActivityFragmentInject(contentViewId = R.layout.activity_refrash_rv)
 public class AttenFriendActivity extends BaseActivity implements IMyCircleView<List<InnerAttention>>, OnRefreshListener, OnLoadListener, OnHolderListener<InnerAttention,AttentionRvAdapter.MyRefrashHolder>, MyItemClickListener {
 
     private int methodType = MethodType.METHOD_TYPE_SEARCH_ATTENTION;
-
     @BindView(R.id.custom_toolbar_iv)
     ImageView mBackIv;
     @BindView(R.id.custom_toolbar_tv)
     TextView mTitleTv;
-
     @BindView(R.id.base_erv)
     EasyDefRecyclerView easyRecyclerView;
 
     @Inject
     AttentionPresenter presenter;
-
     @Inject
     OurCodePresenter codePresenter;
-
-    AttentionRvAdapter refrashRvAdapter;
-
-    private List<InnerAttention> innerAttenBeans = new ArrayList<>();
-
     @Inject
     RxBus mRxBus;
 
+    AttentionRvAdapter refrashRvAdapter;
+    private List<InnerAttention> innerAttenBeans = new ArrayList<>();
     private String friendId = "";
     private Dialog popDialog;
 
     @Override
     public void toDo() {
-
         if (popDialog != null && popDialog.isShowing()) {
             popDialog.dismiss();
         }
-
         methodType = MethodType.METHOD_TYPE_SEARCH_ATTENTION;
         getAttenData(true);
     }
@@ -99,7 +86,6 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
 
     @OnClick(R.id.custom_toolbar_iv)
     void onBackOnli() {
-
         mRxBus.post("isLoad", false);
         finish();
     }
@@ -112,9 +98,7 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
 
     @Override
     public String getMethod() {
-
         String method = "";
-
         switch (methodType){
             case MethodType.METHOD_TYPE_SEARCH_ATTENTION:
                 method = MethodConstant.ATTENTION_SEARCH;
@@ -123,33 +107,27 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
                 method = MethodConstant.ATTENTTION_REMOVE;
                 break;
         }
-
         return method;
     }
 
     public Map<String,String> getParaMap(){
-
         Map<String,String> map = new HashMap<>();
-
         map.put("method",getMethod());
         map.put("sign",getSign());
         map.put("time",getTime());
         map.put("version",getVersion());
         map.put("userid",mUserObjId);
         map.put("token",mToken);
-
         switch (methodType){
             case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
                 map.put("friendid",friendId);
                 break;
         }
-
         return map;
     }
 
     @Override
     protected void initInject() {
-
         DaggerAttentionComponent.builder()
                 .appComponent(getAppComponent())
                 .attentionMoudle(new AttentionMoudle(this,this))
@@ -161,18 +139,13 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
     protected void init() {
         mBackIv.setVisibility(View.VISIBLE);
         mTitleTv.setText("关注好友");
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         easyRecyclerView.setLayoutManager(linearLayoutManager);
-
         easyRecyclerView.setLastUpdateTimeRelateObject(this);
         easyRecyclerView.setOnRefreshListener(this);
         easyRecyclerView.setOnLoadListener(this);
-
         refrashRvAdapter = new AttentionRvAdapter();
-
         easyRecyclerView.setAdapter(refrashRvAdapter);
-
         refrashRvAdapter.setOnHolderListener(this);
         refrashRvAdapter.setMyItemClickListener(this);
     }
@@ -200,7 +173,6 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
     public void onItemClick(View view, int position) {
 
         InnerAttention innerAttention = innerAttenBeans.get(position);
-
         Intent intent = new Intent(AttenFriendActivity.this,CircleDetialActivity.class);
         intent.putExtra("friendid",innerAttention.getUserid());
         intent.putExtra("name",innerAttention.getNickname());
@@ -265,12 +237,10 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
         int width = getWindowManager().getDefaultDisplay().getWidth();
         ViewGroup.LayoutParams params = layout.getLayoutParams();
         params.width = (width * 62) / 72;
-        params.height = (int) ((width * 52) / 72);
-
+        params.height = (width * 52) / 72;
         layout.setLayoutParams(params);
 
         ImageView mDismissIv = (ImageView) view.findViewById(R.id.show_marker_dismiss);
-
 
         if (!"".equals(innerAttention.getNickname()) && innerAttention.getNickname() != null ){
             mUserNameTv.setText(String.valueOf(innerAttention.getNickname()));
@@ -278,27 +248,20 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
         if (!"".equals(innerAttention.getAge())){
             mAgeTv.setText(String.valueOf(innerAttention.getAge())+"岁");
         }
-
         if (!"".equals(innerAttention.getGender())&& innerAttention.getGender() != null){
             mSexTv.setText("1".equals(innerAttention.getGender()) || "男".equals(innerAttention.getGender())?"男":"女");
         }
-
         if (!"".equals(innerAttention.getExperience())&& innerAttention.getExperience() != null ){
             mExperTv.setText("养鸽年限:"+innerAttention.getExperience());
         }
-
         if (!"".equals(innerAttention.getTelephone())&& innerAttention.getTelephone() != null ){
             mUserCodeTv.setText("联系方式:"+innerAttention.getTelephone());
         }
-
         if (!"".equals(innerAttention.getLoftname())&& innerAttention.getLoftname() != null ){
             mLoftNameTv.setText(innerAttention.getLoftname());
         }
-
         if (innerAttention.getHeadpic() != null && !"".equals(innerAttention.getHeadpic()) && !"-1".equals(innerAttention.getHeadpic())){
             String headpic = innerAttention.getHeadpic();
-
-
             Glide.with(this)
                     .load(headpic)
                     .asBitmap()
@@ -310,21 +273,17 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
                         }
                     });
         }
-
         mRemoveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 friendId = innerAttention.getUserid();
                 methodType = MethodType.METHOD_TYPE_REMOVE_ATTENTION;
                 codePresenter.removeAttention(getParaMap());
             }
         });
-
         civ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 ArrayList<String> selectedPhotos = new ArrayList<>();
                 selectedPhotos.add(innerAttention.getHeadpic());
                 MyPhotoPreview.builder()
@@ -332,7 +291,6 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
                         .setCurrentItem(0)
                         .setShowDeleteButton(false)
                         .start(AttenFriendActivity.this);
-
             }
         });
 
@@ -342,7 +300,6 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
                 popDialog.dismiss();
             }
         });
-
         popDialog.show();
     }
 
@@ -360,19 +317,13 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
     public void updateCircleList(List<InnerAttention> attentionList, String errorMsg, int type) {
         switch (type) {
             case DataLoadType.TYPE_LOAD_MORE_FAIL:
-
                 easyRecyclerView.noMore();
-
                 break;
             case DataLoadType.TYPE_REFRESH_FAIL:
-
                 easyRecyclerView.refreshComplete();
-
                 break;
             case DataLoadType.TYPE_LOAD_MORE_SUCCESS:
-
                 easyRecyclerView.loadComplete();
-
                 if (attentionList != null && attentionList != null && attentionList.size() != 0) {
                     refrashRvAdapter.addAll(attentionList);
                     innerAttenBeans.addAll(attentionList);
@@ -382,12 +333,9 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
 
                 break;
             case DataLoadType.TYPE_REFRESH_SUCCESS:
-
                 easyRecyclerView.refreshComplete();
                 easyRecyclerView.loading();
-
                 if (attentionList != null && attentionList != null && attentionList.size() != 0) {
-
                     if (attentionList.size() < 10) {
                         easyRecyclerView.removeFooter();
                     }
@@ -399,7 +347,6 @@ public class AttenFriendActivity extends BaseActivity implements IMyCircleView<L
                     refrashRvAdapter.update(attentionList);
                     innerAttenBeans.clear();
                 }
-
                 break;
         }
     }

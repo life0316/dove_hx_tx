@@ -17,6 +17,7 @@ import com.haoxi.dove.modules.mvp.presenters.VersionPresenter;
 import com.haoxi.dove.modules.mvp.views.IAboutView;
 import com.haoxi.dove.newin.bean.OurVerBean;
 import com.haoxi.dove.utils.ApiUtils;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.widget.CustomDialog;
 
 import java.io.File;
@@ -40,13 +41,9 @@ public class AboutActivity extends BaseActivity implements IAboutView {
 
     private VersionPresenter presenter;
     private ProgressDialog   progressDialog;
-
     private static Handler mHandler = new Handler();
-
-
     @Override
     protected void initInject() {
-
     }
 
     @Override
@@ -64,19 +61,21 @@ public class AboutActivity extends BaseActivity implements IAboutView {
         if (appName != null) {
             mAppNameTv.setText(appName);
         }
-
         if (versionName != null) {
             mVerNameTv.setText("v" + versionName);
         }
-
     }
 
     @OnClick(R.id.activity_about_brief)
     void briefOnCli() {
-        Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra("title_tag","about");
+//        Intent intent = new Intent(this, WebViewActivity.class);
+//        intent.putExtra("title_tag","about");
+//        startActivity(intent);
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri contentUri = Uri.parse(ConstantUtils.APP_INTRO_URL);
+        intent.setData(contentUri);
         startActivity(intent);
-
     }
 
     @OnClick(R.id.custom_toolbar_iv)
@@ -137,7 +136,7 @@ public class AboutActivity extends BaseActivity implements IAboutView {
 
             showUpdateDialog(verBean.getData().getVersion(), verBean.getData().getUrl_android(), sb.toString());
         }
-        }
+    }
 
     @Override
     public void showProgressDialog() {
@@ -146,13 +145,9 @@ public class AboutActivity extends BaseActivity implements IAboutView {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.show();
     }
-
-
-
     @Override
     public void hideProgressDialog() {
         progressDialog.dismiss();
-
     }
 
     @Override
@@ -168,32 +163,27 @@ public class AboutActivity extends BaseActivity implements IAboutView {
     private void showUpdateDialog(String verCode, final String apkUrl, String desc) {
 
         final CustomDialog dialog = new CustomDialog(AboutActivity.this,"发现新版本","发现新版本:v"+ verCode+"\n是否立即升级？","立即升级","稍后再说");
-
         dialog.setClickListenerInterface(new CustomDialog.ClickListenerInterface() {
             @Override
             public void doConfirm() {
-
                 if (!ApiUtils.isNetworkConnected(AboutActivity.this)){
                     ApiUtils.showToast(AboutActivity.this,getString(R.string.net_conn_2));
                     return;
                 }
-
-                netTag = true;
-
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (netTag) {
-                            hideProgress();
-                            ApiUtils.showToast(AboutActivity.this, getString(R.string.net_conn_1));
-                        }
-                    }
-                }, 1000 * 15);
+//                netTag = true;
+//                mHandler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (netTag) {
+//                            hideProgress();
+//                            ApiUtils.showToast(AboutActivity.this, getString(R.string.net_conn_1));
+//                        }
+//                    }
+//                }, 1000 * 15);
 
                 //升级操作，下载apk
                 presenter.downloadApk(apkUrl);
                 Log.e("update","下载apk");
-
                 dialog.dismiss();
             }
 

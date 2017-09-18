@@ -17,27 +17,19 @@ import java.util.Map;
 public class VersionPresenter extends BasePresenter<IAboutView,OurVerBean> implements IVersionPresenter {
 
     private IAboutModel aboutModel;
-
     public VersionPresenter(IAboutModel aboutModel) {
         this.aboutModel = aboutModel;
     }
-
-
     @Override
     public void updateVar(Map<String,String> map) {
-
         checkViewAttached();
-
         aboutModel.updateVar(map,this);
-
     }
 
     @Override
     public void requestSuccess(OurVerBean data) {
         super.requestSuccess(data);
-
         Log.e("fadvwasvb",data.getMsg()+"-----"+data.getData().getUrl_android()+"-----"+data.getData().getVersion());
-
         if (isViewAttached()){
             getMvpView().setNetTag(false);
             getMvpView().toJudgeVer(data);

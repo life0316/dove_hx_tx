@@ -21,26 +21,16 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by lifei on 2017/1/17.
- */
-
 public class TraFragPresenter extends BasePresenter<ITraFragView,OurRouteBean> implements IGetPresenter {
 
     private static String TAG = "TraFragPresenter";
-
     private IGetModel traFragModel;
-
     private static final String TYPE_FROM_DAO = "FROM_DAO";
     private static final String TYPE_FROM_NETS = "FROM_NETS";
-
     private String type_from = TYPE_FROM_NETS;
 
-
     public TraFragPresenter(OurTrailFragment mView) {
-
         attachView(mView);
-
         traFragModel = new TraFragModel();
     }
     @Override
@@ -53,49 +43,22 @@ public class TraFragPresenter extends BasePresenter<ITraFragView,OurRouteBean> i
         List<InnerRouteBean> innerRouteBeanList = ourRouteBean.getData();
 
         if (innerRouteBeanList.size() == 0) {
-            //getMvpView().onFailed("无飞行记录");
-
             getMvpView().trailFromDao(innerRouteBeanList,type_from);
-
         } else {
-
-//            Collections.sort(realFlyBeanList, new TraComparator());
-
             getMvpView().trailFromDao(innerRouteBeanList,type_from);
-
             StringBuffer stringBuffer = new StringBuffer();
-
-//            for (int i = 0; i < realFlyBeanList.size(); i++) {
-//
-//                RealFlyBean realFlyBean = realFlyBeanList.get(i);
-//
-//
-//                stringBuffer.append(type_from + "--");
-//                stringBuffer.append(realFlyBean.getOBJ_ID()+"--")
-//                        .append(realFlyBean.getPIGEON_OBJ_ID()+"--")
-//                        .append(realFlyBean.getGENERATE_TIME()+"--")
-//                        .append(realFlyBean.getLATITUDE()+"--")
-//                        .append(realFlyBean.getLONGITUDE()+"\n");
-//            }
-//
-//            LogToFile.e(TAG,stringBuffer.toString(),1);
         }
     }
 
     @Override
     public void  getDataFromNets(Map<String, String> map) {
-
         type_from = TYPE_FROM_NETS;
-
         checkViewAttached();
-
         traFragModel.getDatasFromNets(map,this);
     }
 
     @Override
     public void requestError(String msg) {
-//        super.requestError(msg);
-
         getMvpView().onFailed(msg);
     }
 

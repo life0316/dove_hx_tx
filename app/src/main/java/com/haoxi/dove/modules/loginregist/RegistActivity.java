@@ -43,15 +43,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-/**
- * Created by lifei on 2017/1/3.
- */
 @ActivityFragmentInject(contentViewId = R.layout.activity_regist,menuId = 0)
 public class RegistActivity extends BaseActivity implements IRegistView<OurUser>,ILoginView {
-
     private RegistPresenter presenter;
-
     @BindView(R.id.custom_toolbar_tv) TextView mTabTitleTv;
     @BindView(R.id.custom_toolbar_iv)
     ImageView mTabBackIv;
@@ -71,10 +65,8 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
 
     @Inject
     OurCodePresenter ourCodePresenter;
-
     @Inject
     RegistPresenter2 registPresenter;
-
     @Inject
     RxBus mRxBus;
 
@@ -91,12 +83,9 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
 
     @Override
     protected void init() {
-
         ButterKnife.bind(this);
-
         presenter = new RegistPresenter();
         presenter.attachView(this);
-
         mTabTitleTv.setText(getResources().getString(R.string.app_user_regist));
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
@@ -111,13 +100,11 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     }
 
     @OnClick(R.id.act_regist_confirm)
-    void registOncli(View v){
-
+    void registOncli(){
         if (!ApiUtils.isNetworkConnected(RegistActivity.this)){
             ApiUtils.showToast(RegistActivity.this,getString(R.string.net_conn_2));
             return;
         }
-
         if (isValid()){
             if (!mAgreeCb.isChecked()){
                 ApiUtils.showToast(this, "您还没有同意用户协议");
@@ -246,15 +233,12 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
 
     @Override
     public String getUserRepwd() {
-
-        String mUserRepwd = mRepwdEt.getText().toString().trim();
-        return mUserRepwd;
+        return mRepwdEt.getText().toString().trim() ;
     }
 
     @Override
     public String getUserSex() {
         String mUserSex = mSexTv.getText().toString().trim();
-
         switch (mUserSex){
             case "男":
                 mUserSex = "1";
@@ -269,31 +253,24 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
 
     @Override
     public String getUserBirth() {
-        String mUserBirth = mUserBirthTv.getText().toString().trim();
-
-        return mUserBirth;
+        return mUserBirthTv.getText().toString().trim();
     }
 
     @Override
     public void setUserBirth(int year,int month,int day) {
-
         if (year == -1 || month == -1 || day == -1) {
             ApiUtils.showToast(this, "已超过当前日期,请重新选择");
             return;
         }
-
         String tempYear = String.valueOf(year);
         String tempMonth = String.valueOf(month);
         String tempDay= String.valueOf(day);
-
         if (month < 10){
             tempMonth = "0"+ tempMonth;
         }
-
         if (day < 10){
             tempDay = "0"+tempDay;
         }
-
         mUserBirthTv.setText(tempYear+"-"+tempMonth+"-"+tempDay);
     }
 
@@ -305,10 +282,8 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
 
     @Override
     public void toMainActivity(OurUser user) {
-
         SpUtils.putString(this,SpConstant.USER_OBJ_ID,user.getData().getUserid());
         SpUtils.putString(this,SpConstant.USER_TOKEN,user.getData().getToken());
-
         Intent intent = new Intent(RegistActivity.this, MainActivity.class);
         startActivity(intent);
         mRxBus.post("finish",true);
@@ -316,14 +291,11 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     }
 
     public Map<String,String> getParaMap(){
-
         Map<String,String> map = new HashMap<>();
-
         map.put("method",getMethod());
         map.put("sign",getSign());
         map.put("time",getTime());
         map.put("version",getVersion());
-
         switch (methodType){
             case MethodType.METHOD_TYPE_REGISTER:
                 map.put("gender",getUserSex());
@@ -346,7 +318,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     }
 
     private String getVerCode() {
-
         verCode = mVerCodeEt.getText().toString().trim();
         return verCode;
     }
@@ -386,14 +357,11 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     }
 
     private boolean isValidate(){
-
         String mUserPhone = mUserPhoneEt.getText().toString().trim();
-
         if (!ApiUtils.isNetworkConnected(RegistActivity.this)){
             ApiUtils.showToast(RegistActivity.this,getString(R.string.net_conn_2));
             return false;
         }
-
         //获取手机号
         if (mUserPhone.isEmpty()){
             ApiUtils.showToast(RegistActivity.this,"请输入手机号");
@@ -407,12 +375,10 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     }
 
     private void changeBtnGetCode() {
-
         mThread = new Thread(){
 
             @Override
             public void run() {
-
                 if (tag){
                     while (i > 0){
                         i--;

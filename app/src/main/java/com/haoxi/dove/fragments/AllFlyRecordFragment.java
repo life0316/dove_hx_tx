@@ -55,19 +55,14 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
 
     @BindView(R.id.refreshLayout)
     RefreshLayout refreshLayout;
-
     @BindView(R.id.fragment_mypigeon_swiprv)
     RecyclerView mRecyclerView;
-
     @BindView(R.id.mypigeon_select)
     RelativeLayout mSelectRv;
-
     @BindView(R.id.fragment_mypigeon_no_network)
     TextView mNetworkTv;
-
     @BindView(R.id.mypigeon_select_cb)
     CheckBox mSelectCb;
-
     @BindView(R.id.fragment_mypigeon_show_add)
     LinearLayout mShowAddLv;
     @BindView(R.id.fragment_mypigeon_show_add_tv1)
@@ -77,35 +72,26 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
 
     @Inject
     OurCodePresenter ourCodePresenter;
-
     @Inject
     FlyStringAdapter titleAdapter;
-
     @Inject
     RouteTitlePresenter titlePresenter;
-
     @Inject
     RxBus mRxBus;
-
     @Inject
     Context mContext;
 
     private boolean longClickTag;
     private CustomDialog dialog;
     private Dialog popDialog;
-
     private int countTemp;
-
     private String flyRecordId = "";
     private List<InnerRouteBean> routeBeanList = new ArrayList<>();
     private List<FlyStringBean> flyStringBeans = new ArrayList<>();
     private List<InnerRouteBean> routeBeanTemps = new ArrayList<>();
-
     private Map<String,ArrayList<InnerRouteBean>> routeMap = new HashMap<>();
-
     private boolean isLoad = true;
     private boolean isClose = false;
-
     private int methodType = MethodType.METHOD_TYPE_SEARCH_BY_PLAYERID;
     private Observable<Boolean> closeObservable;
 
@@ -120,17 +106,13 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         closeObservable = mRxBus.register("close_route",Boolean.class);
-
         closeObservable.subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean aBoolean) {
                 isClose = aBoolean;
-
                 if (aBoolean){
                     if (titleAdapter.getLongClickTag()) {
-//                        mSrl.setEnabled(true);
                         refreshLayout.setEnableRefresh(true);
                         mSelectRv.setVisibility(View.GONE);
                         mSelectCb.setChecked(false);
@@ -151,31 +133,16 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
-
         mRecyclerView.setAdapter(titleAdapter);
-
         mShowAddTv2.setVisibility(View.GONE);
-
         refreshLayout.setEnableLoadmore(false);
-
         refreshLayout.setOnRefreshListener(this);
-
         titleAdapter.setItemCheckListener(this);
         titleAdapter.setRecyclerViewOnItemClickListener(this);
     }
-
-
-//    @Override
-//    public void onRefresh() {
-//        getDatas();
-//    }
-
     @Override
     public void onItemClick(View view, int count) {
         countTemp = count;
-
-        Log.e("count", count + "-----d--" + routeBeanList.size());
-
         if (count >= routeBeanList.size()) {
             mSelectCb.setChecked(true);
         } else {
@@ -188,19 +155,14 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
     @Override
     public void setRouteData(OurRouteBean routeData) {
         setRefrash(false);
-
         flyStringBeans.clear();
         routeMap.clear();
         flyRecordidList.clear();
         routeBeanList.clear();
 
         if (routeData.getData() != null && routeData.getData().size() != 0) {
-
             for (int i = 0; i < routeData.getData().size(); i++) {
-
                 InnerRouteBean innerRouteBean = routeData.getData().get(i);
-                Log.e("longClickTagqqq", innerRouteBean.getDoveid() + "---1--longClickTag---"+innerRouteBean.getFly_recordid());
-
 
                 if (!flyRecordidList.contains(innerRouteBean.getFly_recordid())){
                     flyRecordidList.add(innerRouteBean.getFly_recordid());
@@ -214,26 +176,13 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
                     routeMap.put(innerRouteBean.getFly_recordid(),fsf);
 
                 }else {
-//                    routeBeanList.add(innerRouteBean);
-                    ArrayList<InnerRouteBean> fsf = (ArrayList<InnerRouteBean>) routeMap.get(innerRouteBean.getFly_recordid());
+                    ArrayList<InnerRouteBean> fsf = routeMap.get(innerRouteBean.getFly_recordid());
                     fsf.add(innerRouteBean);
                     routeMap.put(innerRouteBean.getFly_recordid(),fsf);
-
                 }
-//                List<PointBean> pointBeans = routeData.getData().get(i).getPoints();
-//
-//                for (int j = 0; j < pointBeans.size(); j++) {
-//
-//                    Log.e("pointBeans",pointBeans.get(j).getTime()+"-----time");
-//                    Log.e("pointBeans",pointBeans.get(j).getLat()+"-----lat");
-//                    Log.e("pointBeans",pointBeans.get(j).getLng()+"-----lng");
-//                }
             }
-//            routeBeanList.addAll(routeData.getData());
             titleAdapter.addData(flyStringBeans);
-//            mSrl.setEnabled(true);
             refreshLayout.setEnableRefresh(true);
-//            mShowAddLv.setVisibility(View.GONE);
             mShowAddLv.setVisibility(View.GONE);
             mShowAddTv.setVisibility(View.GONE);
 
@@ -245,14 +194,11 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
             this.longClickTag = false;
 
         } else {
-//            refreshLayout.setEnableRefresh(false);
-
             mShowAddLv.setVisibility(View.VISIBLE);
             mShowAddTv.setVisibility(View.VISIBLE);
             mShowAddTv.setText("暂时还没有行程记录");
 
             titleAdapter.addData(flyStringBeans);
-//            mShowAddLv.setVisibility(View.VISIBLE);
             mSelectRv.setVisibility(View.GONE);
             mSelectCb.setChecked(false);
             titleAdapter.setIsShow(false);
@@ -292,22 +238,17 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
     }
 
     public Map<String,String> getParaMap(){
-
         Map<String,String> map = new HashMap<>();
-
         map.put("method",getMethod());
         map.put("sign",getSign());
         map.put("time",getTime());
         map.put("version",getVersion());
-
         map.put("userid",getUserObjId());
         map.put("token",getToken());
 
         switch (methodType){
             case MethodType.METHOD_TYPE_SEARCH_BY_PLAYERID:
-//                map.put("playerid","pl494260");
                 map.put("playerid",getUserObjId());
-
                 break;
             case MethodType.METHOD_TYPE_FLY_DELETE:
                 map.put("fly_recordid",flyRecordId);
@@ -330,15 +271,12 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
                 method = MethodConstant.SEARCH_BY_PLAYERID;
                 break;
         }
-
         return method;
     }
 
 
     public String getDeleteObjIds() {
-
-        StringBuffer sb = new StringBuffer();
-
+        StringBuilder sb = new StringBuilder();
         if (routeBeanTemps != null) {
             for (int i = 0; i < routeBeanTemps.size(); i++) {
 
@@ -364,9 +302,6 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
     @Override
     public void itemChecked(View view, int count) {
         countTemp = count;
-
-        Log.e("count", count + "-----d--" + routeBeanList.size());
-
         if (count >= routeBeanList.size()) {
             mSelectCb.setChecked(true);
         } else {
@@ -376,28 +311,11 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
 
     @Override
     public void onItemClickListener(View view, int position, boolean longClickTag) {
-//        Log.e("longClickTagqqq", longClickTag + "-----longClickTag");
-
         if (!longClickTag) {
-//            InnerRouteBean routeBean = routeBeanList.get(position);
-//            showPop(routeBean);
-
             FlyStringBean flyStringBean = flyStringBeans.get(position);
-
-            Log.e("longClickTagqqq", flyStringBean.getTitle() + "-----longClickTag");
-            Log.e("longClickTagqqq", "-----"+ routeMap.get(flyStringBean.getTitle()).size());
-
             Intent intent = new Intent(getActivity(),RouteDetail2Activity.class);
-//                intent.putExtra("innerRouteBean",innerRouteBean);
             intent.putExtra("recordid",flyStringBean.getTitle());
-//            intent.putExtra("methodTag","search_by_fly_recordid");
-//            intent.putParcelableArrayListExtra("innerRouteBean",routeMap.get(flyStringBean.getTitle()));
             startActivity(intent);
-
-            for (int i = 0; i < routeMap.get(flyStringBean.getTitle()).size(); i++) {
-                Log.e("longClickTagqqq", "Doveid-----"+ routeMap.get(flyStringBean.getTitle()).get(i).getDoveid());
-            }
-
         } else {
             titleAdapter.setSelectItem(position);
         }
@@ -406,20 +324,15 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
     @Override
     public boolean onItemLongClickListener(View view, int position, boolean longClickTag) {
         this.longClickTag = false;
-
         if (!longClickTag) {
             //长按事件
             titleAdapter.setShowBox();
             //设置选中的项
             titleAdapter.setSelectItem(position);
             titleAdapter.notifyDataSetChanged();
-
             mSelectRv.setVisibility(View.VISIBLE);
-//            mSrl.setEnabled(false);
             refreshLayout.setEnableRefresh(false);
-
             titleAdapter.setLongClickTag(true);
-
             mRxBus.post("route_back",false);
             return false;
         }
@@ -438,17 +351,13 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
         }
 
         if (routeBeanTemps.size() > 0) {
-
             dialog = new CustomDialog(getActivity(), "删除信鸽", "确定要删除所选飞行记录?", "确定", "取消");
-
             dialog.setCancelable(true);
             dialog.show();
             dialog.setClickListenerInterface(new CustomDialog.ClickListenerInterface() {
                 @Override
                 public void doConfirm() {
-
                     for (int i = 0; i < routeBeanTemps.size(); i++) {
-
                         if (routeBeanTemps.get(i).getStatus()!= null && !"飞行结束".equals(routeBeanTemps.get(i).getStatus())) {
                             ApiUtils.showToast(getActivity(), "当前记录处于飞行状态，不可删除");
                             return;
@@ -456,9 +365,7 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
                     }
                     methodType = MethodType.METHOD_TYPE_FLY_DELETE;
                     flyRecordId = getDeleteObjIds();
-//                    getParaMap();
                     ourCodePresenter.deleteFly(getParaMap());
-
                     dialog.dismiss();
                 }
                 @Override
@@ -535,7 +442,6 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),RouteDetailActivity.class);
-//                intent.putExtra("innerRouteBean",innerRouteBean);
                 intent.putExtra("recordid",innerRouteBean.getFly_recordid());
                 intent.putParcelableArrayListExtra("innerRouteBean",innerRouteBean.getPoints());
                 startActivity(intent);

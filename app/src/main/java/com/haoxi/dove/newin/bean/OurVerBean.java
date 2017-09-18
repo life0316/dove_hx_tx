@@ -1,9 +1,5 @@
 package com.haoxi.dove.newin.bean;
 
-/**
- * Created by Administrator on 2017\6\6 0006.
- */
-
 public class OurVerBean {
 
     public int code;

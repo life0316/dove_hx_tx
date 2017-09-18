@@ -32,6 +32,7 @@ import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.newin.bean.PointBean;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
+import com.haoxi.dove.utils.StringUtils;
 import com.haoxi.dove.utils.TraUtils;
 
 import java.util.ArrayList;
@@ -42,18 +43,11 @@ import butterknife.OnClick;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-/**
- * Created by lifei on 2017/6/27.
- */
 @ActivityFragmentInject(contentViewId = R.layout.activity_history)
 public class RouteDetailActivity extends BaseActivity implements LocationSource,EasyPermissions.PermissionCallbacks {
-
-
     private static final int REQUEST_CODE_HISTORY = 0x0000;
-
     @BindView(R.id.activity_pegionfly_mapview)
     MapView mapView;
-
     @BindView(R.id.custom_toolbar_iv)
     ImageView mBackIv;
     @BindView(R.id.custom_toolbar_tv)
@@ -67,19 +61,12 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     public AMapLocationClientOption mLocationClientOption = null;
     private OnLocationChangedListener mChangedListener;
     private AMapLocation mAMapLocation;
-
-
     private int trailWidth = 10;
     private String trailColor = "#00ff00";
     private int trailPic = R.mipmap.icon_img_3;
-
     private SharedPreferences mTrailSp;
-
     private ArrayList<PointBean> pointBeanArrayList = new ArrayList<>();
 
-    /**
-     * 需要进行检测的权限数组
-     */
     protected String[] needPermissions = {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -92,7 +79,7 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     }
 
     @OnClick(R.id.custom_toolbar_iv)
-    void backOncli(View view) {
+    void backOncli() {
         this.finish();
     }
 
@@ -100,16 +87,11 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mapView.onCreate(savedInstanceState);
-
         initMap();
-
         Intent intent = getIntent();
         if (intent != null) {
-
             String flyRecordId = intent.getStringExtra("recordid");
-
             pointBeanArrayList = intent.getParcelableArrayListExtra("innerRouteBean");
-
             if (flyRecordId != null) {
                 mIdTv.setText("飞行记录id:"+flyRecordId);
             }
@@ -118,11 +100,9 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
 
     @Override
     protected void init() {
-
         mTitleTv.setText("记录详情");
         mBackIv.setVisibility(View.VISIBLE);
-
-        SharedPreferences preferences = getSharedPreferences(ConstantUtils.USERINFO, MODE_PRIVATE);
+//        SharedPreferences preferences = getSharedPreferences(ConstantUtils.USERINFO, MODE_PRIVATE);
         mTrailSp = getSharedPreferences(ConstantUtils.TRAIL, MODE_PRIVATE);
 
         trailWidth = mTrailSp.getInt("thickness", 10);
@@ -158,18 +138,13 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
         mAMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
         mAMap.setMapType(AMap.MAP_TYPE_NORMAL);
 
-        //    mAMap.clear();
-
         initClient();
         initOption();
-
 
         AMap.OnMarkerClickListener listener = new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
                 showPop(marker);
-
                 return true;
             }
         };
@@ -178,15 +153,10 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     }
 
     private void initOption() {
-
         //初始化定位参数
-
         mLocationClientOption = new AMapLocationClientOption();
-
         mLocationClientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
-
         mLocationClientOption.setNeedAddress(true);
-
         //设置是否只定位一次，
         mLocationClientOption.setOnceLocation(true);
         mLocationClientOption.setInterval(2000);
@@ -196,11 +166,7 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
         }
         mLocationClientOption.setWifiActiveScan(true);
         mLocationClientOption.setMockEnable(false);
-
         mLocationClient.setLocationOption(mLocationClientOption);
-        //mLocationClient.startLocation();
-
-
     }
 
     private void initClient() {
@@ -227,17 +193,12 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     public AMapLocationListener mLocationListener = new AMapLocationListener() {
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
-
             if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
-
                 RouteDetailActivity.this.mAMapLocation = aMapLocation;
-
                 if (mChangedListener != null) {
                     mChangedListener.onLocationChanged(aMapLocation);
-
                     CameraUpdate cu = CameraUpdateFactory.zoomTo(15);
                     mAMap.moveCamera(cu);
-
                 }
             } else if (aMapLocation.getErrorCode() == 12) {
                 ApiUtils.showToast(RouteDetailActivity.this, "缺少定位权限,定位失败");
@@ -251,7 +212,6 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-
         requestCodeQRCodePermissions();
     }
 
@@ -276,9 +236,7 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
-
         EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
-
     }
 
     @AfterPermissionGranted(REQUEST_CODE_HISTORY)
@@ -323,7 +281,6 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-
         if (pointBeanArrayList != null && pointBeanArrayList.size() != 0) {
             toDrawTril(pointBeanArrayList);
         }else {
@@ -333,13 +290,10 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-
 //        mLocationClient.startLocation();
-
     }
 
     public void toDrawTril(List<PointBean> list) {
-
         if (list == null && list.size() == 0) {
             mLocationClient.startLocation();
             return;
@@ -358,10 +312,8 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     }
 
     private void showPop(Marker marker) {
-
         String markerTitle = marker.getTitle();
         String[] eachTitle = markerTitle.split("#");
-
         String createTime = eachTitle[0];
         String eachSpeed = eachTitle[1];
         String eachDirection = eachTitle[2];
@@ -369,46 +321,35 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
         String eachLatitude = eachTitle[4];
         String eachHeight = eachTitle[5];
         String eachDistance = eachTitle[6];
-
-
         final Dialog popDialog = new Dialog(this, R.style.DialogTheme2);
-
         View view = View.inflate(this, R.layout.layout_show_marker2, null);
         popDialog.setCancelable(false);
         popDialog.setContentView(view);
-
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.show_marker_ll);
-
         int width = getWindowManager().getDefaultDisplay().getWidth();
-
         ViewGroup.LayoutParams params = layout.getLayoutParams();
         params.width = (width * 62) / 72;
-        params.height = (int) ((width * 42) / 72);
-
+        params.height =(width * 42) / 72;
         layout.setLayoutParams(params);
-
         //时间
         TextView mCreateTimeTv = (TextView) view.findViewById(R.id.show_marker_time);
-
-
         TextView mSpeedTv = (TextView) view.findViewById(R.id.show_marker_speed);
         TextView mHeightTv = (TextView) view.findViewById(R.id.show_marker_height);
-
         //纬经度
         TextView mLatlngTv = (TextView) view.findViewById(R.id.show_marker_latlng);
-
         //方向
         TextView mDirectionTv = (TextView) view.findViewById(R.id.show_marker_direction);
-
         //总飞行
         TextView mMileageTv = (TextView) view.findViewById(R.id.show_marker_mileage);
         ImageView mDismissIv = (ImageView) view.findViewById(R.id.show_marker_dismiss);
 
-
         mCreateTimeTv.setText(createTime);
         mSpeedTv.setText(eachSpeed);
         mHeightTv.setText(String.valueOf(Double.valueOf(eachHeight) - 20));
-        mLatlngTv.setText("东经" + Math.rint(Double.valueOf(eachLongitude)) + " 北纬" + Math.rint(Double.valueOf(eachLatitude)));
+
+        String resultLng = StringUtils.format4(Double.valueOf(eachLongitude));
+        String resultLat =  StringUtils.format4(Double.valueOf(eachLatitude));
+        mLatlngTv.setText("东经" + resultLng + " 北纬" + resultLat);
         mMileageTv.setText(eachDistance);
         mDirectionTv.setText("方向：" + eachDirection);
 

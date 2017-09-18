@@ -591,35 +591,28 @@ public class TraUtils {
         //final List<Marker> markerTris = new ArrayList<>();
 
         float currentDistance = 0;
-
         final Map<String, ArrayList<Marker>> markerMap = MyApplication.getMyBaseApplication().getMarkerMap();
         Map<String, ArrayList<MarkerOptions>> markerOptionsMap = MyApplication.getMyBaseApplication().getMarkerOptionsMap();
 
-
-        for (int i = 0; i < innerRouteBean.getPoints().size(); i++) {
-            Log.e("OurTrailFragment----", innerRouteBean.getPoints().size()+ "-------trailFromDao -----9");
-            Log.e("OurTrailFragment----", innerRouteBean.getPoints().get(i).getTime()+ "-------trailFromDao -----9");
-            Log.e("OurTrailFragment----", innerRouteBean.getPoints().get(i).getLat()+ "-------trailFromDao -----9");
-            Log.e("OurTrailFragment----", innerRouteBean.getPoints().get(i).getLng()+ "-------trailFromDao -----9");
-        }
-
-        Log.e("OurTrailFragment----", isShow+ "-------trailFromDao -----9");
+//        for (int i = 0; i < innerRouteBean.getPoints().size(); i++) {
+//            Log.e("OurTrailFragment----", innerRouteBean.getPoints().size()+ "-------trailFromDao -----9");
+//            Log.e("OurTrailFragment----", innerRouteBean.getPoints().get(i).getTime()+ "-------trailFromDao -----9");
+//            Log.e("OurTrailFragment----", innerRouteBean.getPoints().get(i).getLat()+ "-------trailFromDao -----9");
+//            Log.e("OurTrailFragment----", innerRouteBean.getPoints().get(i).getLng()+ "-------trailFromDao -----9");
+//        }
+//
+//        Log.e("OurTrailFragment----", isShow+ "-------trailFromDao -----9");
         List<LatLng> latLngs = new ArrayList<>();
-
         if (newMarker != null) {
             newMarker.remove();
         }
-
         if (innerRouteBean.getPoints().size() == 0) {
             return;
         }
-
         PointBean lastPointBean = innerRouteBean.getPoints().get(innerRouteBean.getPoints().size() - 1);
-
         if (markerMap.get(pigeonObjId) != null && markerMap.get(pigeonObjId).size() > 0 && markerMap.get(pigeonObjId).get(0) != null) {
             markerMap.get(pigeonObjId).get(0).remove();
         }
-
         ArrayList<MarkerOptions> optionsList = new ArrayList<>();
 
 //        LatLng endLatLng = ApiUtils.transform(lastPointBean.getLng(),lastPointBean.getLat());
@@ -628,20 +621,14 @@ public class TraUtils {
         for (int i = 0; i < innerRouteBean.getPoints().size() - 1; i++) {
             //创建markeroptions对象
             MarkerOptions options = new MarkerOptions();
-
             PointBean realFlyBean =  innerRouteBean.getPoints().get(i);
-
 //            LatLng currentLl = ApiUtils.transform(realFlyBean.getLng(),realFlyBean.getLat());
             LatLng currentLl = ApiUtils.transform(realFlyBean.getLat(),realFlyBean.getLng());
 
             latLngs.add(currentLl);
-
             if (i == 0 && "".equals(firstTime)) {
-
                 distances.put(pigeonObjId,0.f);
-
                 firstLatlngs.put(pigeonObjId, currentLl);
-
                 //设置markeroptions
                 options.position(currentLl).title(realFlyBean.getTime()
                         + "#" + realFlyBean.getSpeed()
@@ -661,9 +648,7 @@ public class TraUtils {
                     PointBean eachPreFlyBean = innerRouteBean.getPoints().get(i - 1);
 //                    LatLng eachPreLl = ApiUtils.transform(eachPreFlyBean.getLng(),eachPreFlyBean.getLat());
                     LatLng eachPreLl = ApiUtils.transform(eachPreFlyBean.getLat(),eachPreFlyBean.getLng());
-
                     currentDistance += AMapUtils.calculateLineDistance(eachPreLl, currentLl);
-
                     curDir = getDir(currentLl.latitude,currentLl.longitude,eachPreLl.latitude,eachPreLl.longitude);
                 }else {
                     currentDistance += distances.get(pigeonObjId);
@@ -696,13 +681,10 @@ public class TraUtils {
         latLngs.add(endLatLng);
         //设置图标
         if (icon != 0) {
-
             if (innerRouteBean.getPoints().size() > 1) {
                 PointBean realFlyBean = innerRouteBean.getPoints().get(innerRouteBean.getPoints().size() - 2);
-
 //                LatLng preEndLatLng = ApiUtils.transform(realFlyBean.getLng(),realFlyBean.getLat());
                 LatLng preEndLatLng = ApiUtils.transform(realFlyBean.getLat(),realFlyBean.getLng());
-
                 currentDistance += AMapUtils.calculateLineDistance(preEndLatLng, endLatLng);
                 distances.put(pigeonObjId,currentDistance);
                 lastLatLng =  ApiUtils.transform(realFlyBean.getLat(),realFlyBean.getLng());
@@ -726,9 +708,7 @@ public class TraUtils {
                             + "#" + String.valueOf(((float) (Math.round(currentDistance / 1000 * 100)) / 100)))
             ;
             optionsList.add(options);
-
             markers = mAMap.addMarkers(optionsList, true);
-
             if (!markerOptionsMap.containsKey(pigeonObjId)) {
                 ArrayList<MarkerOptions> markerOptionses = new ArrayList<>();
                 markerOptionses.add(optionsList.get(optionsList.size() - 1));
@@ -737,15 +717,11 @@ public class TraUtils {
                 markerOptionsMap.get(pigeonObjId).clear();
                 markerOptionsMap.get(pigeonObjId).add(optionsList.get(optionsList.size() - 1));
             }
-
             if (!markerMap.containsKey(pigeonObjId)) {
-
                 ArrayList<Marker> polygons = new ArrayList<>();
                 polygons.add(markers.get(markers.size() - 1));
-
                 markerMap.put(pigeonObjId, polygons);
             } else {
-
                 markerMap.get(pigeonObjId).clear();
                 markerMap.get(pigeonObjId).add(markers.get(markers.size() - 1));
             }

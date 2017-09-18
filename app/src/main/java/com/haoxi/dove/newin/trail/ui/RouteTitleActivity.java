@@ -46,12 +46,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-/**
- * Created by lifei on 2017/6/27.
- */
 @ActivityFragmentInject(contentViewId = R.layout.activity_route_title)
 public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView, SwipeRefreshLayout.OnRefreshListener, MyItemClickListener, RouteTitleAdapter.RecyclerViewOnItemClickListener, RouteTitleAdapter.MyItemCheckListener, View.OnClickListener {
-
 
     private int methodType = MethodType.METHOD_TYPE_FLY_SEARCH;
 
@@ -67,48 +63,34 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
     RecyclerView mRecyclerView;
     @BindView(R.id.mypigeon_select)
     RelativeLayout mSelectRv;
-
     @BindView(R.id.fragment_mypigeon_no_network)
     TextView mNetworkTv;
-
     @BindView(R.id.mypigeon_select_cb)
     CheckBox mSelectCb;
-
     @BindView(R.id.custom_toolbar_iv)
     ImageView mBackIv;
-
     @BindView(R.id.custom_toolbar_tv)
     TextView mTitleTv;
 
-
     @Inject
     RouteTitlePresenter titlePresenter;
-
     @Inject
     OurCodePresenter ourCodePresenter;
-
     @Inject
     RouteTitleAdapter titleAdapter;
-
     @Inject
     RxBus mRxBus;
-
     @Inject
     Context mContext;
 
     private boolean longClickTag;
     private CustomDialog dialog;
     private Dialog popDialog;
-
     private String flyRecordId = "";
-
     private String doveid = "";
-
     private int countTemp;
-
     private List<InnerRouteBean> routeBeanList = new ArrayList<>();
     private List<InnerRouteBean> routeBeanTemps = new ArrayList<>();
-
 
     @Override
     public void onRefresh() {
@@ -117,7 +99,6 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
 
     @Override
     protected void initInject() {
-
         DaggerRouteTitleComponent.builder()
                 .appComponent(getAppComponent())
                 .routeTitleMoudle(new RouteTitleMoudle(this,this))
@@ -127,31 +108,28 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
 
     @Override
     protected void init() {
-
         mTitleTv.setText("行程记录");
         mBackIv.setVisibility(View.VISIBLE);
         mBackIv.setOnClickListener(this);
-
         Intent intent = getIntent();
         if (intent != null) {
             InnerDoveData innerDoveData = intent.getParcelableExtra("dove");
             doveid = innerDoveData.getDoveid();
         }
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
-
         mRecyclerView.setAdapter(titleAdapter);
 
         mSrl.setOnRefreshListener(this);
-        mSrl.setColorSchemeColors(getResources().getColor(android.R.color.holo_blue_bright), getResources().getColor(android.R.color.holo_green_light), getResources().getColor(android.R.color.holo_orange_light), getResources().getColor(android.R.color.holo_red_light));
-
+        mSrl.setColorSchemeColors(getResources().getColor(android.R.color.holo_blue_bright),
+                getResources().getColor(android.R.color.holo_green_light),
+                getResources().getColor(android.R.color.holo_orange_light),
+                getResources().getColor(android.R.color.holo_red_light));
 
         mSelectCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if (isChecked) {
                     Map<Integer, Boolean> map = titleAdapter.getMap();
                     for (int i = 0; i < map.size(); i++) {
@@ -161,9 +139,7 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
                 } else {
 
                     if (!(countTemp > 0 && countTemp < routeBeanList.size())) {
-
                         Map<Integer, Boolean> m = titleAdapter.getMap();
-
                         for (int i = 0; i < m.size(); i++) {
                             m.put(i, false);
                             titleAdapter.notifyDataSetChanged();
@@ -178,14 +154,11 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
 
     @Override
     public void toDo() {
-
         switch (methodType){
             case MethodType.METHOD_TYPE_FLY_DELETE:
-
                 if (popDialog != null && popDialog.isShowing()) {
                     popDialog.dismiss();
                 }
-
                 methodType = MethodType.METHOD_TYPE_FLY_SEARCH;
                 titlePresenter.getRouteFormNets(getParaMap());
                 break;
@@ -200,6 +173,7 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
 
     public void getDatas() {
         if (!ApiUtils.isNetworkConnected(this)) {
+            //
         } else {
             methodType = MethodType.METHOD_TYPE_FLY_SEARCH;
             titlePresenter.getRouteFormNets(getParaMap());
@@ -207,26 +181,21 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
     }
 
     public Map<String,String> getParaMap(){
-
         Map<String,String> map = new HashMap<>();
-
         map.put("method",getMethod());
         map.put("sign",getSign());
         map.put("time",getTime());
         map.put("version",getVersion());
-
         map.put("userid",getUserObjId());
         map.put("token",getToken());
-
         switch (methodType){
             case MethodType.METHOD_TYPE_FLY_SEARCH:
                 map.put("doveid",doveid);
-//                map.put("doveid","dv018957");
                 break;
             case MethodType.METHOD_TYPE_FLY_DELETE:
                 map.put("fly_recordid",flyRecordId);
         }
-        Log.e("fafsewdfvd",map.toString());
+//        Log.e("fafsewdfvd",map.toString());
         return map;
     }
 
@@ -246,14 +215,10 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
     }
 
     public String getDeleteObjIds() {
-
-        StringBuffer sb = new StringBuffer();
-
+        StringBuilder sb = new StringBuilder();
         if (routeBeanTemps != null) {
             for (int i = 0; i < routeBeanTemps.size(); i++) {
-
                 if ((i == routeBeanTemps.size() - 1)) {
-
                     sb.append(routeBeanTemps.get(i).getFly_recordid());
                 } else {
                     sb.append(routeBeanTemps.get(i).getFly_recordid()).append(",");
@@ -274,23 +239,21 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
 
     @Override
     public void setRouteData(OurRouteBean routeData) {
-
         setRefrash(false);
         routeBeanList.clear();
-
         if (routeData.getData() != null && routeData.getData().size() != 0) {
-
-            for (int i = 0; i < routeData.getData().size(); i++) {
-
-                List<PointBean> pointBeans = routeData.getData().get(i).getPoints();
-
-                for (int j = 0; j < pointBeans.size(); j++) {
-
-                    Log.e("pointBeans",pointBeans.get(j).getTime()+"-----time");
-                    Log.e("pointBeans",pointBeans.get(j).getLat()+"-----lat");
-                    Log.e("pointBeans",pointBeans.get(j).getLng()+"-----lng");
-                }
-            }
+//
+//            for (int i = 0; i < routeData.getData().size(); i++) {
+//
+//                List<PointBean> pointBeans = routeData.getData().get(i).getPoints();
+//
+//                for (int j = 0; j < pointBeans.size(); j++) {
+//
+//                    Log.e("pointBeans",pointBeans.get(j).getTime()+"-----time");
+//                    Log.e("pointBeans",pointBeans.get(j).getLat()+"-----lat");
+//                    Log.e("pointBeans",pointBeans.get(j).getLng()+"-----lng");
+//                }
+//            }
             routeBeanList.addAll(routeData.getData());
             titleAdapter.addData(routeBeanList);
             mSrl.setEnabled(true);
@@ -335,8 +298,6 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
 
     @Override
     public void onItemClickListener(View view, int position, boolean longClickTag) {
-        Log.e("longClickTag", longClickTag + "-----longClickTag");
-
         if (!longClickTag) {
             InnerRouteBean routeBean = routeBeanList.get(position);
             showPop(routeBean);
@@ -369,9 +330,6 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
     @Override
     public void itemChecked(View view, int count) {
         countTemp = count;
-
-        Log.e("count", count + "-----d--" + routeBeanList.size());
-
         if (count >= routeBeanList.size()) {
             mSelectCb.setChecked(true);
         } else {
@@ -379,7 +337,7 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
         }
     }
     @OnClick(R.id.mypigeon_select_delete)
-    void deleteOnCli(View view) {
+    void deleteOnCli() {
         routeBeanTemps.clear();
         //获取你选中的item
         Map<Integer, Boolean> map = titleAdapter.getMap();
@@ -390,17 +348,13 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
         }
 
         if (routeBeanTemps.size() > 0) {
-
             dialog = new CustomDialog(this, "删除信鸽", "确定要删除所选飞行记录?", "确定", "取消");
-
             dialog.setCancelable(true);
             dialog.show();
             dialog.setClickListenerInterface(new CustomDialog.ClickListenerInterface() {
                 @Override
                 public void doConfirm() {
-
                     for (int i = 0; i < routeBeanTemps.size(); i++) {
-
                         if (routeBeanTemps.get(i).getStatus()!= null && !"飞行结束".equals(routeBeanTemps.get(i).getStatus())) {
                             ApiUtils.showToast(RouteTitleActivity.this, "当前记录处于飞行状态，不可删除");
                             return;
@@ -412,7 +366,6 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
                     ourCodePresenter.deleteFly(getParaMap());
                     dialog.dismiss();
                 }
-
                 @Override
                 public void doCancel() {
                     dialog.dismiss();
@@ -422,12 +375,9 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
             ApiUtils.showToast(RouteTitleActivity.this, "没有可删除的飞行记录");
         }
     }
-
     @Override
     public void onBackPressed() {
-
-        titleAdapter.getLongClickTag();
-
+//        titleAdapter.getLongClickTag();
         if (titleAdapter.getLongClickTag()) {
             mSelectRv.setVisibility(View.GONE);
             mSelectCb.setChecked(false);
@@ -458,10 +408,11 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
         Button mRemoveBtn = (Button) view.findViewById(R.id.delete_route);
         Button mDetailBtn = (Button) view.findViewById(R.id.detail_route);
 
+        @SuppressWarnings("deprecation")
         int width = getWindowManager().getDefaultDisplay().getWidth();
         ViewGroup.LayoutParams params = layout.getLayoutParams();
         params.width = (width * 62) / 72;
-        params.height = (int) ((width * 52) / 72);
+        params.height = (width * 52) / 72;
 
         layout.setLayoutParams(params);
 
@@ -506,7 +457,6 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RouteTitleActivity.this,RouteDetailActivity.class);
-//                intent.putExtra("innerRouteBean",innerRouteBean);
                 intent.putExtra("recordid",innerRouteBean.getFly_recordid());
                 intent.putParcelableArrayListExtra("innerRouteBean",innerRouteBean.getPoints());
                 startActivity(intent);
