@@ -23,6 +23,7 @@ import com.haoxi.dove.inject.MainMoudle;
 import com.haoxi.dove.base.BaseActivity;
 import com.haoxi.dove.modules.traject.OurTrailFragment;
 import com.haoxi.dove.utils.ApiUtils;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.utils.SpConstant;
 import com.haoxi.dove.utils.SpUtils;
@@ -35,7 +36,6 @@ public class MainActivity extends BaseActivity{
 
     @BindView(R.id.act_main_cvp)
     FrameLayout mCvp;
-
     @BindView(R.id.act_main_rg)
     RadioGroup mRg;
     @BindView(R.id.act_main_rb_tab1)
@@ -58,17 +58,12 @@ public class MainActivity extends BaseActivity{
     private BroadcastReceiver mHomeKeyEventReceiver = new BroadcastReceiver() {
         String SYSTEM_REASON = "reason";
         String SYSTEM_HOME_KEY = "homekey";
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-
-            Log.e("homeememme",action+"-------action");
             switch (action) {
                 case Intent.ACTION_CLOSE_SYSTEM_DIALOGS:
                     String reason = intent.getStringExtra(SYSTEM_REASON);
-                    Log.e("homeememme",reason+"-------reason");
-
                     if (TextUtils.equals(reason, SYSTEM_HOME_KEY)) {
                         //表示按了home键,程序到了后台
                         mRxBus.post("home_back",true);
@@ -76,7 +71,6 @@ public class MainActivity extends BaseActivity{
                     break;
                 case Intent.ACTION_SCREEN_OFF:
                     //息屏、锁屏
-
                     mRxBus.post("screen_on_off",true);
                     break;
                 case Intent.ACTION_SCREEN_ON:
@@ -99,21 +93,17 @@ public class MainActivity extends BaseActivity{
 
     @Override
     protected void init() {
-
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
-
         registerReceiver(mHomeKeyEventReceiver, filter);
-
         mAppManager.addActivity(this);
         initView();
         setSelection(0);
     }
 
     private void initView() {
-
         mRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -129,7 +119,6 @@ public class MainActivity extends BaseActivity{
                         break;
                     case R.id.act_main_rb_tab4:
                         setSelection(3);
-
                         break;
                 }
             }
@@ -144,15 +133,12 @@ public class MainActivity extends BaseActivity{
     }
 
     private void setSelection(int position) {
-
         mRxBus.post("clickRadio", position);
-
         SpUtils.putInt(this, SpConstant.CLICK_NUM,position);
         currentPos = position;
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         hideAllFragments(ft);
-
         switch (position) {
             case 0:
                 if (mTab1 == null) {
@@ -209,9 +195,7 @@ public class MainActivity extends BaseActivity{
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         boolean isExit = SpUtils.getBoolean(this,SpConstant.MAIN_EXIT,true);
-
         if (isExit){
             if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
                 if ((System.currentTimeMillis() - exitTime) > 2000) {
@@ -225,9 +209,8 @@ public class MainActivity extends BaseActivity{
             }
         }else {
             String other = SpUtils.getString(this,SpConstant.OTHER_EXIT);
-
             if (!"".equals(other)){
-                RxBus.getInstance().post("exit",other);
+                RxBus.getInstance().post(ConstantUtils.OBSER_EXIT,other);
             }
             return false;
         }
@@ -239,8 +222,6 @@ public class MainActivity extends BaseActivity{
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mHomeKeyEventReceiver);
-//        mRxBus.unregister("exit", mExitObserver);
-
     }
     @Override
     public String getMethod() {

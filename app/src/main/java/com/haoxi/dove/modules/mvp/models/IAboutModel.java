@@ -15,13 +15,6 @@ import java.util.Map;
 public interface IAboutModel<T> {
 
 
-    //获取简介数据
-    void getBriefData(JSONObject params, MyModelCallback modelCallback);
-
-    //获取版本信息
-
-    void updateVar(JSONObject params, MyModelCallback modelCallback);
-
     //获取新版本
     void downloadApk(String apkUrl, MyProgressCallback progressCallback);
 

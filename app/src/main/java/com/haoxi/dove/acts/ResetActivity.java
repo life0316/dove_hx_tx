@@ -1,8 +1,6 @@
 package com.haoxi.dove.acts;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
@@ -20,9 +18,13 @@ import com.haoxi.dove.base.BaseActivity;
 import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.modules.mvp.views.IResetView;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
+import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
+import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.utils.ApiUtils;
-import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.MD5Tools;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +39,6 @@ public class ResetActivity extends BaseActivity implements IResetView{
     ImageView mBackIv;
     @BindView(R.id.custom_toolbar_tv)
     TextView mTitleTv;
-
     @BindView(R.id.activity_reset_phone)
     EditText mEtPhone;
     @BindView(R.id.activity_reset_newpassword) EditText mEtNewPwd;
@@ -51,13 +52,10 @@ public class ResetActivity extends BaseActivity implements IResetView{
 
     @Override
     public void toDo() {
-        SharedPreferences loginsp = getSharedPreferences(ConstantUtils.LOGINSP, Context.MODE_PRIVATE);
-        SharedPreferences.Editor loginEditor = loginsp.edit();
-        loginEditor.putString("username",getTelephone());
-        loginEditor.putString("password", "");
-        loginEditor.putBoolean("remebercb",false);
-        loginEditor.putBoolean("autocb",false);
-        loginEditor.apply();
+        SpUtils.putString(this,SpConstant.USER_TELEPHONE,getTelephone());
+        SpUtils.putString(this,SpConstant.USER_PWD,"");
+        SpUtils.putBoolean(this,SpConstant.IS_AUTO,false);
+        SpUtils.putBoolean(this,SpConstant.IS_REM,false);
         finish();
     }
 
@@ -73,37 +71,21 @@ public class ResetActivity extends BaseActivity implements IResetView{
         }
         codePresenter.resetPwd(getParaMap());
     }
-
-    public Map<String,String> getParaMap(){
-
-        Map<String,String> map = new HashMap<>();
-
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-
-
-        map.put("telephone",getTelephone());
-        map.put("password", MD5Tools.MD5(getNewPwd()));
-
+    @Override
+    protected Map<String, String> getParaMap() {
+        Map<String,String> map = super.getParaMap();
+        map.put(MethodParams.USER_TELEPHONE,getTelephone());
+        map.put(MethodParams.PARAMS_PWD,MD5Tools.MD5(getNewPwd()));
         return map;
     }
     @Override
     public String getMethod() {
-        return "/app/user/reset_password";
-    }
-
-    @Override
-    protected void initInject() {
-
+        return MethodConstant.RESET_PASSWORD;
     }
 
     @Override
     protected void init() {
-
         codePresenter = new OurCodePresenter(this);
-
         mTitleTv.setText("找回密码");
         mBackIv.setVisibility(View.VISIBLE);
         mBackIv.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +94,6 @@ public class ResetActivity extends BaseActivity implements IResetView{
                 finish();
             }
         });
-
         mCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -134,21 +115,15 @@ public class ResetActivity extends BaseActivity implements IResetView{
 
         mEtNewPwd.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (delayRun != null) {
                     mHandler.removeCallbacks(delayRun);
                 }
-
                 editPwd = s.toString();
                 mHandler.postDelayed(delayRun, 500);
             }
@@ -160,12 +135,10 @@ public class ResetActivity extends BaseActivity implements IResetView{
     private Runnable delayRun = new Runnable() {
         @Override
         public void run() {
-
             if (editPwd.length() == 0 || "".equals(editPwd) || editPwd == null) {
                 mBtnFinish.setBackgroundResource(R.drawable.btn_pigeon_bg2);
                 mBtnFinish.setEnabled(false);
             } else {
-
                 mBtnFinish.setEnabled(true);
                 mBtnFinish.setBackgroundResource(R.drawable.btn_pigeon_bg);
             }
@@ -174,7 +147,6 @@ public class ResetActivity extends BaseActivity implements IResetView{
 
     @Override
     public String getTelephone() {
-
         return mEtPhone.getText().toString().trim();
     }
 

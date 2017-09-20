@@ -28,54 +28,38 @@ public class RouteSelectActivity extends BaseActivity implements View.OnClickLis
 
     @BindView(R.id.act_main_cvp)
     FrameLayout mCvp;
-
     @BindView(R.id.custom_toolbar_tv)
     TextView mTitleTv;
-
     @BindView(R.id.custom_toolbar_iv)
     ImageView mBackIv;
-
     @BindView(R.id.custom_toolbar_setting)
     ImageView mSeletctIv;
+
     private PopupWindow mPopupWindow;
-
     private boolean isBack = true;
-
-
     RouteDoveFragment  mTab1;
     AllFlyRecordFragment mTab2;
     private Observable<Boolean> backObservable;
 
     @Override
-    protected void initInject() {
-
-    }
-
-    @Override
     protected void init() {
-
         mTitleTv.setVisibility(View.GONE);
         mBackIv.setVisibility(View.VISIBLE);
         mSeletctIv.setVisibility(View.VISIBLE);
         mSeletctIv.setImageResource(R.mipmap.icon_nav_add);
-
         mBackIv.setOnClickListener(this);
         mSeletctIv.setOnClickListener(this);
-
         backObservable = RxBus.getInstance().register("route_back",Boolean.class);
-
         backObservable.subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean aBoolean) {
                 isBack = aBoolean;
             }
         });
-
         setSelection(0);
     }
 
     private void setSelection(int position) {
-
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         hideAllFragments(ft);
@@ -98,12 +82,10 @@ public class RouteSelectActivity extends BaseActivity implements View.OnClickLis
                 }
                 break;
         }
-
         ft.commitAllowingStateLoss();
     }
 
     private void hideAllFragments(FragmentTransaction ft) {
-
         if (mTab1 != null) {
             ft.hide(mTab1);
         }
@@ -115,7 +97,6 @@ public class RouteSelectActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()){
             case R.id.custom_toolbar_iv:
                 RxBus.getInstance().post("isLoad",false);
@@ -131,26 +112,19 @@ public class RouteSelectActivity extends BaseActivity implements View.OnClickLis
         if (mPopupWindow == null) {
             LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = layoutInflater.inflate(R.layout.add_popup, null);
-
             LinearLayout addPigeon = (LinearLayout) view.findViewById(R.id.add_pigeon_ll);
             LinearLayout addCirle = (LinearLayout) view.findViewById(R.id.add_circle_ll);
             LinearLayout addMate = (LinearLayout) view.findViewById(R.id.add_mate_ll);
-
             TextView mTv1 = (TextView) view.findViewById(R.id.add_pigeon);
             TextView mTv2 = (TextView) view.findViewById(R.id.add_circle);
             mTv1.setText("单只");
             mTv2.setText("全部");
             addMate.setVisibility(View.GONE);
-
             mPopupWindow = new PopupWindow(view, (int) getResources().getDimension(R.dimen.DIP_150_DP), (int) getResources().getDimension(R.dimen.DIP_120_DP));
-
-
             addPigeon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     setSelection(0);
-
                     if (mPopupWindow != null) {
                         mPopupWindow.dismiss();
                     }
@@ -170,18 +144,12 @@ public class RouteSelectActivity extends BaseActivity implements View.OnClickLis
         mPopupWindow.setFocusable(true);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-
         WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-
         int xPos = windowManager.getDefaultDisplay().getWidth() * 1 / 5 - mPopupWindow.getWidth() / 2;
-
         mPopupWindow.showAsDropDown(v, xPos, 40);
-
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.alpha = 1f;
-
        getWindow().setAttributes(params);
-
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
@@ -191,12 +159,6 @@ public class RouteSelectActivity extends BaseActivity implements View.OnClickLis
             }
         });
     }
-
-    @Override
-    public void toDo() {
-
-    }
-
     @Override
     public String getMethod() {
         return null;

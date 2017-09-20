@@ -92,14 +92,12 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
     private int methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
 
     private int PAGENUM = 1;  //查询起始下标，默认为0
-    private int PAGESIZE = 10;//每页返回的数据，默认10
-
+//    private int PAGESIZE = 10;//每页返回的数据，默认10
     private boolean isFriend = false;
     private boolean isDao = false;
     private boolean isLoad = true;
     private int tag = 0;
     private String headpic;
-
 
     private String circleid;
     private String friendId;
@@ -107,10 +105,8 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
     private InnerCircleBean innerCircleBean;
     private int currentPosition;//当前操作的 position
 
-
     HmNativeAd nativeAd;
     private List<InnerCircleBean> innerCircleBeans = new ArrayList<>();
-
     private Map<String,Integer> pageNumMap = new HashMap<>();
 
     @BindView(R.id.refreshLayout) SmartRefreshLayout refreshLayout;
@@ -127,9 +123,7 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
 
 
     EachCirclePresenter eachCirclePresenter;
-
     private OpenAdPresenter adPresenter;
-
     AdCircleAdapter adCircleAdapter;
     private Observable<Integer> netObservale;
     private Observable<Boolean> isLoadObervable;
@@ -145,7 +139,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 //        isUpdateObervable = mRxBus.register("update", Boolean.class);
         netObservale = mRxBus.register("load_circle", Integer.class);
         isLoadObervable = mRxBus.register("isLoadA", Boolean.class);
@@ -173,26 +166,19 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         width = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         height = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-
         eachCirclePresenter = new EachCirclePresenter(this);
         adPresenter = new OpenAdPresenter(this);
-
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadmoreListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-
         adCircleAdapter = new AdCircleAdapter(getActivity(),0);
-
         recyclerView.setAdapter(adCircleAdapter);
         adCircleAdapter.setOnHolderListener(this);
         adCircleAdapter.setMyItemClickListener(this);
-
         getAdDatas();
-
     }
 
     @Override
@@ -246,7 +232,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
     public void toDo() {
 
         if (adCircleAdapter.getItem(currentPosition) instanceof InnerCircleBean){
-
             switch (methodType){
                 case MethodType.METHOD_TYPE_ADD_ATTENTION:
                 case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
@@ -269,22 +254,21 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
             PAGENUM = 1;
             pageNumMap.put("all",1);
             methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
-            getDatas();
-
+            //getDatas();
+            refreshLayout.autoRefresh();
             nativeAd.loadAd("429");
         }
         isLoad = false;
 
-//        if (isLoadBanner) {
+        if (isLoadBanner) {
             adPresenter.getOpenAd(getParamsMap());
             isLoadBanner = false;
-//        }
+        }
     }
 
     private  List<NativeResource> list = new ArrayList<>();
 
     private void getAdDatas() {
-
         nativeAd = new HmNativeAd(getActivity(), new AdNativeLoadListener() {
             @Override
             public boolean onAdLoaded(NativeResource nativeResource) {
@@ -304,16 +288,13 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
 
             @Override
             public boolean onFailed(int i, String s) {
-                Log.d("Inapp","onFailed " + i+"-------"+s);
                 return false;
             }
-
             @Override
             public void onAdClosed() {
 
             }
         });
-
     }
 
     @Override
@@ -329,10 +310,8 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
     public void onLoadmore(RefreshLayout refreshlayout) {
         updateRecyclerView();
     }
-
     // 上拉加载时调用的更新RecyclerView的方法
     private void updateRecyclerView() {
-
         if (innerCircleBeans.size() % 10 != 0) {
             PAGENUM = innerCircleBeans.size() / 10 + 2;
         }else {
@@ -340,7 +319,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
         }
         pageNumMap.put("all",PAGENUM);
         methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
-
         innerCirclePresenter.loadMoreData(getParaMap(),0);
     }
 
@@ -419,7 +397,7 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                 break;
             case MethodType.METHOD_TYPE_ALL_CIRCLES:
                 map.put(MethodParams.PARAMS_CP,String.valueOf(PAGENUM));
-                map.put(MethodParams.PARAMS_PS,String.valueOf(PAGESIZE));
+//                map.put(MethodParams.PARAMS_PS,String.valueOf(PAGESIZE));
                 break;
             case MethodType.METHOD_TYPE_SHARE_CIRCLE:
             case MethodType.METHOD_TYPE_ADD_FAB:
@@ -459,36 +437,25 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                         ((AdCircleAdapter.MyRefrashHolder)holder).mContentTv.setText("转发动态");
                     }
                 }
-
                 if (!"".equals(curData.getTrans_name()) && curData.getTrans_name() != null ){
                     ((AdCircleAdapter.MyRefrashHolder)holder).mTranName.setText("@" + String.valueOf(curData.getTrans_name()));
                 }
 
                 if (curData.getPics() != null && curData.getPics().size() != 0){
-
                     final ArrayList<String> selectedPhotos = new ArrayList<>();
                     selectedPhotos.clear();
-
                     int picCount = curData.getPics().size();
-
                     selectedPhotos.addAll(curData.getPics());
-
                     ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.removeAllViews();
-
                     CirclePhotoAdapter photoAdapter = new CirclePhotoAdapter(getContext(), selectedPhotos);
-
                     ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.setVisibility(View.VISIBLE);
                     ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.setAdapter(photoAdapter);
                     ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.setLayoutManager(new StaggeredGridLayoutManager(picCount < 3 ?2:3, OrientationHelper.VERTICAL));
-
                     ((SimpleItemAnimator) ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.getItemAnimator()).setSupportsChangeAnimations(false);
-
                     photoAdapter.setMyItemClickListener(new MyItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
-
                             isLoad = false;
-
                             MyPhotoPreview.builder()
                                     .setPhotos(selectedPhotos)
                                     .setCurrentItem(position)
@@ -500,37 +467,24 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                     ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.removeAllViews();
                     ((AdCircleAdapter.MyRefrashHolder)holder).mTranRv.setVisibility(View.GONE);
                 }
-
                 ((AdCircleAdapter.MyRefrashHolder)holder).mAddFriendBtn.setVisibility(View.GONE);
                 ((AdCircleAdapter.MyRefrashHolder)holder).mDownIv.setVisibility(View.GONE);
-
             }else {
-
                 ((AdCircleAdapter.MyRefrashHolder)holder).transpondFl.setVisibility(View.GONE);
-
                 if (!TextUtils.isEmpty(innerCircleBean.getContent()) && !"".equals(innerCircleBean.getContent())){
                     ((AdCircleAdapter.MyRefrashHolder)holder).mContentTv.setText(innerCircleBean.getContent());
                 }
-
                 if (curData.getPics() != null && curData.getPics().size() != 0){
-
                     final ArrayList<String> selectedPhotos = new ArrayList<>();
                     selectedPhotos.clear();
-
                     int picCount = curData.getPics().size();
-
                     selectedPhotos.addAll(curData.getPics());
-
                     ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.removeAllViews();
-
                     CirclePhotoAdapter  photoAdapter = new CirclePhotoAdapter(getContext(), selectedPhotos);
-
                     ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.setVisibility(View.VISIBLE);
                     ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.setAdapter(photoAdapter);
                     ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(picCount < 3 ?2:3, OrientationHelper.VERTICAL));
-
                     ((SimpleItemAnimator) ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-
                     photoAdapter.setMyItemClickListener(new MyItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
@@ -542,16 +496,11 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                                     .start(getActivity());
                         }
                     });
-
-
                 }else {
                     ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.removeAllViews();
                     ((AdCircleAdapter.MyRefrashHolder)holder).mRecyclerView.setVisibility(View.GONE);
                 }
             }
-
-            Log.e("afsdfdewf",curData.getPlayerid()+"------"+curData.getCircleid()+"-----"+curData.getIs_friend());
-
             if (curData.isIs_friend() || tag == 1 || tag == 2) {
                 ((AdCircleAdapter.MyRefrashHolder)holder).mAddFriendBtn.setVisibility(View.GONE);
                 ((AdCircleAdapter.MyRefrashHolder)holder).mDownIv.setVisibility(View.VISIBLE);
@@ -568,13 +517,11 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                 likeLift.setBounds(0, 0, likeLift.getMinimumWidth(), likeLift.getMinimumHeight());
                 ((AdCircleAdapter.MyRefrashHolder)holder).mPraiseBtn.setCompoundDrawables(likeLift, null, null, null);
             }
-
             if (curData.getShare_count() != 0) {
                 ((AdCircleAdapter.MyRefrashHolder)holder).mTranspondBtn.setText(getString(R.string.share_circle) + curData.getShare_count());
             }else {
                 ((AdCircleAdapter.MyRefrashHolder)holder).mTranspondBtn.setText(getString(R.string.share_circle));
             }
-
             if (curData.getComment_count() != 0) {
                 ((AdCircleAdapter.MyRefrashHolder)holder).mCommentBtn.setText(getString(R.string.comment_circle)+curData.getComment_count());
             }else {
@@ -585,13 +532,11 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
             }else {
                 ((AdCircleAdapter.MyRefrashHolder)holder).mPraiseBtn.setText(getString(R.string.fab_circle));
             }
-
             if (curData.getContent() == null || "".equals(curData.getContent())){
                 ((AdCircleAdapter.MyRefrashHolder)holder).mContentTv.setVisibility(View.GONE);
             }else {
                 ((AdCircleAdapter.MyRefrashHolder)holder).mContentTv.setVisibility(View.VISIBLE);
             }
-
             if (!"".equals(curData.getUsername()) && curData.getUsername() != null ){
                 ((AdCircleAdapter.MyRefrashHolder)holder).mUserName.setText(String.valueOf(curData.getUsername()));
             }
@@ -599,9 +544,7 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
             headpic = ConstantUtils.HEADPIC;
             if (curData.getHeadpic() != null && !"".equals(curData.getHeadpic()) && !"-1".equals(curData.getHeadpic())){
                 headpic += curData.getHeadpic();
-
                 String tag = (String) ((AdCircleAdapter.MyRefrashHolder)holder).mUserIcon.getTag(R.id.imageid);
-
                 if (!TextUtils.equals(headpic,tag)){
                     ((AdCircleAdapter.MyRefrashHolder)holder).mUserIcon.setImageResource(R.mipmap.btn_img_photo_default);
                 }
@@ -634,16 +577,13 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                     }
                 }
             });
-
             if (!TextUtils.isEmpty(curData.getCreate_time()) && !"".equals(curData.getCreate_time())) {
                 ((AdCircleAdapter.MyRefrashHolder)holder).mCreateTimeTv.setText(curData.getCreate_time());
             }
             ((AdCircleAdapter.MyRefrashHolder)holder).mDownIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     currentPosition = position;
-
                     circleid = curData.getCircleid();
                     friendId = curData.getUserid();
                     isFriend = curData.isIs_friend();
@@ -651,18 +591,13 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                 }
             });
 
-
             ((AdCircleAdapter.MyRefrashHolder)holder).mAddFriendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     currentPosition = position;
-
                     circleid = curData.getCircleid();
-
                     methodType = MethodType.METHOD_TYPE_ADD_ATTENTION;
                     friendId = curData.getUserid();
-
                     ourCodePresenter.addAttention(getParaMap());
                 }
             });
@@ -670,9 +605,7 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
             ((AdCircleAdapter.MyRefrashHolder)holder).mPraiseBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     currentPosition = position;
-
                     circleid = curData.getCircleid();
                     friendId = curData.getUserid();
                     isFriend = curData.isIs_friend();
@@ -692,10 +625,8 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                 @Override
                 public void onClick(View v) {
                     currentPosition = position;
-
                     circleid = curData.getCircleid();
                     methodType = MethodType.METHOD_TYPE_ADD_COMMENT;
-
                     if (curData.getComment_count() != 0){
                         Intent intent = new Intent(getActivity(),EarchCircleActivity.class);
                         intent.putExtra("innerCircleBean",innerCircleBeans.get(currentPosition));
@@ -721,7 +652,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
         }if (data instanceof NativeResource){
 
             Log.e("ad","原生广告");
-
             ((AdCircleAdapter.AdHolder)holder).content.setText( ((NativeResource)data).getTextForLabel("title"));
                 NativeResource.Img img =  ((NativeResource)data).getImgForLabel("ad");
             ((NativeResource)data).onExposured(((AdCircleAdapter.AdHolder)holder).adImage);
@@ -754,7 +684,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
         int curPost = position >= 1? position - (adCircleAdapter.getAdDatas().size() / 10 + adCircleAdapter.getAdDatas().size()):position;
         currentPosition = curPost;
         if (innerCircleBeans.get(curPost) != null) {
-
             circleid = innerCircleBeans.get(curPost).getCircleid();
             Intent intent = new Intent(getActivity(),EarchCircleActivity.class);
             intent.putExtra("innerCircleBean",innerCircleBeans.get(curPost));
@@ -783,23 +712,15 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
 
         mEtDialog.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
                 if (delayRun != null) {
                     mHandler.removeCallbacks(delayRun);
                 }
-
                 editPwd = s.toString();
-
                 mHandler.postDelayed(delayRun, 500);
             }
         });
@@ -807,7 +728,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
         commentSub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 commentContent = mEtDialog.getText().toString().trim();
                 if (!TextUtils.equals("",commentContent)) {
                     ourCodePresenter.addComment(getParaMap());
@@ -821,7 +741,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
     private Runnable delayRun = new Runnable() {
         @Override
         public void run() {
-
             if (editPwd.length() == 0 || "".equals(editPwd) || editPwd == null) {
                 commentSub.setEnabled(false);
                 commentSub.setTextColor(getResources().getColor(R.color.darkgray));
@@ -840,7 +759,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
         circleBean.setShare_count(data.getData().getShare_count());
         circleBean.setHas_fab(data.getData().getHas_fab());
         circleBean.setIs_friend(data.getData().getIs_friend());
-
         adCircleAdapter.getDatas().add(currentPosition,circleBean);
         adCircleAdapter.notifyDataSetChanged();
     }
@@ -997,20 +915,14 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
         String str = object.toString().replace("\"", "%22").replace("{", "%7b").replace("}", "%7d").replace("[", "%5b").replace("]", "%5d").replace(" ","%20");
         String BASE_AD_URL = "http://open.adview.cn/agent/openRequest.do?"+str;
 
-        Log.e("getAdData", BASE_AD_URL + "-----请求广告资源数据---url");
     }
 
     @Override
     public void setOpenAd(AdviewResObj resObj) {
         adviewResObj = resObj;
 
-        Log.e("getAdData", resObj.getRes() + "-----获取到的广告资源数据---Res");
-        Log.e("getAdData", resObj.getMg() + "-----获取到的广告资源数据---mg");
-//        Log.e("getAdData", resObj.getAd().toString() + "-----获取到的广告资源数据---getAd");
         List<AdviewResObj.AdBody> adBodyList = resObj.getAd();
         if (adBodyList != null) {
-            Log.e("getAdData", adBodyList.toString() + "-----获取到的广告资源数据");
-            Log.e("getAdData", adBodyList.get(0).getApi().size() + "--------获取到的广告数量");
             if (adBodyList.size() != 0 && adBodyList.get(0).getApi().size() != 0) {
                 String imgUrl = adBodyList.get(0).getApi().get(0);
                 String al = adBodyList.get(0).getAl();
@@ -1029,7 +941,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                             for (Map.Entry<String, List<String>> entry : set) {
                                 List<String> arr = entry.getValue();
                                 for (String url : arr) {
-                                    Log.e("getAdData", url + "--------es--------2");
                                     String getEc = Http.get(url, null);
                                 }
                             }
@@ -1046,7 +957,7 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                     public void run() {
                         bannerIv.setVisibility(View.GONE);
                     }
-                },20 * 1000);
+                },5 * 1000);
             }
         }
     }
@@ -1057,9 +968,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
     @OnClick(R.id.bannerIv)
     void banner(){
                 if (!TextUtils.isEmpty(clickAdImg) && clickAdImg.startsWith("http")){
-
-//                    isClick = true;
-
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -1068,14 +976,12 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                                 if (ec != null && ec.size() > 0) {
                                     for (String url:ec) {
                                         String getEc = Http.get(url,null);
-                                        Log.e("esssss",getEc+"--------ec---------1");
                                     }
                                 }
                             }
                         }
                     }).start();
 
-//                    SpUtils.putBoolean(getActivity(), SpConstant.CLICK_AD,true);
                     Intent intent = new Intent();
                     intent.setAction("android.intent.action.VIEW");
                     Uri contentUri = Uri.parse(clickAdImg);

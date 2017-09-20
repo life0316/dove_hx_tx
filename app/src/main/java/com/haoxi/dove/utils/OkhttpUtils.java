@@ -32,8 +32,6 @@ import java.util.concurrent.TimeUnit;
  * Created by david jin on 2016/4/27.
  */
 public class OkhttpUtils {
-
-
     public interface ReqProgressCallBack<T>{
         /**
          * 响应进度更新

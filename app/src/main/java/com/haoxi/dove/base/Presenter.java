@@ -1,11 +1,6 @@
 package com.haoxi.dove.base;
 
-/**
- * Created by lifei on 2016/12/23.
- */
-
 public interface Presenter <V extends MvpView>{
-
     /**
      * presenter 与 view 建立连接
      * @param mvpView
@@ -16,5 +11,4 @@ public interface Presenter <V extends MvpView>{
      * p 与 v 断开连接
      */
     void detachView();
-
 }

@@ -1,26 +1,16 @@
 package com.haoxi.dove.base;
 
-import android.text.TextUtils;
 import android.util.Log;
-
 import com.haoxi.dove.callback.RequestCallback;
 import com.haoxi.dove.utils.ApiUtils;
-
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
-
 import rx.Subscriber;
-
-/**
- * Created by lifei on 2017/3/29.
- */
 
 public class BaseSubscriber<T> extends Subscriber<T> {
 
     private RequestCallback<T> mRequestCallBack;
-
     public BaseSubscriber(RequestCallback<T> callback) {
-
         mRequestCallBack = callback;
     }
 
@@ -33,12 +23,10 @@ public class BaseSubscriber<T> extends Subscriber<T> {
 //        }
 //    }
 
-
     @Override
     public void onCompleted() {
         if (mRequestCallBack != null) {
             mRequestCallBack.requestComplete();
-
         }
     }
 
@@ -79,7 +67,6 @@ public class BaseSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onNext(T t) {
-
         if (mRequestCallBack != null) {
             mRequestCallBack.requestSuccess(t);
         }

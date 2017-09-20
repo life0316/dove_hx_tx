@@ -1,10 +1,6 @@
 package com.haoxi.dove.base;
 
-/**
- * Created by lifei on 2016/12/22.
- */
-
-public abstract interface MvpView {
+public interface MvpView {
 
     //显示进度条
     void showProgress();

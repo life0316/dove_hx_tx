@@ -200,20 +200,16 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
 
     @Override
     public void toDo() {
-
             switch (methodType){
                 case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
                     mRxBus.post("isLoadA",true);
-
                     methodType = MethodType.METHOD_TYPE_FRIENDS_CIRCLES;
                     PAGENUM = 1;
                     getDatas();
                     break;
-
                 case MethodType.METHOD_TYPE_ADD_FAB:
                 case MethodType.METHOD_TYPE_REMOVE_FAB:
                 case MethodType.METHOD_TYPE_ADD_COMMENT:
-
                     methodType = MethodType.METHOD_TYPE_CIRCLE_DETAIL;
                     eachCirclePresenter.getDataFromNets(getParaMap());
                     break;
@@ -314,16 +310,11 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
         }
         return method;
     }
-
-    public Map<String,String> getParaMap(){
-        Map<String,String> map = new HashMap<>();
-        map.put(MethodParams.PARAMS_METHOD,getMethod());
-        map.put(MethodParams.PARAMS_SIGEN,getSign());
-        map.put(MethodParams.PARAMS_TIME,getTime());
-        map.put(MethodParams.PARAMS_VERSION,getVersion());
+    @Override
+    protected Map<String, String> getParaMap() {
+        Map<String,String> map = super.getParaMap();
         map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
         map.put(MethodParams.PARAMS_TOKEN,getToken());
-
         switch (methodType){
             case MethodType.METHOD_TYPE_ADD_ATTENTION:
             case MethodType.METHOD_TYPE_REMOVE_ATTENTION:
@@ -346,64 +337,42 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
         }
         return map;
     }
-
     @SuppressLint("SetTextI18n")
     @Override
     public void toInitHolder(final CircleAdapter.MyRefrashHolder holder, final int position, final InnerCircleBean data) {
             this.innerCircleBean = data;
-
             //转发的
-
             if (data.getTrans_userid() != null && !"".equals(data.getTrans_userid()) && !"-1".equals(data.getTrans_userid())) {
                 holder.transpondFl.setVisibility(View.VISIBLE);
-
                 holder.mRecyclerView.setVisibility(View.GONE);
-
                 if (!TextUtils.isEmpty(data.getContent()) && !"".equals(data.getContent())) {
-
                     String content = data.getContent();
-
                     String[] contents = content.split("#");
                     holder.mTranContentTv.setText(contents[contents.length - 1]);
-
-                    Log.e("mTranContentTv", content + "--------" + data.getUsername() + "--------" + data.getTrans_name());
-
                     if (content.lastIndexOf("#") != -1) {
                        holder.mContentTv.setText(content.substring(0, content.lastIndexOf("#")));
                     } else {
                        holder.mContentTv.setText("转发动态");
                     }
                 }
-
                 if (!"".equals(data.getTrans_name()) && data.getTrans_name() != null) {
                     holder.mTranName.setText("@" + String.valueOf(data.getTrans_name()));
                 }
-
                 if (data.getPics() != null && data.getPics().size() != 0) {
-
                     final ArrayList<String> selectedPhotos = new ArrayList<>();
                     selectedPhotos.clear();
-
                     int picCount = data.getPics().size();
-
                     selectedPhotos.addAll(data.getPics());
-
                     holder.mTranRv.removeAllViews();
-
                     CirclePhotoAdapter photoAdapter = new CirclePhotoAdapter(getContext(), selectedPhotos);
-
                     holder.mTranRv.setVisibility(View.VISIBLE);
                     holder.mTranRv.setAdapter(photoAdapter);
                     holder.mTranRv.setLayoutManager(new StaggeredGridLayoutManager(picCount < 3 ? 2 : 3, OrientationHelper.VERTICAL));
-
                     ((SimpleItemAnimator)holder.mTranRv.getItemAnimator()).setSupportsChangeAnimations(false);
-
                     photoAdapter.setMyItemClickListener(new MyItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
-
                             isLoad = false;
-
                             MyPhotoPreview.builder()
                                     .setPhotos(selectedPhotos)
                                     .setCurrentItem(position)
@@ -415,43 +384,28 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
                     holder.mTranRv.removeAllViews();
                     holder.mTranRv.setVisibility(View.GONE);
                 }
-
                 holder.mAddFriendBtn.setVisibility(View.GONE);
                 holder.mDownIv.setVisibility(View.GONE);
-
             } else {
-
                 holder.transpondFl.setVisibility(View.GONE);
-
                 if (!TextUtils.isEmpty(innerCircleBean.getContent()) && !"".equals(innerCircleBean.getContent())) {
                     holder.mContentTv.setText(innerCircleBean.getContent());
                 }
-
                 if (data.getPics() != null && data.getPics().size() != 0) {
-
                     final ArrayList<String> selectedPhotos = new ArrayList<>();
                     selectedPhotos.clear();
-
                     int picCount = data.getPics().size();
-
                     selectedPhotos.addAll(data.getPics());
-
                     holder.mRecyclerView.removeAllViews();
-
                     CirclePhotoAdapter photoAdapter = new CirclePhotoAdapter(getContext(), selectedPhotos);
-
                     holder.mRecyclerView.setVisibility(View.VISIBLE);
                     holder.mRecyclerView.setAdapter(photoAdapter);
                     holder.mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(picCount < 3 ? 2 : 3, OrientationHelper.VERTICAL));
-
                     ((SimpleItemAnimator)holder.mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-
                     photoAdapter.setMyItemClickListener(new MyItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
-
                             isLoad = false;
-
                             MyPhotoPreview.builder()
                                     .setPhotos(selectedPhotos)
                                     .setCurrentItem(position)
@@ -459,16 +413,11 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
                                     .start(getActivity());
                         }
                     });
-
-
                 } else {
                     holder.mRecyclerView.removeAllViews();
                     holder.mRecyclerView.setVisibility(View.GONE);
                 }
             }
-
-            Log.e("afsdfdewf", data.getPlayerid() + "------" + data.getCircleid() + "-----" + data.getIs_friend());
-
             if (data.isIs_friend() || tag == 1 || tag == 2) {
                 holder.mAddFriendBtn.setVisibility(View.GONE);
                 holder.mDownIv.setVisibility(View.VISIBLE);
@@ -516,13 +465,10 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
             headpic = ConstantUtils.HEADPIC;
             if (data.getHeadpic() != null && !"".equals(data.getHeadpic()) && !"-1".equals(data.getHeadpic())) {
                 headpic += data.getHeadpic();
-
                 String tag = (String)holder.mUserIcon.getTag(R.id.imageid);
-
                 if (!TextUtils.equals(headpic, tag)) {
                     holder.mUserIcon.setImageResource(R.mipmap.btn_img_photo_default);
                 }
-
                 holder.mUserIcon.setTag(R.id.imageid, headpic);
                 Glide.with(getContext())
                         .load(headpic)
@@ -530,12 +476,10 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
                         .placeholder(R.mipmap.btn_img_photo_default)
                         .error(R.mipmap.btn_img_photo_default)
                         .into(holder.mUserIcon);
-
             } else {
                  holder.mUserIcon.setTag(R.id.imageid, "");
                  holder.mUserIcon.setImageResource(R.mipmap.btn_img_photo_default);
             }
-
             holder.mUserIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -551,16 +495,13 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
                     }
                 }
             });
-
             if (!TextUtils.isEmpty(data.getCreate_time()) && !"".equals(data.getCreate_time())) {
                 holder.mCreateTimeTv.setText(data.getCreate_time());
             }
             holder.mDownIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     currentPosition = position;
-
                     circleid = data.getCircleid();
                     friendId = data.getUserid();
                     isFriend = data.isIs_friend();
@@ -568,16 +509,12 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
                 }
             });
 
-
             holder.mAddFriendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     currentPosition = position;
                     methodType = MethodType.METHOD_TYPE_ADD_ATTENTION;
-
                     friendId = data.getUserid();
-
                     ourCodePresenter.addAttention(getParaMap());
                 }
             });
@@ -585,13 +522,10 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
              holder.mPraiseBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     currentPosition = position;
-
                     circleid = data.getCircleid();
                     friendId = data.getUserid();
                     isFriend = data.isIs_friend();
-
                     if (data.isHas_fab()) {
                         methodType = MethodType.METHOD_TYPE_REMOVE_FAB;
                         ourCodePresenter.removeFab(getParaMap());
@@ -606,10 +540,8 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
                 @Override
                 public void onClick(View v) {
                     currentPosition = position;
-
                     circleid = data.getCircleid();
                     methodType = MethodType.METHOD_TYPE_ADD_COMMENT;
-
                     if (data.getComment_count() != 0) {
                         Intent intent = new Intent(getActivity(), EarchCircleActivity.class);
                         intent.putExtra("innerCircleBean", innerCircleBeans.get(currentPosition));
@@ -625,7 +557,6 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
                 @Override
                 public void onClick(View v) {
                     currentPosition = position;
-
                     circleid = data.getCircleid();
                     Intent intent = new Intent(getActivity(), TransCircleActivity.class);
                     intent.putExtra("innerCircleBean", data);
@@ -634,9 +565,7 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
                 }
             });
     }
-
-
-    @Override
+   @Override
     public void onDestroy() {
         super.onDestroy();
         mRxBus.unregister("load_circle", netObservale);
@@ -658,7 +587,6 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
     private Dialog mDialogEt;
     public void showMyDialog() {
         mDialogEt = new Dialog(getActivity(), R.style.DialogTheme);
-
         View view = getActivity().getLayoutInflater().inflate(R.layout.comment_dialog, null);
         final EditText mEtDialog = (EditText) view.findViewById(R.id.pigeon_name_dialog_et);
         commentSub = (TextView) view.findViewById(R.id.comment_submit);
@@ -668,18 +596,11 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
         mDialogEt.setContentView(view, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         ApiUtils.setDialogWindow(mDialogEt);
         mDialogEt.show();
-
         mEtDialog.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
                 if (delayRun != null) {
@@ -706,7 +627,6 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
     private Runnable delayRun = new Runnable() {
         @Override
         public void run() {
-
             if (editPwd.length() == 0 || "".equals(editPwd) || editPwd == null) {
                 commentSub.setEnabled(false);
                 commentSub.setTextColor(getResources().getColor(R.color.darkgray));
@@ -716,18 +636,14 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
             }
         }
     };
-
     @Override
     public void toUpdateEach(EachCircleBean data) {
-
         circleAdapter.getDatas().remove(currentPosition);
-
         InnerCircleBean circleBean = innerCircleBeans.get(currentPosition);
         circleBean.setComment_count(data.getData().getComment_count());
         circleBean.setFab_count(data.getData().getFab_count());
         circleBean.setShare_count(data.getData().getShare_count());
         circleBean.setHas_fab(data.getData().getHas_fab());
-
         circleAdapter.getDatas().add(currentPosition,circleBean);
         circleAdapter.notifyDataSetChanged();
     }
@@ -736,14 +652,11 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
         final Dialog mDialog = new Dialog(getActivity(), R.style.DialogTheme);
         mDialog.setCancelable(false);
         View view = getActivity().getLayoutInflater().inflate(R.layout.personal_down_dialog,null);
-
         mDialog.setContentView(view,new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
         TextView mRemoveTv = (TextView) view.findViewById(R.id.headciv_dialog_remove_attention);
         TextView mShouTv = (TextView) view.findViewById(R.id.headciv_dialog_shou);
         TextView mDeleteTv = (TextView) view.findViewById(R.id.headciv_dialog_delete);
         TextView mCancle = (TextView) view.findViewById(R.id.headciv_dialog_cancle);
-
         mDeleteTv.setVisibility(View.GONE);
         mShouTv.setVisibility(View.GONE);
         if (getUserObJId().equals(friendId)){
@@ -769,10 +682,8 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
         mRemoveTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 methodType = MethodType.METHOD_TYPE_REMOVE_ATTENTION;
                 ourCodePresenter.removeAttention(getParaMap());
-
                 mDialog.dismiss();
             }
         });

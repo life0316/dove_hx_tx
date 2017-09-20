@@ -2,14 +2,8 @@ package com.haoxi.dove.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-
 import com.haoxi.dove.callback.MyItemClickListener;
 import com.haoxi.dove.callback.MyItemLongClickListener;
-
-
-/**
- * Created by lifei on 2017/1/10.
- */
 
 public abstract class MyBaseRvAdapter<T extends ViewHolder> extends RecyclerView.Adapter<T> {
 
@@ -22,8 +16,8 @@ public abstract class MyBaseRvAdapter<T extends ViewHolder> extends RecyclerView
     public void setOnItemClickListener(MyItemClickListener itemClickListener) {
         this.mItemClickListener = itemClickListener;
     }
-
-    public void setOnItemLongClickListener(MyItemLongClickListener itemLongClickListener) {
-        this.mItemLongClickListener = itemLongClickListener;
-    }
+//
+//    public void setOnItemLongClickListener(MyItemLongClickListener itemLongClickListener) {
+//        this.mItemLongClickListener = itemLongClickListener;
+//    }
 }

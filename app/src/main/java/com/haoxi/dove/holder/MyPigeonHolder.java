@@ -14,13 +14,7 @@ import com.haoxi.dove.callback.MyItemLongClickListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-/**
- * Created by lifei on 2017/1/6.
- */
-
 public class MyPigeonHolder extends BasicRvHolder {
-
     @BindView(R.id.item_rv_mypigeon_ismate) public TextView mIsMate;
     @BindView(R.id.item_rv_mypigeon_pigeonold) public TextView mPegionOld;
     @BindView(R.id.item_rv_mypigeon_pigeoncolor) public TextView mPegionColor;
@@ -30,16 +24,11 @@ public class MyPigeonHolder extends BasicRvHolder {
     @BindView(R.id.ll) public LinearLayout ll;
     @BindView(R.id.item_rv_mypigeon_cb) public CheckBox mCheckBox;
 
-    public View root;
-
+    protected View root;
 
     public MyPigeonHolder(final Context mContext, View itemView, MyItemClickListener myItemClickListener, MyItemLongClickListener myItemLongClickListener) {
-
         super(mContext, itemView, myItemClickListener, myItemLongClickListener);
-
         ButterKnife.bind(this,itemView);
         this.root = itemView;
-
     }
-
 }

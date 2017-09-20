@@ -10,20 +10,13 @@ import com.haoxi.dove.modules.circle.MyCircleFragment;
 import com.haoxi.dove.newin.ourcircle.ui.CircleFragment;
 
 import static android.view.View.VISIBLE;
-
-/**
- * Created by lifei on 2016/12/27.
- */
-
 public class PigeonCircleFragment extends MyBaseFragment {
-
     @Override
     protected void initToolbar(View view) {
         mTabTitleTv.setText("鸽圈");
         mTabAddIv.setVisibility(View.GONE);
         mTabSearchIv.setVisibility(VISIBLE);
     }
-
     @Override
     public void setupAdapter(MyBaseAdapter adapter) {
         adapter.addFragment(AllCircleFragment.class,"鸽圈",getBundle("鸽圈"));

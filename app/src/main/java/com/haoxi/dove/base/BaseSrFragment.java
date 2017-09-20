@@ -14,6 +14,7 @@ import android.view.WindowManager;
 
 import com.haoxi.dove.R;
 import com.haoxi.dove.inject.AppComponent;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.MD5Tools;
@@ -138,5 +139,17 @@ public abstract class BaseSrFragment extends Fragment implements MvpView {
             return "1.0";
         }
         return "1.0";
+    }
+    @Override
+    public void toDo() {
+
+    }
+    protected Map<String,String> getParaMap(){
+        Map<String,String> map = new HashMap<>();
+        map.put(MethodParams.PARAMS_METHOD,getMethod());
+        map.put(MethodParams.PARAMS_SIGEN,getSign());
+        map.put(MethodParams.PARAMS_TIME,getTime());
+        map.put(MethodParams.PARAMS_VERSION,getVersion());
+        return map;
     }
 }

@@ -41,46 +41,6 @@ public class AboutModel extends BaseModel implements IAboutModel<OurVerBean> {
     }
 
     @Override
-    public void getBriefData(JSONObject params, MyModelCallback modelCallback) {
-
-    }
-
-    @Override
-    public void updateVar(JSONObject params, final MyModelCallback modelCallback) {
-        final String strUrl = params.toString().replace("\"", "%22").replace("{", "%7b").replace("}", "%7d");
-
-        OkhttpUtils.get(ConstantUtils.UPDATEVER + strUrl, new OkhttpUtils.ResultCallback() {
-            @Override
-            public void onSuccess(Object response) {
-
-                JSONArray array = (JSONArray) response;
-
-                JSONObject object = (JSONObject) array.get(0);
-
-                //1 解析服务器端的数据
-
-                //版本name
-                String verCode = object.getString("app_version");
-                String apkUrl = object.getString("app_url");
-                String desc = object.getString("app_desc");
-
-                VersionBean versionBean = new VersionBean();
-                versionBean.setVerCode(verCode);
-                versionBean.setApkUrl(apkUrl);
-                versionBean.setApkDesc(desc);
-
-                modelCallback.onSuccess(versionBean);
-
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-
-            }
-        });
-    }
-
-    @Override
     public void downloadApk(String apkUrl, final MyProgressCallback progressCallback) {
         OkHttpClient mOkHttpClient = new OkHttpClient();
         Request request = new Request.Builder().url(apkUrl).build();

@@ -21,8 +21,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitManager {
 
-//    private static final String BASE_OUR_URL = "http://118.178.227.194/";
-    private static final String BASE_OUR_URL = "http://111.231.54.111/";
+    private static final String BASE_OUR_URL = "http://118.178.227.194/";
+//    private static final String BASE_OUR_URL = "http://111.231.54.111/";
     private static final String BASE_AD_URL = "https://open.adview.cn";
 
 
@@ -51,8 +51,6 @@ public class RetrofitManager {
                 .retryOnConnectionFailure(true)
                 .connectTimeout(100, TimeUnit.SECONDS)
                 .build();
-
-
 
         ourRetrofit = new Retrofit.Builder()
                 .client(okHttpClient)

@@ -97,14 +97,6 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
             }
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            Log.e("fafdwwwwwwwwww","mac------------"+ AdUtils.getMachineHardwareAddress());
-        }else {
-
-            Log.e("fafdwwwwwwwwww","mac---------1---"+ AdUtils.getLocalMacAddress(this));
-        }
-
         String usernamesp = SpUtils.getString(this, SpConstant.USER_TELEPHONE);
         String pwdsp = SpUtils.getString(this,SpConstant.USER_PWD);
         Boolean isRemCb = SpUtils.getBoolean(this,SpConstant.IS_REM);
@@ -183,9 +175,6 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
             }
         }
     };
-
-//    private AlertDialog.Builder builder;
-//    private AlertDialog dialog;
 
     @OnClick(R.id.act_login_loginbtn)
     void login() {
@@ -357,7 +346,6 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
     @Override
     public String getMethod() {
         String method = "";
-
         switch (methodType){
             case MethodType.METHOD_TYPE_LOGIN:
                 method = MethodConstant.LOGIN;
@@ -369,14 +357,9 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
         return method;
     }
 
-    public Map<String,String> getParaMap(){
-
-        Map<String,String> map = new HashMap<>();
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-
+    @Override
+    protected Map<String, String> getParaMap() {
+        Map<String,String> map = super.getParaMap();
         switch (methodType){
             case MethodType.METHOD_TYPE_LOGIN:
                 map.put("password",getUserPwd());
@@ -387,7 +370,6 @@ public class LoginActivity extends BaseActivity implements ILoginView, CompoundB
                 map.put("userid",getUserId());
                 break;
         }
-
         return map;
     }
 }

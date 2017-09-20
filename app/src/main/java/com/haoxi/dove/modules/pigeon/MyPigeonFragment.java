@@ -30,6 +30,7 @@ import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.utils.ApiUtils;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.utils.SpConstant;
 import com.haoxi.dove.utils.SpUtils;
@@ -80,28 +81,18 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     private Observable<Boolean> isLoadObservable;
     private Observable<Integer> mTagNumObservable;
     private Observable<Boolean> dataObservable;
-    private Observable<Integer> clickObservable;
-    private Observable<Integer> unbindObservable;
 
     private List<String> mPigeonCodes;
-
     private List<InnerDoveData> pigeonBeans = new ArrayList<>();
     private List<InnerDoveData> pigeonTemps = new ArrayList<>();
-
-    private int unbindTag = 5;
-    private int clickRadio = 0;
-
     private boolean longClickTag;
     private CustomDialog dialog;
-
     private int methodType = MethodType.METHOD_TYPE_DOVE_SEARCH;
-
     private Observable<String> exitObservable;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-
         if (!getUserVisibleHint()) {
             if (mRxBus != null) {
                 mRxBus.post("tagnum", 6);
@@ -123,14 +114,14 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         super.onCreate(savedInstanceState);
         mPigeonCodes = MyApplication.getMyBaseApplication().getmPigeonCodes();
 
-        exitObservable = mRxBus.register("exit",String.class);
+        exitObservable = mRxBus.register(ConstantUtils.OBSER_EXIT,String.class);
 
         exitObservable.subscribe(new Action1<String>() {
             @Override
             public void call(String s) {
-                if ("pigeon".equals(s)){
+                if (ConstantUtils.OBSER_PIGEON.equals(s)){
                     mShowAddLv.setVisibility(View.GONE);
-                    mRxBus.post("cancle", true);
+                    mRxBus.post(ConstantUtils.OBSER_CANCLE, true);
                     mSelectRv.setVisibility(View.GONE);
                     mSelectCb.setChecked(false);
                     pigeonAdapter.setIsShow(false);
@@ -151,17 +142,12 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
-
         mRecyclerView.setAdapter(pigeonAdapter);
-
         refreshLayout.setEnableLoadmore(false);
-
         refreshLayout.setOnRefreshListener(this);
-
         mSelectCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if (isChecked) {
                     Map<Integer, Boolean> map = pigeonAdapter.getMap();
                     for (int i = 0; i < map.size(); i++) {
@@ -169,11 +155,8 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
                         pigeonAdapter.notifyDataSetChanged();
                     }
                 } else {
-
                     if (!(countTemp > 0 && countTemp < pigeonBeans.size())) {
-
                         Map<Integer, Boolean> m = pigeonAdapter.getMap();
-
                         for (int i = 0; i < m.size(); i++) {
                             m.put(i, false);
                             pigeonAdapter.notifyDataSetChanged();
@@ -182,10 +165,8 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
                 }
             }
         });
-
         pigeonAdapter.setItemCheckListener(this);
         pigeonAdapter.setRecyclerViewOnItemClickListener(this);
-
         mRefrashLl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,40 +174,6 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
             }
         });
     }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        dataObservable = mRxBus.register("isLoadData", Boolean.class);
-//
-//        clickObservable = mRxBus.register("clickRadio", Integer.class);
-//        unbindObservable = mRxBus.register("refrash", Integer.class);
-//
-//        if (isLoad) {
-//            if (longClickTag) {
-//                mRxBus.post("tagnum", 6);
-//                if (dialog.isShowing() && dialog != null) {
-//                    dialog.dismiss();
-//                }
-//            }
-//            getDatas();
-//        } else {
-//            Log.e(TAG, unbindTag + "-------unbindTag");
-//            Log.e(TAG, clickRadio + "-------clickRadio");
-//
-//            if (unbindTag == clickRadio) {
-//                if (longClickTag) {
-//                    mRxBus.post("tagnum", 6);
-//                    if (dialog.isShowing() && dialog != null) {
-//                        dialog.dismiss();
-//                    }
-//                }
-//                getDatas();
-//                unbindTag = 1;
-//            }
-//        }
-//        isLoad = true;
-//    }
 
     @Override
     public void onResume() {
@@ -237,8 +184,8 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         setObservable();
         if (isLoad) {
             getDatas();
-            isLoad = false;
         }
+        isLoad = false;
     }
 
     public void getDatas() {
@@ -250,17 +197,11 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         }
     }
 
-    public Map<String,String> getParaMap(){
-
-        Map<String,String> map = new HashMap<>();
-
-        map.put(MethodParams.PARAMS_METHOD,getMethod());
-        map.put(MethodParams.PARAMS_SIGEN,getSign());
-        map.put(MethodParams.PARAMS_TIME,getTime());
-        map.put(MethodParams.PARAMS_VERSION,getVersion());
+    @Override
+    protected Map<String, String> getParaMap() {
+        Map<String,String> map = super.getParaMap();
         map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
         map.put(MethodParams.PARAMS_TOKEN,getToken());
-
         switch (methodType){
             case MethodType.METHOD_TYPE_DOVE_SEARCH:
                 map.put(MethodParams.PARAMS_PLAYER_ID,getUserObjId());
@@ -279,7 +220,6 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
                 isLoad = aBoolean;
             }
         });
-
         dataObservable.subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean aBoolean) {
@@ -289,29 +229,7 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
                 }
             }
         });
-//
-//        unbindObservable.subscribe(new Action1<Integer>() {
-//            @Override
-//            public void call(Integer integer) {
-//                unbindTag = integer;
-//            }
-//        });
-//
-//        clickObservable.subscribe(new Action1<Integer>() {
-//            @Override
-//            public void call(Integer integer) {
-//                clickRadio = integer;
-//
-//                Log.e(TAG, unbindTag + "-------unbindTag---");
-//                Log.e(TAG, clickRadio + "-------clickRadio---");
-//
-//                if (unbindTag == clickRadio) {
-//                    getDatas();
-//                    unbindTag = 5;
-//                }
-//            }
-//        });
-//
+
         mTagNumObservable.subscribe(new Action1<Integer>() {
             @Override
             public void call(Integer integer) {
@@ -319,7 +237,6 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
                     changeAdapter();
                 } else if (integer == 6) {
                     changeAdapter();
-                    isLoad = true;
                 }
             }
         });
@@ -392,11 +309,6 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         }
 
         if (pigeonData != null && pigeonData.size() != 0) {
-            if (pigeonData.size() >= 15) {
-                numMap.put("pigeon_num", true);
-            } else {
-                numMap.put("pigeon_num", false);
-            }
             pigeonBeans.addAll(pigeonData);
             pigeonAdapter.addData(pigeonBeans);
             refreshLayout.setEnableRefresh(true);
@@ -409,7 +321,7 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
             mSelectRv.setVisibility(View.GONE);
             mPigeonCodes.clear();
         }
-        mRxBus.post("cancle", true);
+        mRxBus.post(ConstantUtils.OBSER_CANCLE, true);
         mSelectRv.setVisibility(View.GONE);
         mSelectCb.setChecked(false);
         pigeonAdapter.setIsShow(false);
@@ -424,9 +336,7 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 
     @Override
     public void itemChecked(View view, int count) {
-
         countTemp = count;
-
         if (count >= pigeonBeans.size()) {
             mSelectCb.setChecked(true);
         } else {
@@ -439,7 +349,6 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 
         if (!longClickTag) {
             InnerDoveData pigeonBean = pigeonBeans.get(position);
-
             Intent intent = new Intent(getActivity(), PigeonActivity.class);
             intent.putExtra("pigeonBean", pigeonBean);
             startActivity(intent);
@@ -450,9 +359,7 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 
     @Override
     public boolean onItemLongClickListener(View view, int position, boolean longClickTag) {
-
         this.longClickTag = false;
-
         if (!longClickTag) {
             //长按事件
             pigeonAdapter.setShowBox();
@@ -462,20 +369,16 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
             mSelectRv.setVisibility(View.VISIBLE);
             refreshLayout.setEnableRefresh(false);
             pigeonAdapter.setLongClickTag(true);
-            mRxBus.post("cancle", false);
-
+            mRxBus.post(ConstantUtils.OBSER_CANCLE, false);
             SpUtils.putBoolean(getActivity(), SpConstant.MAIN_EXIT,false);
-            SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,"pigeon");
-
+            SpUtils.putString(getActivity(),SpConstant.OTHER_EXIT,ConstantUtils.OBSER_PIGEON);
             return false;
-
         }
         return true;
     }
 
     @OnClick(R.id.mypigeon_select_delete)
     void deleteOnCli(){
-
         pigeonTemps.clear();
 
         //获取你选中的item
@@ -487,17 +390,13 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         }
 
         if (pigeonTemps.size() > 0) {
-
             dialog = new CustomDialog(getActivity(), "删除信鸽", "确定要删除所选信鸽?", "确定", "取消");
-
             dialog.setCancelable(true);
             dialog.show();
             dialog.setClickListenerInterface(new CustomDialog.ClickListenerInterface() {
                 @Override
                 public void doConfirm() {
-
                     for (int i = 0; i < pigeonTemps.size(); i++) {
-
                         if (!"".equals(pigeonTemps.get(i).getRingid()) && !"-1".equals(pigeonTemps.get(i).getRingid()) &&pigeonTemps.get(i).getRingid() != null) {
                             ApiUtils.showToast(getActivity(), "当前存在信鸽处于匹配状态，不可删除");
                             return;
@@ -505,10 +404,8 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
                     }
                     methodType = MethodType.METHOD_TYPE_DOVE_DELETE;
                     ourCodePresenter.deleteDove(getParaMap());
-
                     dialog.dismiss();
                 }
-
                 @Override
                 public void doCancel() {
                     dialog.dismiss();
@@ -521,9 +418,7 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 
     @OnClick(R.id.mypigeon_select_share)
     void shareOnCli() {
-
         pigeonTemps.clear();
-
         //获取你选中的item
         Map<Integer, Boolean> map = pigeonAdapter.getMap();
         for (int i = 0; i < map.size(); i++) {
@@ -531,9 +426,7 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
                 pigeonTemps.add(pigeonBeans.get(i));
             }
         }
-
         if (pigeonTemps.size() > 0) {
-
 //            Intent intent = new Intent(getActivity(), ShareActivity.class);
 //            intent.putExtra("shareObjId", getDeleteObjIds());
 //            startActivity(intent);
@@ -542,33 +435,19 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         }
     }
 
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mRxBus.unregister("clickRadio", clickObservable);
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         mRxBus.unregister("isLoad", isLoadObservable);
         mRxBus.unregister("tagnum", mTagNumObservable);
         mRxBus.unregister("isLoadData", dataObservable);
-        mRxBus.unregister("refrash", unbindObservable);
-
     }
 
     @Override
     public void onRefresh(RefreshLayout refreshLayout) {
-
         if (!ApiUtils.isNetworkConnected(getActivity())) {
-
-            Log.e(TAG,"------onRefresh");
             mPresenter.getDatas();
         } else {
-
             methodType = MethodType.METHOD_TYPE_DOVE_SEARCH;
             mPresenter.getDatasRefrash(getParaMap());
         }
@@ -577,6 +456,6 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mRxBus.unregister("exit",exitObservable);
+        mRxBus.unregister(ConstantUtils.OBSER_EXIT,exitObservable);
     }
 }

@@ -16,6 +16,7 @@ import com.haoxi.dove.base.MyApplication;
 import com.haoxi.dove.base.MyBaseAdapter;
 import com.haoxi.dove.newin.ourcircle.ui.AttenFriendActivity;
 import com.haoxi.dove.newin.ourcircle.ui.ReleaseCircleActivity;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.widget.CustomViewPager;
 
@@ -88,7 +89,7 @@ public abstract class MyBaseFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 viewpagerTagNum = mViewPager.getCurrentItem();
-                RxBus.getInstance().post("cancle", true);
+                RxBus.getInstance().post(ConstantUtils.OBSER_CANCLE, true);
                 RxBus.getInstance().post("tagnum", viewpagerTagNum);
             }
         });

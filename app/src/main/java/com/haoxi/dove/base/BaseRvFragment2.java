@@ -14,6 +14,7 @@ import android.view.WindowManager;
 
 import com.haoxi.dove.R;
 import com.haoxi.dove.inject.AppComponent;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.MD5Tools;
@@ -21,6 +22,7 @@ import com.haoxi.dove.utils.SpConstant;
 import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.utils.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,15 +31,11 @@ import butterknife.ButterKnife;
 public abstract class BaseRvFragment2 extends Fragment implements MvpView {
 
     protected Dialog                   mDialog;
-
     protected String                   token;
     protected String                   userObjId;
-
     protected boolean netTag = true;
     protected MyApplication mApplication;
     protected List<String> mPigeonCodes;
-
-    protected Map<String, Boolean> numMap;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -53,10 +51,7 @@ public abstract class BaseRvFragment2 extends Fragment implements MvpView {
         super.onCreate(savedInstanceState);
 
         mApplication = MyApplication.getMyBaseApplication();
-
         mPigeonCodes = mApplication.getmPigeonCodes();
-        numMap = mApplication.getNumMap();
-
         token = SpUtils.getString(getActivity(), SpConstant.USER_TOKEN);
         userObjId = SpUtils.getString(getActivity(), SpConstant.USER_OBJ_ID);
 
@@ -86,29 +81,16 @@ public abstract class BaseRvFragment2 extends Fragment implements MvpView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view  = inflater.inflate(R.layout.smart_refrash,container, false);
         ButterKnife.bind(this,view);
         return view;
     }
 
-
-
     public String getUserObjId() {
-
-        if ("".equals(userObjId)){
-            return "";
-        }
-
         return userObjId;
     }
 
     public String getToken() {
-
-        if ("".equals(token)){
-            return "";
-        }
-
         return token;
     }
 
@@ -127,9 +109,7 @@ public abstract class BaseRvFragment2 extends Fragment implements MvpView {
 
     @Override
     public void showErrorMsg(String errorMsg) {
-
         ApiUtils.showToast(getActivity(),errorMsg);
-
     }
 
     @Override
@@ -139,9 +119,7 @@ public abstract class BaseRvFragment2 extends Fragment implements MvpView {
 
     @Override
     public String getTime() {
-
         long time = StringUtils.tsToString(StringUtils.getNowTimestamp());
-
         return String.valueOf(time);
     }
 
@@ -151,13 +129,11 @@ public abstract class BaseRvFragment2 extends Fragment implements MvpView {
         if (getMethod() != null) {
             sign = MD5Tools.MD5(getMethod()+getTime()+getVersion()+ ConstantUtils.APP_SECRET);
         }
-
         return sign;
     }
 
     @Override
     public String getVersion() {
-
         String versionName = ApiUtils.getVersionName(getContext());
         if (versionName != null) {
             return "1.0";
@@ -166,7 +142,13 @@ public abstract class BaseRvFragment2 extends Fragment implements MvpView {
     }
 
     @Override
-    public void toDo() {
-
+    public void toDo() {}
+    protected Map<String,String> getParaMap(){
+        Map<String,String> map = new HashMap<>();
+        map.put(MethodParams.PARAMS_METHOD,getMethod());
+        map.put(MethodParams.PARAMS_SIGEN,getSign());
+        map.put(MethodParams.PARAMS_TIME,getTime());
+        map.put(MethodParams.PARAMS_VERSION,getVersion());
+        return map;
     }
 }

@@ -16,7 +16,6 @@ import butterknife.ButterKnife;
 
 public class MyCircleHolder extends BasicRvHolder {
 
-
     @BindView(R.id.item_rv_mycircle_id) public TextView mCircleId;
     @BindView(R.id.item_rv_mycircle_activate) public TextView mActivite;
     @BindView(R.id.item_rv_mycircle_mate) public TextView mMate;
@@ -26,7 +25,6 @@ public class MyCircleHolder extends BasicRvHolder {
 
     public MyCircleHolder(Context mContext, View itemView, MyItemClickListener myItemClickListener, MyItemLongClickListener myItemLongClickListener) {
         super(mContext, itemView, myItemClickListener, myItemLongClickListener);
-
         ButterKnife.bind(this, itemView);
         mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

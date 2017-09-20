@@ -21,6 +21,7 @@ import com.haoxi.dove.modules.mvp.presenters.MyPigeonPresenter;
 import com.haoxi.dove.modules.mvp.views.IGetPigeonView;
 import com.haoxi.dove.newin.bean.InnerDoveData;
 import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.ui.RouteTitleActivity;
 import com.haoxi.dove.utils.ApiUtils;
@@ -99,15 +100,11 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
             mPresenter.getDataFromNets(getParaMap());
         }
     }
-
-    public Map<String,String> getParaMap(){
-        Map<String,String> map = new HashMap<>();
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("userid",getUserObjId());
-        map.put("token",getToken());
+    @Override
+    protected Map<String, String> getParaMap() {
+        Map<String,String> map = super.getParaMap();
+        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
+        map.put(MethodParams.PARAMS_TOKEN,getToken());
         switch (methodType){
             case MethodType.METHOD_TYPE_DOVE_SEARCH:
                 map.put("playerid",getUserObjId());
@@ -120,7 +117,6 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
     public void toSetHolder(MyRouteHolder holder, InnerDoveData data, int position) {
         holder.mTitleTv.setText("信鸽： "+data.getFoot_ring());
     }
-
     @Override
     public void onItemClick(View view, int position) {
         InnerDoveData doveData = doveDatas.get(position);
@@ -128,7 +124,6 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
         intent.putExtra("dove",doveData);
         startActivity(intent);
     }
-
     @Override
     public String getMethod() {
         String method = "";
@@ -139,7 +134,6 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
         }
         return method;
     }
-
     @Override
     public void setPigeonData(List<InnerDoveData> pigeonData) {
         refreshLayout.finishRefresh(false);
@@ -156,12 +150,10 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
             mShowAddTv.setText("暂时还没有行程记录");
         }
     }
-
     @Override
     public void setRefrash(boolean isRefrash) {
         refreshLayout.finishRefresh(isRefrash);
     }
-
     @Override
     protected void inject() {
         DaggerRouteDFComponent.builder()
@@ -173,12 +165,10 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
     public String getUserObjId() {
         return userObjId;
     }
-
     @Override
     public String getToken() {
         return token;
     }
-
     @Override
     public void onRefresh(RefreshLayout refreshLayout) {
         if (!ApiUtils.isNetworkConnected(getActivity())) {

@@ -32,6 +32,7 @@ import com.haoxi.dove.newin.trail.ui.IGetOurRouteView;
 import com.haoxi.dove.newin.trail.ui.RouteDetail2Activity;
 import com.haoxi.dove.newin.trail.ui.RouteDetailActivity;
 import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.RxBus;
@@ -236,24 +237,18 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
             titlePresenter.getRouteFormNets(getParaMap());
         }
     }
-
-    public Map<String,String> getParaMap(){
-        Map<String,String> map = new HashMap<>();
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("userid",getUserObjId());
-        map.put("token",getToken());
-
+    @Override
+    protected Map<String, String> getParaMap() {
+        Map<String,String> map = super.getParaMap();
+        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
+        map.put(MethodParams.PARAMS_TOKEN,getToken());
         switch (methodType){
             case MethodType.METHOD_TYPE_SEARCH_BY_PLAYERID:
-                map.put("playerid",getUserObjId());
+                map.put(MethodParams.PARAMS_PLAYER_ID,getUserObjId());
                 break;
             case MethodType.METHOD_TYPE_FLY_DELETE:
-                map.put("fly_recordid",flyRecordId);
+                map.put(MethodParams.PARAMS_FLY_RECORDID,flyRecordId);
         }
-        Log.e("fafsewdfvd",map.toString());
         return map;
     }
 
@@ -279,9 +274,7 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
         StringBuilder sb = new StringBuilder();
         if (routeBeanTemps != null) {
             for (int i = 0; i < routeBeanTemps.size(); i++) {
-
                 if ((i == routeBeanTemps.size() - 1)) {
-
                     sb.append(routeBeanTemps.get(i).getFly_recordid());
                 } else {
                     sb.append(routeBeanTemps.get(i).getFly_recordid()).append(",");
@@ -349,7 +342,6 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
                 routeBeanTemps.add(routeBeanList.get(i));
             }
         }
-
         if (routeBeanTemps.size() > 0) {
             dialog = new CustomDialog(getActivity(), "删除信鸽", "确定要删除所选飞行记录?", "确定", "取消");
             dialog.setCancelable(true);
@@ -397,13 +389,9 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
         int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
         ViewGroup.LayoutParams params = layout.getLayoutParams();
         params.width = (width * 62) / 72;
-        params.height = (int) ((width * 52) / 72);
-
+        params.height = (width * 52) / 72;
         layout.setLayoutParams(params);
-
         ImageView mDismissIv = (ImageView) view.findViewById(R.id.show_marker_dismiss);
-
-
         if (innerRouteBean.getDoveid() != null) {
             mDoveNameTv.setText(innerRouteBean.getDoveid());
         }

@@ -40,7 +40,8 @@ public class EachCirclePresenter extends BasePresenter<IEachView,EachCircleBean>
         attachView(mView);
         earchModel = new EarchCircleModel();
     }
-
+    @Override
+    public void beforeRequest(){}
     @Override
     public void requestSuccess(EachCircleBean circleBean) {
         super.requestSuccess(circleBean);

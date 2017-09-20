@@ -12,15 +12,11 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by alisa on 2016/9/9.
- */
 public class MyBaseAdapter extends FragmentPagerAdapter {
 
     private final ViewPager mViewPager;
     private final Context context;
     private final TabLayout mTabLayout;
-
 
     ArrayList<Class<?>> fragments=new ArrayList<Class<?>>();
     List<String> mFragmentTitleList = new ArrayList<>();
@@ -36,9 +32,6 @@ public class MyBaseAdapter extends FragmentPagerAdapter {
     }
 
     public void addFragment(Class<?> fragment, String title, Bundle bundle){
-
-        Log.e("fragments",fragments.size()+"---");
-
         fragments.add(fragment);
         mFragmentTitleList.add(title);
         bundles.add(bundle);
@@ -53,18 +46,15 @@ public class MyBaseAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position)
-    {
+    public Fragment getItem(int position) {
         Class<?> clazz=fragments.get(position);
         return Fragment.instantiate(context,clazz.getName(), bundles.get(position));
     }
 
     @Override
     public int getCount() {
-
         return fragments.size()==0?0:fragments.size();
     }
-
 
     @Override
     public CharSequence getPageTitle(int position) {

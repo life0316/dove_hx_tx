@@ -1,6 +1,5 @@
 package com.haoxi.dove.modules.pigeon;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -33,10 +32,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-/**
- * Created by lifei on 2017/1/12.
- */
-
 @ActivityFragmentInject(contentViewId = R.layout.activity_addpigeon)
 public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
 
@@ -48,100 +43,70 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
     @BindView(R.id.act_addpigeon_blood) TextView  mBloodTv;
     @BindView(R.id.custom_toolbar_iv) ImageView mBackIv;
     @BindView(R.id.custom_toolbar_tv) TextView  mTitleTv;
-
     @Inject
     OurCodePresenter ourCodePresenter;
-
     @Inject
     AddPigeonPresenter presenter;
-
     @Inject
     DaoSession daoSession;
-
     @Inject
     RxBus mRxBus;
-
 
     private List<String> mPigeonCodes;
 
     private int userAgeYear;
     private int userAgeMonth;
     private int userAgeDay;
-
     private boolean isAdd = false;
     private boolean isContained = false;
-
     @Override
     protected void initInject() {
-
         DaggerAddPigeonComponent.builder().appComponent(getAppComponent())
                 .addPigeonMoudle(new AddPigeonMoudle(this,this))
                 .build()
                 .inject(this);
-
     }
 
     @Override
     protected void init() {
-
         mBackIv.setVisibility(View.VISIBLE);
         mTitleTv.setText("添加信鸽");
-
         mPigeonCodes = MyApplication.getMyBaseApplication().getmPigeonCodes();
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         SpUtils.putInt(this,"yearSp", 0);
         SpUtils.putInt(this,"monthSp", 0);
         SpUtils.putInt(this,"daySp", 0);
-
     }
 
     @OnClick(R.id.custom_toolbar_iv)
     void backOnli() {
-
-        if (!isAdd) {
-            mRxBus.post("isLoad",false);
-        }
-
         finish();
     }
 
     @OnClick(R.id.act_addpigeon_confirm)
     void onAddPigeonOnli() {
-
         if (ApiUtils.isFastDoubleClick()) {
             return;
         }
-
         if (numMap.get("pigeon_num") != null &&(Boolean)numMap.get("pigeon_num")){
-
             ApiUtils.showToast(this,"最多只能添加 15 只信鸽");
-
             return;
         }
-
         if (isVelidated()) {
-
-//            codePresenter.toAddPigeon(object);
-
             ourCodePresenter.addDove(getParaMap());
         }
     }
 
     public Map<String,String> getParaMap(){
-
         Map<String,String> map = new HashMap<>();
-
         map.put("method",getMethod());
         map.put("sign",getSign());
         map.put("time",getTime());
         map.put("version",getVersion());
-
         map.put("userid",getUserObjIds());
         map.put("token",getToken());
         map.put("playerid",getUserObjIds());
@@ -151,47 +116,38 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
         map.put("color",getPigeonColor());
         map.put("eye",getPigeonEyes());
         map.put("ancestry",getPigeonBlood());
-
         return map;
     }
 
     @OnClick(R.id.act_addpigeon_sex)
-    void setSexOncli(View v) {
+    void setSexOncli() {
         presenter.setUserSex(this);
     }
-
     @OnClick(R.id.act_addpigeon_old)
-    void setOldOncli(View v) {
+    void setOldOncli() {
         presenter.showAgeDialog(this);
     }
-
     @OnClick(R.id.act_addpigeon_color)
-    void setColorOncli(View v) {
+    void setColorOncli() {
         presenter.showEvDialog(this, "color", mColorTv);
     }
-
     @OnClick(R.id.act_addpigeon_blood)
-    void setBloodOncli(View v) {
+    void setBloodOncli() {
         presenter.showEvDialog(this, "blood", mBloodTv);
     }
-
     @OnClick(R.id.act_addpigeon_eyes)
-    void setEyesOncli(View v) {
+    void setEyesOncli() {
         presenter.showEyesDialog(this);
     }
-
     private boolean isVelidated() {
-
         if ("".equals(getRingCode())) {
             ApiUtils.showToast(this, getString(R.string.add_ringcode_null));
             return false;
         }
-
         if (mPigeonCodes.contains(getRingCode())) {
             ApiUtils.showToast(this, getString(R.string.add_pigeon_code_exist));
             return false;
         }
-
         if ("".equals(getPigeonSex())) {
             ApiUtils.showToast(this, getString(R.string.add_pigeon_sex_null));
             return false;
@@ -203,12 +159,10 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
             ApiUtils.showToast(this, getString(R.string.add_pigeon_color_check));
             return false;
         }
-
         if ("".equals(getPigeonOld())) {
             ApiUtils.showToast(this, getString(R.string.add_pigeon_old_null));
             return false;
         }
-
         if ("".equals(getPigeonBlood())) {
             ApiUtils.showToast(this, getString(R.string.add_pigeon_blood_null));
             return false;
@@ -216,8 +170,6 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
             ApiUtils.showToast(this, getString(R.string.add_pigeon_blood_check));
             return false;
         }
-
-
         return true;
     }
 
@@ -228,27 +180,20 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
         }
         return "";
     }
-
     public String getToken() {
         if (mToken != null) {
             return mToken;
         }
         return "";
     }
-
     @Override
     public String getRingCode() {
-
-        String ringCode = mRingCodeEt.getText().toString().trim();
-
-        return ringCode;
+        return mRingCodeEt.getText().toString().trim();
     }
 
     @Override
     public String getPigeonSex() {
-
         String pigeonSex = mSexTv.getText().toString().trim();
-
         switch (pigeonSex) {
             case "公":
                 pigeonSex = "1";
@@ -262,56 +207,31 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
 
     @Override
     public String getPigeonOld() {
-
-        //Log.e("pigeonOld",userAgeYear+"--------pigeonOld-----"+userAgeMonth+"-----"+userAgeDay);
-
         if (userAgeYear == 0 || userAgeMonth == 0 || userAgeDay == 0) {
             return "";
         }
         String tempYear = String.valueOf(userAgeYear);
         String tempMonth = String.valueOf(userAgeMonth);
         String tempDay = String.valueOf(userAgeDay);
-
-
-        if (userAgeMonth < 10) {
-            tempMonth = "0" + tempMonth;
-        }
-
-        if (userAgeDay < 10) {
-            tempDay = "0" + tempDay;
-        }
-
+        if (userAgeMonth < 10) tempMonth = "0" + tempMonth;
+        if (userAgeDay < 10) tempDay = "0" + tempDay;
         String pigeonOld = tempYear + "-" + tempMonth + "-" + tempDay + " 00:00:00";
-
-
-        Log.e("pigeonOld",pigeonOld+"--------pigeonOld");
-
-
         return pigeonOld;
     }
 
     @Override
     public String getPigeonColor() {
-
-        String pigeonColor = mColorTv.getText().toString().trim();
-
-        return pigeonColor;
+        return mColorTv.getText().toString().trim();
     }
 
     @Override
     public String getPigeonEyes() {
-
-        String pigeonEyes = mEyesTv.getText().toString().trim();
-
-        return pigeonEyes;
+        return mEyesTv.getText().toString().trim();
     }
 
     @Override
     public String getPigeonBlood() {
-
-        String pogeonBlood = mBloodTv.getText().toString().trim();
-
-        return pogeonBlood;
+        return mBloodTv.getText().toString().trim();
     }
 
     @Override
@@ -323,30 +243,23 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
 
     @Override
     public void setPigeonOld(int year, int month, int day) {
-
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
-
-
         if (year == -1 || month == -1 || day == -1) {
             ApiUtils.showToast(this, "已超过当前日期,请重新选择");
             return;
         }
-
         if (currentYear == year && currentMonth < month) {
             ApiUtils.showToast(this, "已超过当前日期,请重新选择");
             return;
         }
-
         this.userAgeYear = year;
         this.userAgeMonth = month;
         this.userAgeDay = day;
-
         SpUtils.putInt(this,"yearSp", year);
         SpUtils.putInt(this,"monthSp", month);
         SpUtils.putInt(this,"daySp", day);
-
         if (currentYear == year) {
             if (currentMonth == month) {
                 mOldTv.setText("1个月");
@@ -357,7 +270,6 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
         } else {
             int dxYear = ((currentYear - year) * 12 - (month - currentMonth)) / 12;
             int dxAge = ((currentYear - year) * 12 - (month - currentMonth)) % 12;
-
             if (dxYear == 0) {
                 mOldTv.setText(dxAge + "个月");
             } else {
@@ -386,25 +298,15 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
 
     @Override
     public void setPigeonBlood(String pigeonBlood) {
-
         if (pigeonBlood != null) {
             mBloodTv.setText(pigeonBlood);
         }
     }
 
     @Override
-    public void onBackPressed() {
-        if (!isAdd) {
-            mRxBus.post("isLoad",false);
-        }
-        super.onBackPressed();
-    }
-
-    @Override
     public void toDo() {
-
         isAdd = true;
-
+        mRxBus.post("isLoad",true);
         this.finish();
     }
 

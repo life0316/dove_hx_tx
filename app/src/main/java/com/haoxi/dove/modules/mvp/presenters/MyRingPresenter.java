@@ -1,7 +1,5 @@
 package com.haoxi.dove.modules.mvp.presenters;
 
-import android.util.Log;
-
 import com.haoxi.dove.base.BasePresenter;
 import com.haoxi.dove.base.MyApplication;
 import com.haoxi.dove.modules.mvp.models.IGetModel;
@@ -17,27 +15,17 @@ import java.util.Map;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-/**
- * Created by lifei on 2017/3/30.
- */
-
 public class MyRingPresenter extends BasePresenter<IGetRingView,OurRingBean> implements IGetPresenter {
-
     private static String TAG = "MyRingPresenter";
-
     private IGetModel ringModel;
-
     private boolean isRefrash;
-
     private String type = "nets";
-
     public MyRingPresenter(IGetRingView mView) {
         attachView(mView);
         ringModel = new RingModel();
     }
 
     public void getDatas() {
-
         getDatasFromDao(getMvpView().getUserObjId());
     }
 
@@ -51,18 +39,11 @@ public class MyRingPresenter extends BasePresenter<IGetRingView,OurRingBean> imp
     @Override
     public void requestSuccess(OurRingBean ringData) {
         super.requestSuccess(ringData);
-
-        Log.e(TAG,type+"------type");
-        Log.e(TAG,ringData.getMsg()+"------msg");
-        Log.e(TAG,ringData.getData().size()+"------data");
-
         if (isRefrash) {
             getMvpView().setRefrash(false);
-            isRefrash = false;
-//            getMvpView().showErrorMsg("刷新成功");
+            isRefrash = true;
         }
         getMvpView().setRingData(ringData.getData());
-
     }
 
     @Override
@@ -70,15 +51,13 @@ public class MyRingPresenter extends BasePresenter<IGetRingView,OurRingBean> imp
         super.requestComplete();
         if (isRefrash) {
             getMvpView().setRefrash(false);
-            isRefrash = false;
-//            getMvpView().showErrorMsg("刷新成功");
+            isRefrash = true;
         }
     }
 
     @Override
     public void requestError(String msg) {
        super.requestError(msg);
-
         switch (msg){
             case "600":
                 getMvpView().setRingData(null);
@@ -89,13 +68,12 @@ public class MyRingPresenter extends BasePresenter<IGetRingView,OurRingBean> imp
         }
 
         if (isRefrash) {
-            isRefrash = false;
+            isRefrash = true;
         }
     }
 
 
     public void deleteDatasFromData(String userObjId){
-
         MyApplication.getDaoSession().getInnerRingDao()
                 .queryBuilder().where(InnerRingDao.Properties.Playerid.eq(userObjId))
                 .rx().list()
@@ -113,9 +91,7 @@ public class MyRingPresenter extends BasePresenter<IGetRingView,OurRingBean> imp
     }
 
     private void getDatasFromDao(String userObjId) {
-
         type = "dao";
-
         MyApplication.getDaoSession().getInnerRingDao()
                 .queryBuilder().where(InnerRingDao.Properties.Playerid.eq(userObjId))
                 .rx().list()
@@ -123,7 +99,6 @@ public class MyRingPresenter extends BasePresenter<IGetRingView,OurRingBean> imp
                 .subscribe(new Action1<List<InnerRing>>() {
                     @Override
                     public void call(List<InnerRing> innerRings) {
-
                         OurRingBean ourRingBean = new OurRingBean();
                         ourRingBean.setMsg("从数据库中获取");
                         ourRingBean.setData(innerRings);
@@ -137,6 +112,7 @@ public class MyRingPresenter extends BasePresenter<IGetRingView,OurRingBean> imp
     public void getDataFromNets(Map<String, String> map) {
         type = "nets";
 
+        isRefrash = true;
         ringModel.getDatasFromNets(map,this);
     }
 }

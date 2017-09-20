@@ -8,12 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by Administrator on 2017\6\28 0028.
- */
-
 public class InnerRbsConverter implements PropertyConverter<List<PointBean>, String> {
-
     @Override
     public ArrayList<PointBean> convertToEntityProperty(String databaseValue) {
         if (databaseValue == null) {

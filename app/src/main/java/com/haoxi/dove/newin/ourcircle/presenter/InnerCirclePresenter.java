@@ -22,37 +22,23 @@ import java.util.Map;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-/**
- * Created by lifei on 2017/1/17.
- */
-
 public class InnerCirclePresenter extends BasePresenter<IMyCircleView,CircleBean> implements ICirclePresenter {
 
     private static final String TAG = "MyDynamicPresenter";
-
     private ICirlcModel circleModel;
-
     private boolean isRefresh = true;
-
     private String type = "nets";
-
     public InnerCirclePresenter(IMyCircleView mView) {
-
         attachView(mView);
         circleModel = new OurCircleModel();
     }
 
     @Override
+    public void beforeRequest(){}
+    @Override
     public void requestSuccess(CircleBean circleBean) {
         super.requestSuccess(circleBean);
-        Log.e(TAG,(circleBean.getData() != null)+"------null");
-        Log.e(TAG,type+"------type");
         if (circleBean.getData() != null) {
-            Log.e(TAG,circleBean.getData().size()+"------size");
-            for (int i = 0; i < circleBean.getData().size(); i++) {
-                Log.e(TAG,circleBean.getData().get(i).getPlayerid()+"------playerid");
-                Log.e(TAG,circleBean.getData().get(i).getUserid()+"-------------userid");
-            }
             getMvpView().updateCircleList(circleBean,"",isRefresh ? DataLoadType.TYPE_REFRESH_SUCCESS:DataLoadType.TYPE_LOAD_MORE_SUCCESS);
         }
     }
@@ -62,25 +48,17 @@ public class InnerCirclePresenter extends BasePresenter<IMyCircleView,CircleBean
         super.requestError(msg);
         getMvpView().setRefrash(false);
     }
-
     @Override
     public void refreshFromNets(Map<String,String> map,int tag) {
-
         isRefresh = true;
-
         getDatasFromNets(map,tag);
-
     }
 
     @Override
     public void loadMoreData(Map<String,String> map,int tag) {
-
         isRefresh = false;
-
         getDatasFromNets(map,tag);
     }
-
-
 
     @Override
     public void getDatasFromNets(Map<String,String> map,int tag) {
@@ -88,7 +66,6 @@ public class InnerCirclePresenter extends BasePresenter<IMyCircleView,CircleBean
         switch (tag){
             case 0:
                 circleModel.getAllCircleDatas(map,this);
-
                 break;
             case 1:
                 circleModel.getRouteDatasFromNet(map,this);
@@ -101,9 +78,7 @@ public class InnerCirclePresenter extends BasePresenter<IMyCircleView,CircleBean
 
     @Override
     public void getDatasFromDao(String playerId,String userId,boolean isFriend,int tag) {
-
         isRefresh = true;
-
         type = "dao-----"+tag;
         switch (tag){
             case 0:
@@ -176,25 +151,18 @@ public class InnerCirclePresenter extends BasePresenter<IMyCircleView,CircleBean
                     public void call(List<InnerCircleBean> innerCircleBeans) {
                         CircleBean circleBean = new CircleBean();
                         circleBean.setMsg("从数据库中获取");
-
                         Collections.sort(innerCircleBeans, new CircleComparator());
-
                         circleBean.setData(innerCircleBeans);
-
                         for (int i = 0; i < innerCircleBeans.size(); i++) {
                             Log.e("youwu",innerCircleBeans.get(i).getPlayerid()+"---all---"+innerCircleBeans.get(i).getIs_friend());
                         }
-
-
                         requestSuccess(circleBean);
                     }
                 });
     }
 
     public void updateCircle(InnerCircleBean innerCircleBean){
-
         MyApplication.getDaoSession().getInnerCircleBeanDao().updateInTx(innerCircleBean);
-
     }
 
     public void updateCircleBy(String playerId, String userId, final boolean isAttention){

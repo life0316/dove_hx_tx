@@ -37,19 +37,13 @@ public class MyApplication extends Application {
     private static final String TAG = "MyApplication";
 
     private static MyApplication myApplication;
-
     private static DaoSession daoSession;
-
     private RxBus mRxBus;
-
     AppComponent mAppComponent;
-
     //已添加的信鸽足环编号
     private List<String> mPigeonCodes;
-
     //开始飞行的鸽子
     private Set<String> mFlyingPigeonSets;
-
     private Map<String,ArrayList<String>> uniqueLists;
 
     private Map<String,ArrayList<PolylineOptions>> pOptionsMap = new HashMap<>();
@@ -59,12 +53,9 @@ public class MyApplication extends Application {
     private Map<String,Boolean> numMap = new HashMap<>();
 
     private List<RealFlyBean> currentFlyBeans = new ArrayList<>();
-
     private List<String> mateList = new ArrayList<>();
 
-
     public List<RealFlyBean> getCurrentFlyBeans() {
-
         return currentFlyBeans;
     }
 
@@ -77,49 +68,35 @@ public class MyApplication extends Application {
     }
 
     public Map<String,ArrayList<PolylineOptions>> getpOptionsMap(){
-
         if (pOptionsMap == null) {
             pOptionsMap = new HashMap<>();
         }
-
         return pOptionsMap;
-
     }
     public Map<String,Boolean> getNumMap(){
-
         if (numMap == null) {
             numMap = new HashMap<>();
         }
-
         return numMap;
-
     }
     public List<String> getMateList(){
-
         if (mateList == null) {
             mateList = new ArrayList<>();
         }
-
         return mateList;
-
     }
 
     public Map<String,ArrayList<Polyline>> getPolylineMap(){
-
         if (polylineMap == null) {
             polylineMap = new HashMap<>();
         }
-
         return polylineMap;
-
     }
 
     public static MyApplication getMyBaseApplication() {
-
         if (myApplication == null) {
             myApplication = new MyApplication();
         }
-
         return myApplication;
     }
 
@@ -137,57 +114,23 @@ public class MyApplication extends Application {
         // 182681387751
 
         myApplication = this;
-
         LogToFile.init(this);
-
         setupDatabase();
-        initCloudChannel(this);
-
         mRxBus = RxBus.getInstance();
-
         RetrofitManager.initRetrofit();
         initInjector();
     }
 
-    /**
-     * 初始化云推送通道
-     * @param applicationContext
-     */
-    private void initCloudChannel(Context applicationContext) {
-//        PushServiceFactory.init(applicationContext);
-//        CloudPushService pushService = PushServiceFactory.getCloudPushService();
-//        pushService.register(applicationContext, new CommonCallback() {
-//            @Override
-//            public void onSuccess(String response) {
-//                Log.d(TAG, "init cloudchannel success");
-//            }
-//            @Override
-//            public void onFailed(String errorCode, String errorMessage) {
-//                Log.d(TAG, "init cloudchannel failed -- errorcode:" + errorCode + " -- errorMessage:" + errorMessage);
-//            }
-//        });
-    }
-
-    /**
-     * 初始化注射器
-     */
     private void initInjector() {
-
         mAppComponent = DaggerAppComponent.builder()
                 .appMoudle(new AppMoudle(myApplication,daoSession,mRxBus)).build();
-
     }
 
     private void setupDatabase() {
-
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,"pigeonfly.db",null);
-
         SQLiteDatabase database = helper.getWritableDatabase();
-
         DaoMaster daoMaster = new DaoMaster(database);
-
         daoSession = daoMaster.newSession();
-
     }
 
     public static DaoSession getDaoSession() {
@@ -199,29 +142,23 @@ public class MyApplication extends Application {
     }
 
     public List<String> getmPigeonCodes() {
-
         if (mPigeonCodes == null){
             mPigeonCodes = new ArrayList<>();
         }
-
         return mPigeonCodes;
     }
 
     public Set<String> getmFlyingPigeonSets() {
-
         if (mFlyingPigeonSets == null){
             mFlyingPigeonSets = new HashSet<>();
         }
-
         return mFlyingPigeonSets;
     }
 
     public Map<String, ArrayList<String>> getUniqueLists() {
-
         if (uniqueLists == null) {
             uniqueLists = new HashMap<>();
         }
-
         return uniqueLists;
     }
 

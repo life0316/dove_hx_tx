@@ -116,7 +116,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     }
 
     private boolean isValid() {
-
         if ("".equals(getUserPhone())){
             ApiUtils.showToast(this,getString(R.string.user_phone));
             return false;
@@ -128,12 +127,10 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
             ApiUtils.showToast(this,getString(R.string.user_name));
             return false;
         }
-
         if ("".equals(getVerCode())){
             ApiUtils.showToast(this,"请输入短信验证码");
             return false;
         }
-
         if ("".equals(getUserPwd())){
             ApiUtils.showToast(this,getString(R.string.user_pwd));
             return false;
@@ -141,7 +138,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
             ApiUtils.showToast(this, getString(R.string.user_pwd_size));
             return false;
         }
-
         if ("".equals(getUserRepwd())){
             ApiUtils.showToast(this,getString(R.string.user_pwd_re));
             return false;
@@ -149,12 +145,10 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
             ApiUtils.showToast(this, getString(R.string.user_pwd_repwd));
             return false;
         }
-
         if ("".equals(getUserSex())){
             ApiUtils.showToast(this,getString(R.string.user_sex_select));
             return false;
         }
-
         return true;
     }
 
@@ -162,18 +156,14 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     void backOnlic(){
         finish();
     }
-
     @OnClick(R.id.act_regist_rl_data)
     void setUserAgeOnlic(){
         presenter.setUserAge(this,mUserBirthTv);
     }
-
     @OnClick(R.id.act_regist_rl_sex)
     void setUserSexOnlic(){
         presenter.setUserSex(this,mSexTv);
     }
-   
-
     public String isEmptyStr(String checkStr,String showMsg){
         if ("".equals(checkStr)||checkStr == null||checkStr.isEmpty()){
             ApiUtils.showToast(this,showMsg);
@@ -183,11 +173,8 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     }
     @Override
     public String getUserPhone() {
-
         String mUserPhone = mUserPhoneEt.getText().toString().trim();
-
         mUserPhone = isEmptyStr(mUserPhone,getResources().getString(R.string.user_phone));
-
         if (!StringUtils.isPhoneNumberValid(mUserPhone)){
             ApiUtils.showToast(this,getResources().getString(R.string.user_phone_valid));
             return "";
@@ -198,29 +185,23 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     @Override
     public String getUserEmail() {
         String mUserMail = mUserNameEt.getText().toString().trim();
-
         mUserMail = isEmptyStr(mUserMail,getResources().getString(R.string.user_name));
         return mUserMail;
     }
 
     @Override
     public String getUserPwd() {
-
         String mUserPwd = mPwdEt.getText().toString().trim();
-
         mUserPwd = isEmptyStr(mUserPwd,getResources().getString(R.string.user_pwd));
-
         return mUserPwd;
     }
 
     public String getUserId() {
         return SpUtils.getString(this, SpConstant.USER_OBJ_ID);
     }
-
     public String getToken() {
         return SpUtils.getString(this, SpConstant.USER_TOKEN);
     }
-
     @Override
     public void toGetDetail(OurUser user) {
 
@@ -235,7 +216,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     public String getUserRepwd() {
         return mRepwdEt.getText().toString().trim() ;
     }
-
     @Override
     public String getUserSex() {
         String mUserSex = mSexTv.getText().toString().trim();
@@ -278,7 +258,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     public void setUserSex(String userSex) {
         mSexTv.setText(userSex);
     }
-
 
     @Override
     public void toMainActivity(OurUser user) {
@@ -336,7 +315,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
                 method = MethodConstant.USER_INFO_DETAIL;
                 break;
         }
-
         return method;
     }
 
@@ -392,7 +370,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
                                 mSendCodeBtn.setClickable(false);
                             }
                         });
-
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
@@ -404,7 +381,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
 
                 i = 60;
                 tag = true;
-                if (RegistActivity.this != null){
                     RegistActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -412,24 +388,17 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
                             mSendCodeBtn.setClickable(true);
                         }
                     });
-                }
             }
         };
         mThread.start();
     }
-
-    /**
-     * 说明：获取验证码
-     */
     private boolean getValidateCode() {
-
         if (getUserPhone().equals("")){
             ApiUtils.showToast(this, "请输入手机号!");
             return false;
         }else {
             mUserPhone = getUserPhone();
             methodType = MethodType.METHOD_TYPE_REQUEST_VER_CODE;
-
             ourCodePresenter.getRequestCode(getParaMap());
         }
         return true;

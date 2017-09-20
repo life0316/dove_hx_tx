@@ -25,6 +25,7 @@ import com.haoxi.dove.modules.loginregist.presenter.UserInfoPresenter;
 import com.haoxi.dove.modules.loginregist.ui.IGetInfo;
 import com.haoxi.dove.newin.bean.OurUserInfo;
 import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.utils.SpConstant;
 import com.haoxi.dove.utils.SpUtils;
 
@@ -39,9 +40,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class HomeFragment extends BaseFragment implements IGetInfo {
 
     private OurUserInfo userInfo;
-//    private String userPhone;
-//    private String headPic;
-
     @BindView(R.id.fragment_home_civ_icon)
     CircleImageView mHomeCiv;
 
@@ -123,23 +121,25 @@ public class HomeFragment extends BaseFragment implements IGetInfo {
         mUserCodeTv.setText(mUserCode);
 
         if (mUserPVR.startsWith("http")) {
-//            Glide.with(getContext())
-//                    .load(mUserPVR)
-//                    .asBitmap()
-//                    .error(R.mipmap.btn_img_photo_default)
-//                    .into(new SimpleTarget<Bitmap>() {
-//                        @Override
-//                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//                            mHomeCiv.setImageBitmap(resource);
-//                        }
-//                    });
 
+            Log.e("hfaw",mUserPVR+"---mUserPVR");
             Glide.with(getContext())
                     .load(mUserPVR)
-                    .dontAnimate()
-                    .placeholder(R.mipmap.btn_img_photo_default)
+                    .asBitmap()
                     .error(R.mipmap.btn_img_photo_default)
-                    .into(mHomeCiv);
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            mHomeCiv.setImageBitmap(resource);
+                        }
+                    });
+
+//            Glide.with(getContext())
+//                    .load(mUserPVR)
+//                    .dontAnimate()
+//                    .placeholder(R.mipmap.btn_img_photo_default)
+//                    .error(R.mipmap.btn_img_photo_default)
+//                    .into(mHomeCiv);
 
         }else {
             if (!mUserPVR.equals("")) {
@@ -180,15 +180,12 @@ public class HomeFragment extends BaseFragment implements IGetInfo {
     public String getMethod() {
         return MethodConstant.USER_INFO_DETAIL;
     }
-    public Map<String,String> getParaMap(){
 
-        Map<String,String> map = new HashMap<>();
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("token",getToken());
-        map.put("userid",getUserObjId());
+    @Override
+    protected Map<String, String> getParaMap() {
+        Map<String,String> map = super.getParaMap();
+        map.put(MethodParams.PARAMS_TOKEN,getToken());
+        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
         return map;
     }
 }

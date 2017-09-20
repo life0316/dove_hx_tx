@@ -18,18 +18,11 @@ public class UserProtocolActivity extends BaseActivity {
 
     @BindView(R.id.custom_toolbar_iv)
     ImageView mBackIv;
-
     @BindView(R.id.custom_toolbar_tv)
     TextView mTitleTv;
 
     @Override
-    protected void initInject() {
-
-    }
-
-    @Override
     protected void init() {
-
         mTitleTv.setText("用户协议");
         mBackIv.setVisibility(View.VISIBLE);
         mBackIv.setOnClickListener(new View.OnClickListener() {
@@ -38,11 +31,6 @@ public class UserProtocolActivity extends BaseActivity {
                 finish();
             }
         });
-    }
-
-    @Override
-    public void toDo() {
-
     }
 
     @Override

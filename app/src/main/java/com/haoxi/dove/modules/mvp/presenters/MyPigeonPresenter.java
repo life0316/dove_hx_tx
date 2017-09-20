@@ -1,6 +1,5 @@
 package com.haoxi.dove.modules.mvp.presenters;
 
-import android.content.SharedPreferences;
 
 import com.haoxi.dove.base.BasePresenter;
 import com.haoxi.dove.base.MyApplication;
@@ -17,38 +16,23 @@ import java.util.Map;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-/**
- * Created by lifei on 2017/3/30.
- */
-
 public class MyPigeonPresenter extends BasePresenter<IGetPigeonView,OurDoveBean> implements IGetPresenter {
 
     private static final String TAG = "MyPigeonPresenter";
-
     private IGetModel pigeonModel;
-
     private boolean isRefrash;
-
-    private SharedPreferences preferences;
-
     private String type = "nets";
-
     public MyPigeonPresenter(IGetPigeonView mView) {
         attachView(mView);
-
         pigeonModel = new PigeonModel();
-
     }
 
     public void getDatas() {
-
         getDatasFromDao(getMvpView().getUserObjId());
     }
 
     private void getDatasFromDao(String userObjId) {
-
         type = "dao";
-
         MyApplication.getDaoSession().getInnerDoveDataDao()
                 .queryBuilder().where(InnerDoveDataDao.Properties.Playerid.eq(userObjId))
                 .rx().list()
@@ -56,18 +40,15 @@ public class MyPigeonPresenter extends BasePresenter<IGetPigeonView,OurDoveBean>
                 .subscribe(new Action1<List<InnerDoveData>>() {
                     @Override
                     public void call(List<InnerDoveData> innerDoveData) {
-
                         OurDoveBean ourDoveBean = new OurDoveBean();
                         ourDoveBean.setMsg("从数据库中获取");
                         ourDoveBean.setData(innerDoveData);
-
                         requestSuccess(ourDoveBean);
                     }
                 });
     }
 
     public void deleteDatasFromData(String userObjId){
-
         MyApplication.getDaoSession().getInnerDoveDataDao()
                 .queryBuilder().where(InnerDoveDataDao.Properties.Playerid.eq(userObjId))
                 .rx().list()
@@ -93,11 +74,8 @@ public class MyPigeonPresenter extends BasePresenter<IGetPigeonView,OurDoveBean>
         if (isRefrash) {
             getMvpView().setRefrash(false);
             isRefrash = false;
-//            getMvpView().showErrorMsg("刷新成功");
         }
-
         getMvpView().setPigeonData(data.getData());
-
     }
 
     public void getDatasRefrash(Map<String,String> map) {
@@ -113,14 +91,12 @@ public class MyPigeonPresenter extends BasePresenter<IGetPigeonView,OurDoveBean>
         if (isRefrash) {
             getMvpView().setRefrash(false);
             isRefrash = false;
-//            getMvpView().showErrorMsg("刷新成功");
         }
     }
 
     @Override
     public void requestError(String msg) {
         super.requestError(msg);
-
         switch (msg){
             case "600":
                 getMvpView().setPigeonData(null);
@@ -129,7 +105,6 @@ public class MyPigeonPresenter extends BasePresenter<IGetPigeonView,OurDoveBean>
                 getDatas();
                 break;
         }
-
         if (isRefrash) {
             getMvpView().setRefrash(false);
             isRefrash = false;
@@ -139,7 +114,7 @@ public class MyPigeonPresenter extends BasePresenter<IGetPigeonView,OurDoveBean>
     @Override
     public void getDataFromNets(Map<String, String> map) {
         type = "nets";
-
+        isRefrash = true;
         pigeonModel.getDatasFromNets(map,this);
 
     }
