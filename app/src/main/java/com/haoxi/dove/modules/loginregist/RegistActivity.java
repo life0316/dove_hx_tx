@@ -1,8 +1,6 @@
 package com.haoxi.dove.modules.loginregist;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -15,16 +13,13 @@ import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.base.BaseActivity;
 import com.haoxi.dove.inject.DaggerRegistComponent;
 import com.haoxi.dove.inject.RegistMoudle;
-import com.haoxi.dove.modules.loginregist.model.UserInfoModel;
 import com.haoxi.dove.modules.loginregist.presenter.RegistPresenter;
 import com.haoxi.dove.modules.loginregist.presenter.RegistPresenter2;
-import com.haoxi.dove.modules.loginregist.presenter.UserInfoPresenter;
 import com.haoxi.dove.modules.loginregist.ui.ILoginView;
 import com.haoxi.dove.modules.loginregist.ui.IRegistView;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.newin.bean.OurUser;
-import com.haoxi.dove.newin.bean.OurUserInfo;
 import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.MD5Tools;

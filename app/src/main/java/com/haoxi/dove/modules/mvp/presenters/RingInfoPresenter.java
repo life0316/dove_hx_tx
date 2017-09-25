@@ -19,26 +19,16 @@ import java.util.Map;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-/**
- * @创建者 Administrator
- * @创建时间 2017/1/20 10:33
- * @描述
- */
 public class RingInfoPresenter extends BasePresenter<IRingInfoView,OurDoveBean> implements IGetPresenter {
-
     private IGetModel pigeonModel;
-
     private String type = "nets";
-
     public RingInfoPresenter(RingInfoActivity activity){
-
         attachView(activity);
         pigeonModel = new PigeonModel();
     }
 
     public void getDatasFromDao(String userObjId){
         type = "dao";
-
         MyApplication.getDaoSession().getInnerDoveDataDao()
                 .queryBuilder().where(InnerDoveDataDao.Properties.Playerid.eq(userObjId))
                 .rx().list()
@@ -58,7 +48,6 @@ public class RingInfoPresenter extends BasePresenter<IRingInfoView,OurDoveBean> 
 
     @Override
     public void getDataFromNets(Map<String,String> map) {
-
         //这里是从网络中获取
         pigeonModel.getDatasFromNets(map,this);
     }
@@ -66,16 +55,9 @@ public class RingInfoPresenter extends BasePresenter<IRingInfoView,OurDoveBean> 
     @Override
     public void requestSuccess(OurDoveBean data) {
         super.requestSuccess(data);
-
         List<InnerDoveData> doveDatas = new ArrayList<>();
-
         for (int i = 0; i < data.getData().size(); i++) {
             InnerDoveData doveData = data.getData().get(i);
-
-            if (doveData.getRingid() != null) {
-                Log.e("matedfa",doveData.getRingid()+"-------getRingid");
-            }
-
             if (doveData.getRingid() == null || "".equals(doveData) || "-1".equals(doveData)) {
                 continue;
             }else {

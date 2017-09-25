@@ -9,10 +9,6 @@ import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.util.Log;
 
-/**
- * Created by lifei on 2017/5/26.
- */
-
 public class SystemSwitchUtils {
 
     private Context context;

@@ -31,7 +31,7 @@ public class SplashActivity extends BaseActivity implements ILoginView {
     private int methodType = MethodType.METHOD_TYPE_LOGIN;
     @Override
     protected void init() {
-        presenter = new LoginPresenter(new LoginModel(this));
+        presenter = new LoginPresenter(new LoginModel());
         presenter.attachView(this);
         mPwdsp = SpUtils.getString(this, SpConstant.USER_PWD);
         final Boolean isAutoCb = SpUtils.getBoolean(this,SpConstant.IS_AUTO);

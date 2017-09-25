@@ -102,7 +102,7 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     protected void init() {
         mTitleTv.setText("记录详情");
         mBackIv.setVisibility(View.VISIBLE);
-//        SharedPreferences preferences = getSharedPreferences(ConstantUtils.USERINFO, MODE_PRIVATE);
+
         mTrailSp = getSharedPreferences(ConstantUtils.TRAIL, MODE_PRIVATE);
 
         trailWidth = mTrailSp.getInt("thickness", 10);

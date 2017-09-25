@@ -7,12 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by lifei on 2017/1/3.
- */
-
 public class StringUtils {
-
     public static boolean checkHanZi(String needCheckStr){
         boolean isCheaked = false;
         try {

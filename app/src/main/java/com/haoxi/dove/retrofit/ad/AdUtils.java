@@ -10,15 +10,17 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
+
+import com.haoxi.dove.utils.ConstantUtils;
+import com.haoxi.dove.utils.MD5Tools;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
-
-/**
- * Created by Administrator on 2017\9\6 0006.
- */
+import java.util.HashMap;
+import java.util.Map;
 
 public class AdUtils {
 
@@ -164,4 +166,48 @@ public class AdUtils {
         }
         return buf.toString();
     }
+
+    public static Map<String,Object> getParamsMap(Context context,int width,int height, int pt) {
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("n", Config.AD_NUM);
+        map.put("appid",Config.APP_ID);
+//        map.put("pt",Config.BANNER_AD);
+        map.put("pt",pt);
+        map.put("w",width);
+        map.put("h",height);
+        map.put("os",Config.ANDORID_OS);
+        map.put("bdr", Build.VERSION.RELEASE);
+        map.put("tp", Build.MODEL);
+        map.put("brd",Build.BRAND);
+        map.put("sn", getIMEI(context));
+        map.put("nop",getOperators(context));
+
+        map.put("andid",getAndroidId(context));
+        map.put("nt",getNetworkType(context));
+        map.put("tab",0);
+        map.put("tm",Config.DEBUG);
+        map.put("pack", ConstantUtils.PACKAGE_NAME);
+
+        map.put("sw",getDisplayWidth(context));
+        map.put("sh",getDisplayHeight(context));
+        map.put("tp", Build.MODEL);
+        map.put("brd",Build.BRAND);
+        map.put("deny",getDisplayDensity(context));
+        map.put("mc",getLocalMacAddress(context));
+
+        String time = String.valueOf(System.currentTimeMillis());
+        map.put("time",time);
+        StringBuilder sb = new StringBuilder(Config.APP_ID);
+        sb.append(getIMEI(context)).append(Config.ANDORID_OS);
+        sb.append(getOperators(context)).append(ConstantUtils.PACKAGE_NAME);
+        sb.append(time).append(Config.SECRET_KEY);
+
+        String token = MD5Tools.MD5(String.valueOf(sb));
+
+        map.put("token",token);
+
+        return map;
+    }
+
 }

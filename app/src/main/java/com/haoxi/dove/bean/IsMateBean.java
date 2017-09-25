@@ -1,14 +1,8 @@
 package com.haoxi.dove.bean;
 
-/**
- * Created by lifei on 2017/3/31.
- */
-
 public class IsMateBean {
-
     private String title;
     private boolean iconUp;
-
 
     public IsMateBean(String title, boolean iconUp) {
         this.title = title;

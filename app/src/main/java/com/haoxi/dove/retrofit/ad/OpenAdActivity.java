@@ -34,6 +34,7 @@ import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.MD5Tools;
 import com.haoxi.dove.utils.SpConstant;
 import com.haoxi.dove.utils.SpUtils;
+import com.ytb.inner.logic.vo.Ad;
 import com.ytb.logic.interfaces.AdSplashListener;
 import com.ytb.logic.view.HmSplashAd;
 
@@ -92,7 +93,7 @@ public class OpenAdActivity extends BaseActivity implements EasyPermissions.Perm
 
     @Override
     protected void init() {
-        presenter = new LoginPresenter(new LoginModel(this));
+        presenter = new LoginPresenter(new LoginModel());
         presenter.attachView(this);
 
         adPresenter = new OpenAdPresenter(this);
@@ -172,7 +173,7 @@ public class OpenAdActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     private void loadOurAd() {
-        adPresenter.getOpenAd(getParamsMap());
+        adPresenter.getOpenAd(AdUtils.getParamsMap(this,width,height,Config.AD_PT));
     }
 
     private void loadAd(){
@@ -346,41 +347,7 @@ public class OpenAdActivity extends BaseActivity implements EasyPermissions.Perm
         }
     }
     private final static String PACKAGE_NAME = "com.haoxi.dove";
-    @Override
-    public Map<String,Object> getParamsMap() {
-        Map<String,Object> map = new HashMap<>();
 
-        map.put("n",Config.AD_NUM);
-        map.put("appid",Config.APP_ID);
-        map.put("pt",Config.AD_PT);
-        map.put("w",width);
-        map.put("h",height);
-        map.put("os",Config.ANDORID_OS);
-        map.put("bdr", Build.VERSION.RELEASE);
-        map.put("tp", Build.MODEL);
-        map.put("brd",Build.BRAND);
-        map.put("sn",getIMEI());
-        map.put("nop",getOperators());
-
-        map.put("andid",getAndroidId());
-        map.put("nt",getNetworkType());
-        map.put("tab",0);
-        map.put("tm",Config.DEBUG);
-        map.put("pack",PACKAGE_NAME);
-
-        String time = String.valueOf(System.currentTimeMillis());
-        map.put("time",time);
-        StringBuilder sb = new StringBuilder(Config.APP_ID);
-        sb.append(getIMEI()).append(Config.ANDORID_OS);
-        sb.append(getOperators()).append(PACKAGE_NAME);
-        sb.append(time).append(Config.SECRET_KEY);
-
-//        String token = Guardian.md5Encode(String.valueOf(sb));
-
-        String token = MD5Tools.MD5(String.valueOf(sb));
-        map.put("token",token);
-        return map;
-    }
     private String getIMEI() {
         TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         String imei = tm.getDeviceId();

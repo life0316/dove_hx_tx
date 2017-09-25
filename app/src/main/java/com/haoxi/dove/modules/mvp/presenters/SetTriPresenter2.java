@@ -19,10 +19,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by lifei on 2017/1/17.
- */
-
 public class SetTriPresenter2 extends BasePresenter<ITraFragView, List<SetTriBean>> implements ISetTriPresenter2 {
 
     private static final String TYPE_USERID = "USER_OBJ_ID";

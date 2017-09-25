@@ -576,7 +576,7 @@ public class EarchCircleActivity extends BaseActivity implements IMyCommentView<
     }
 
     private void changeRxBus(){
-        mRxBus.post("load_circle",circleTag);
+        mRxBus.post(ConstantUtils.OBSER_LOAD_CIRCLE,circleTag);
     }
 
     @Override

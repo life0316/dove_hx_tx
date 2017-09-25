@@ -7,9 +7,6 @@ import com.haoxi.dove.newin.bean.StartFlyBean;
 
 import java.util.List;
 
-/**
- * Created by lifei on 2017/1/17.
- */
 
 public interface ITraFragView extends MvpView {
 

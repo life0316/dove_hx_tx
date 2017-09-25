@@ -9,7 +9,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.haoxi.dove.R;
-import com.haoxi.dove.bean.User;
+
 import com.haoxi.dove.base.BasePresenter;
 import com.haoxi.dove.modules.loginregist.ui.IRegistView;
 import com.haoxi.dove.modules.loginregist.RegistActivity;
@@ -17,21 +17,11 @@ import com.haoxi.dove.utils.ApiUtils;
 
 import java.util.Calendar;
 import java.util.Map;
-
-/**
- * Created by lifei on 2016/12/26.
- */
-
-public class RegistPresenter extends BasePresenter<IRegistView,User> implements ILoginPresenter {
-
-
+public class RegistPresenter extends BasePresenter<IRegistView,Object> implements ILoginPresenter {
     private int yearBirth;
     private int monthBirth;
     private int dayBirth;
     private NumberPicker dayPicker;
-
-    public RegistPresenter() {
-    }
 
     /**
      * 弹出日期对话框，设置出生日期

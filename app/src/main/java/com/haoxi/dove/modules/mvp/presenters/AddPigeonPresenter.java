@@ -25,10 +25,6 @@ import com.haoxi.dove.widget.wheelview.adapters.ArrayWheelAdapter;
 
 import java.util.Calendar;
 
-/**
- * Created by lifei on 2017/1/12.
- */
-
 public class AddPigeonPresenter extends BasePresenter<IAddPigeonView,Object>{
 
     private int       mYearNewVal;
@@ -167,38 +163,26 @@ public class AddPigeonPresenter extends BasePresenter<IAddPigeonView,Object>{
             }
         });
 
-        SharedPreferences preferences = context.getSharedPreferences(ConstantUtils.USERINFO, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-
         final Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        int yearSp = preferences.getInt("yearSp", 0);
-        int monthSp = preferences.getInt("monthSp", 0);
-        int daySp = preferences.getInt("daySp",0);
-
-        if (yearSp == 0) yearSp = year;
-        if (monthSp == 0) monthSp = month + 1;
-        if (daySp == 0) daySp = day;
-
         yearPicker.setMaxValue(year);
         yearPicker.setMinValue(2000);
-        yearPicker.setValue(yearSp);
+        yearPicker.setValue(year);
 
         monthPicker.setMaxValue(12);
         monthPicker.setMinValue(01);
-        monthPicker.setValue(monthSp);
+        monthPicker.setValue(month + 1);
 
         mYearNewVal = yearPicker.getValue();
         mMonthNewVal = monthPicker.getValue();
 
-        initDay(daySp);
+        initDay(day);
 
         mDayNewVal = dayPicker.getValue();
         Log.e("pigeonOld",mDayNewVal+"-----3---dayValue");
-
 
 
         yearPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {

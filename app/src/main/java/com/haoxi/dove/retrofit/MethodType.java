@@ -4,11 +4,6 @@ import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-/**
- * Created by lifei on 2017/4/6.
- */
-
 public class MethodType {
     /**
      * 获取验证码

@@ -129,7 +129,7 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
 
         isLoadObervable = mRxBus.register("isLoad", Boolean.class);
         isUpdateObervable = mRxBus.register("update", Boolean.class);
-        netObservale = mRxBus.register("load_circle", Integer.class);
+        netObservale = mRxBus.register(ConstantUtils.OBSER_LOAD_CIRCLE, Integer.class);
 
         Bundle bundle = getArguments();
         String bundleKey = (String)bundle.get("key");
@@ -153,8 +153,8 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
             public void call(Boolean aBoolean) {
                 update = aBoolean;
                 if (update) {
-                    mRxBus.post("load_circle",0);
-                    mRxBus.post("load_circle",1);
+                    mRxBus.post(ConstantUtils.OBSER_LOAD_CIRCLE,0);
+                    mRxBus.post(ConstantUtils.OBSER_LOAD_CIRCLE,1);
                     update = false;
                 }
             }
@@ -209,67 +209,22 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
 
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadmoreListener(this);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-
         myLmAdapter = new MyLmAdapter<InnerCircleBean>(getActivity(),true,0);
-
         recyclerView.setAdapter(myLmAdapter);
-
         myLmAdapter.setOnHolderListener(this);
         myLmAdapter.setMyItemClickListener(this);
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//
-//                //在 newState为滑到底部时
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE){
-//                    //如果没有隐藏 footview ，那么最后一个条目的位置就比我们的getItemCount 少 1，
-//
-//                    if (myLmAdapter.isFadeTips() == false && lastVisibleItem + 1 == myLmAdapter.getItemCount()){
-//                        mHandler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                //然后调用 加载更多更新recyclerview
-//                                updateRecyclerView();
-//                            }
-//                        },500);
-//                    }
-//
-//                    //如果隐藏了提示条，但是又是上拉加载时，那么最后一个条目就要比 getItemCount  少 2
-//                    if (myLmAdapter.isFadeTips() == true && lastVisibleItem + 2 == myLmAdapter.getItemCount()){
-//                        mHandler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                //然后调用 加载更多更新recyclerview
-//                                updateRecyclerView();
-//                            }
-//                        },500);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-//            }
-//        });
     }
 
     // 上拉加载时调用的更新RecyclerView的方法
     private void updateRecyclerView() {
-
         if (innerCircleBeans.size() % 10 != 0) {
             PAGENUM = innerCircleBeans.size() / 10 + 2;
         }else {
             PAGENUM = innerCircleBeans.size() / 10 + 1;
         }
-
         pageNumMap.put(fragmentBundle,PAGENUM);
-
         changeMethodType();
         innerCirclePresenter.loadMoreData(getParaMap(),tag);
     }
@@ -290,7 +245,6 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
 
     @Override
     protected void inject() {
-
         DaggerCircleComponent.builder()
                 .appComponent(getAppComponent())
                 .circleMoudle(new CircleMoudle(getActivity(), this))
@@ -311,33 +265,21 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
                 innerCirclePresenter.updateCircleBy(getUserObJId(),innerCircleBean.getUserid(),false);
                 break;
             case MethodType.METHOD_TYPE_DELETE_SINGEL:
-
                 innerCirclePresenter.deleteCircleById(innerCircleBean.getId());
-
                 loadCircle();
-
                 break;
 
             case MethodType.METHOD_TYPE_ADD_FAB:
-
-                Log.e("faamap99999","点赞-------"+ innerCircleBean.getCircleid());
-                Log.e("faamap99999","id---1----"+ innerCircleBean.getId());
-
                 innerCircleBean.setHas_fab(true);
                 innerCircleBean.setFab_count(innerCircleBean.getFab_count() + 1);
-
                 innerCirclePresenter.updateCircle(innerCircleBean);
-
                 loadCircle();
-
                 break;
             case MethodType.METHOD_TYPE_REMOVE_FAB:
 
                 innerCircleBean.setHas_fab(false);
                 innerCircleBean.setFab_count(innerCircleBean.getFab_count() - 1);
-
                 innerCirclePresenter.updateCircle(innerCircleBean);
-
                 loadCircle();
                 break;
 
@@ -345,7 +287,6 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
 
                 innerCircleBean.setComment_count(innerCircleBean.getComment_count() + 1);
                 innerCirclePresenter.updateCircle(innerCircleBean);
-
                 loadCircle();
 
                 break;
@@ -353,9 +294,9 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
     }
 
     private void loadCircle(){
-        mRxBus.post("load_circle",0);
-        mRxBus.post("load_circle",1);
-        mRxBus.post("load_circle",2);
+        mRxBus.post(ConstantUtils.OBSER_LOAD_CIRCLE,0);
+        mRxBus.post(ConstantUtils.OBSER_LOAD_CIRCLE,1);
+        mRxBus.post(ConstantUtils.OBSER_LOAD_CIRCLE,2);
     }
 
 
@@ -540,9 +481,6 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
                 map.put("content",commentContent);
                 break;
         }
-
-        Log.e("faamap",map.toString()+"----"+fragmentBundle+"------"+TAG);
-
         return map;
     }
 
@@ -731,7 +669,7 @@ public class CircleFragment extends BaseSrFragment implements IMyCircleView<Circ
     public void onDestroy() {
         super.onDestroy();
         mRxBus.unregister("isLoad", isLoadObervable);
-        mRxBus.unregister("load_circle", netObservale);
+        mRxBus.unregister(ConstantUtils.OBSER_LOAD_CIRCLE, netObservale);
         mRxBus.unregister("update", isUpdateObervable);
     }
 

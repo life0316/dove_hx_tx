@@ -1,14 +1,7 @@
 package com.haoxi.dove.newin.bean;
 
 import java.util.List;
-
-/**
- * Created by lifei on 2017/6/27.
- */
-
 public class OurRouteBean {
-
-
     private int code;
     private String msg;
 

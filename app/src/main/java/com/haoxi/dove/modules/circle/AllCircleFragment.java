@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -56,20 +57,16 @@ import com.haoxi.dove.retrofit.ad.AdviewResObj;
 import com.haoxi.dove.retrofit.ad.Config;
 import com.haoxi.dove.retrofit.ad.Http;
 import com.haoxi.dove.retrofit.ad.IAdView;
-import com.haoxi.dove.retrofit.ad.OpenAdActivity;
 import com.haoxi.dove.retrofit.ad.OpenAdPresenter;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.MD5Tools;
 import com.haoxi.dove.utils.RxBus;
-import com.haoxi.dove.utils.SpConstant;
-import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.widget.MyPhotoPreview;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.ytb.inner.logic.vo.Ad;
 import com.ytb.logic.external.NativeResource;
 import com.ytb.logic.interfaces.AdNativeLoadListener;
 import com.ytb.logic.view.HmNativeAd;
@@ -92,7 +89,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
     private int methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
 
     private int PAGENUM = 1;  //查询起始下标，默认为0
-//    private int PAGESIZE = 10;//每页返回的数据，默认10
     private boolean isFriend = false;
     private boolean isDao = false;
     private boolean isLoad = true;
@@ -121,13 +117,11 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
     @Inject
     RxBus mRxBus;
 
-
     EachCirclePresenter eachCirclePresenter;
     private OpenAdPresenter adPresenter;
     AdCircleAdapter adCircleAdapter;
     private Observable<Integer> netObservale;
     private Observable<Boolean> isLoadObervable;
-//    private Observable<Boolean> isUpdateObervable;
     private NativeResource nativeResource;
     private boolean isLoadMore = false;
 
@@ -139,8 +133,7 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        isUpdateObervable = mRxBus.register("update", Boolean.class);
-        netObservale = mRxBus.register("load_circle", Integer.class);
+        netObservale = mRxBus.register(ConstantUtils.OBSER_LOAD_CIRCLE, Integer.class);
         isLoadObervable = mRxBus.register("isLoadA", Boolean.class);
         netObservale.subscribe(new Action1<Integer>() {
             @Override
@@ -254,14 +247,13 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
             PAGENUM = 1;
             pageNumMap.put("all",1);
             methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
-            //getDatas();
             refreshLayout.autoRefresh();
             nativeAd.loadAd("429");
         }
         isLoad = false;
 
         if (isLoadBanner) {
-            adPresenter.getOpenAd(getParamsMap());
+            adPresenter.getOpenAd(AdUtils.getParamsMap(getActivity(),width,height,Config.BANNER_AD));
             isLoadBanner = false;
         }
     }
@@ -272,7 +264,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
         nativeAd = new HmNativeAd(getActivity(), new AdNativeLoadListener() {
             @Override
             public boolean onAdLoaded(NativeResource nativeResource) {
-                Log.d("Inapp","onAdLoaded " + nativeResource);
                 AllCircleFragment.this.nativeResource = nativeResource;
                 methodType = MethodType.METHOD_TYPE_ALL_CIRCLES;
                 if (isLoadMore){
@@ -397,7 +388,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                 break;
             case MethodType.METHOD_TYPE_ALL_CIRCLES:
                 map.put(MethodParams.PARAMS_CP,String.valueOf(PAGENUM));
-//                map.put(MethodParams.PARAMS_PS,String.valueOf(PAGESIZE));
                 break;
             case MethodType.METHOD_TYPE_SHARE_CIRCLE:
             case MethodType.METHOD_TYPE_ADD_FAB:
@@ -411,7 +401,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
                 break;
         }
 
-        Log.e("faaafee",map.toString());
         return map;
     }
 
@@ -671,11 +660,10 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
         }
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mRxBus.unregister("load_circle", netObservale);
+        mRxBus.unregister(ConstantUtils.OBSER_LOAD_CIRCLE, netObservale);
         mRxBus.unregister("isLoadA", isLoadObervable);
     }
 
@@ -704,8 +692,11 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
 
         mEtDialog.setSelection(mEtDialog.getText().length());
 
-        mDialogEt.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        mDialogEt.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        Window window = mDialogEt.getWindow();
+        if (window != null) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
         mDialogEt.setContentView(view, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         ApiUtils.setDialogWindow(mDialogEt);
         mDialogEt.show();
@@ -821,100 +812,6 @@ public class AllCircleFragment extends BaseSrFragment implements IAdView, IMyCir
         });
         ApiUtils.setDialogWindow(mDialog);
         mDialog.show();
-    }
-    private final static String PACKAGE_NAME = "com.haoxi.dove";
-
-    @Override
-    public Map<String,Object> getParamsMap() {
-        Map<String,Object> map = new HashMap<>();
-
-        map.put("n", Config.AD_NUM);
-        map.put("appid",Config.APP_ID);
-        map.put("pt",Config.BANNER_AD);
-        map.put("w",width);
-        map.put("h",height);
-        map.put("os",Config.ANDORID_OS);
-        map.put("bdr", Build.VERSION.RELEASE);
-        map.put("tp", Build.MODEL);
-        map.put("brd",Build.BRAND);
-        map.put("sn", AdUtils.getIMEI(getActivity()));
-        map.put("nop",AdUtils.getOperators(getActivity()));
-
-        map.put("andid",AdUtils.getAndroidId(getActivity()));
-        map.put("nt",AdUtils.getNetworkType(getActivity()));
-        map.put("tab",0);
-        map.put("tm",Config.DEBUG);
-        map.put("pack",PACKAGE_NAME);
-
-        map.put("sw",AdUtils.getDisplayWidth(getActivity()));
-        map.put("sh",AdUtils.getDisplayHeight(getActivity()));
-        map.put("tp", Build.MODEL);
-        map.put("brd",Build.BRAND);
-        map.put("deny",AdUtils.getDisplayDensity(getActivity()));
-        map.put("mc",AdUtils.getLocalMacAddress(getActivity()));
-
-        String time = String.valueOf(System.currentTimeMillis());
-        map.put("time",time);
-        StringBuilder sb = new StringBuilder(Config.APP_ID);
-        sb.append( AdUtils.getIMEI(getActivity())).append(Config.ANDORID_OS);
-        sb.append(AdUtils.getOperators(getActivity())).append(PACKAGE_NAME);
-        sb.append(time).append(Config.SECRET_KEY);
-
-//        String token = Guardian.md5Encode(String.valueOf(sb));
-        String token = MD5Tools.MD5(String.valueOf(sb));
-
-        map.put("token",token);
-        Log.e("getAdData", map.toString() + "--------获取广告请求参数");
-        testAD();
-
-        return map;
-    }
-
-
-    public void testAD(){
-
-        JSONObject object = new JSONObject();
-
-        object.put("n", Config.AD_NUM);
-        object.put("appid",Config.APP_ID);
-        object.put("pt",Config.BANNER_AD);
-        object.put("w",width);
-        object.put("h",height);
-        object.put("os",Config.ANDORID_OS);
-        object.put("bdr", Build.VERSION.RELEASE);
-        object.put("tp", Build.MODEL);
-        object.put("brd",Build.BRAND);
-        object.put("sn", AdUtils.getIMEI(getActivity()));
-        object.put("nop",AdUtils.getOperators(getActivity()));
-
-        object.put("andid",AdUtils.getAndroidId(getActivity()));
-        object.put("nt",AdUtils.getNetworkType(getActivity()));
-        object.put("tab",0);
-        object.put("tm",Config.DEBUG);
-        object.put("pack",PACKAGE_NAME);
-
-        object.put("sw",AdUtils.getDisplayWidth(getActivity()));
-        object.put("sh",AdUtils.getDisplayHeight(getActivity()));
-        object.put("tp", Build.MODEL);
-        object.put("brd",Build.BRAND);
-        object.put("deny",AdUtils.getDisplayDensity(getActivity()));
-        object.put("mc",AdUtils.getLocalMacAddress(getActivity()));
-
-        String time = String.valueOf(System.currentTimeMillis());
-        object.put("time",time);
-        StringBuilder sb = new StringBuilder(Config.APP_ID);
-        sb.append( AdUtils.getIMEI(getActivity())).append(Config.ANDORID_OS);
-        sb.append(AdUtils.getOperators(getActivity())).append(PACKAGE_NAME);
-        sb.append(time).append(Config.SECRET_KEY);
-
-//        String token = Guardian.md5Encode(String.valueOf(sb));
-        String token = MD5Tools.MD5(String.valueOf(sb));
-
-        object.put("token",token);
-
-        String str = object.toString().replace("\"", "%22").replace("{", "%7b").replace("}", "%7d").replace("[", "%5b").replace("]", "%5d").replace(" ","%20");
-        String BASE_AD_URL = "http://open.adview.cn/agent/openRequest.do?"+str;
-
     }
 
     @Override

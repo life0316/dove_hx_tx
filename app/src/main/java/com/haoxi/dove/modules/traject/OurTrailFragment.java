@@ -45,7 +45,6 @@ import com.haoxi.dove.adapter.TraAdpter;
 import com.haoxi.dove.adapter.TraAdpter2;
 import com.haoxi.dove.base.BaseFragment;
 import com.haoxi.dove.bean.DaoSession;
-import com.haoxi.dove.bean.RealFlyBean;
 import com.haoxi.dove.bean.SetTriBean;
 import com.haoxi.dove.callback.MyRvItemClickListener;
 import com.haoxi.dove.inject.DaggerOurTrailFragComponent;
@@ -72,7 +71,6 @@ import com.haoxi.dove.utils.TraUtils;
 import com.haoxi.dove.widget.BottomPopView;
 import com.haoxi.dove.widget.CustomDrawerLayout;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -144,7 +142,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     public AMapLocationClient mLocationClient = null;
     public AMapLocationClientOption mLocationClientOption = null;
     private OnLocationChangedListener mChangedListener;
-    private Map<String, RealFlyBean> preMapFlys = new HashMap<>();
     private Map<String,PointBean> preMapPoint = new HashMap<>();
     private Dialog dialog;
 
@@ -181,7 +178,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     private BottomPopView popView;
     private LinearLayout ll;
     private String endflyObjID;
-
 
     private Map<String, SetTriBean> flySetTriMap = new HashMap<>();
     private Map<String, InnerRouteBean> flyBeanMap = new HashMap<>();
@@ -239,7 +235,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         }
     };
 
-
     public static OurTrailFragment newInstance(String content) {
         Bundle args = new Bundle();
         args.putString("ARGS", content);
@@ -261,10 +256,8 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         myPigeonBeanList = new ArrayList<>();
         notFlyList = new ArrayList<>();
-
         loadObservable = mRxBus.register("isLoad", Boolean.class);
         mHomeObservable = mRxBus.register("home_back", Boolean.class);
         mScreenObservable = mRxBus.register("screen_on_off", Boolean.class);
@@ -351,7 +344,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     }
 
     private void initMap() {
-
         if (mAMap == null) {
             mAMap = mapView.getMap();
             mUiset = mAMap.getUiSettings();//设置ui控件
@@ -388,7 +380,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         AMap.OnMarkerClickListener listener = new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
                 showPop(marker);
                 return true;
             }
@@ -559,7 +550,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
                 clickPos = integer;
                 if (integer == 1) {
                     mAMap.clear(true);
-                    preMapFlys.clear();
                     mLastTime = "";
                     setTriPresenter.getDaoWithObjId(getUserObjId());
                 } else {
@@ -571,9 +561,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         if (isLoad && num == 1) {
 
             mAMap.clear(true);
-
-            preMapFlys.clear();
-
             setTriPresenter.getDaoWithObjId(getUserObjId());
 
             mLastTime = "";
@@ -616,7 +603,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     @Override
     public void onDestroy() {
         super.onDestroy();
-        preMapFlys.clear();
         mRxBus.unregister("isLoad", loadObservable);
         mRxBus.unregister("showTrilPop", mShowObservable);
         mRxBus.unregister("home_back", mHomeObservable);
@@ -711,7 +697,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
                 mTriPicMap.remove(endflyObjID);
                 Log.e("endflyObjID", endflyObjID + "----endflyObjID");
 //                preMapLatLng.remove(endflyObjID);
-                preMapFlys.remove(endflyObjID);
 //                traFragPresenter.deleteFromDaoFromId(getUserObjId(), endflyObjID);
                 setTriPresenter.deleteSetTriBean(flySetTriMap.get(endflyObjID));
                 setTriPresenter.getDaoWithObjId(getUserObjId());
@@ -723,12 +708,9 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
             mTriColorMap.clear();
             mTriPicMap.clear();
             //preMapLatLng.clear();
-            preMapFlys.clear();
             flySetTriMap.clear();
 //            traFragPresenter.deleteAllFromDaoById(getUserObjId());
             setTriPresenter.deleteAllSetTriBean(getUserObjId());
-
-            mRxBus.post("isLoadData",true);
             getPigeonDatas();
         }
     }
@@ -737,9 +719,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     public void onFailed(String msg) {
         ApiUtils.showToast(getContext(), msg);
         mHandler.sendEmptyMessageDelayed(1, 1000 * 60 * mLastLocationTime);
-        if (preMapFlys == null || preMapFlys.size() == 0) {
-            mLocationClient.startLocation();
-        }
     }
 
     private List<String> pigeonObjLists = new ArrayList<>();

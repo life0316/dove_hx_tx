@@ -72,7 +72,6 @@ public class MyRingPresenter extends BasePresenter<IGetRingView,OurRingBean> imp
         }
     }
 
-
     public void deleteDatasFromData(String userObjId){
         MyApplication.getDaoSession().getInnerRingDao()
                 .queryBuilder().where(InnerRingDao.Properties.Playerid.eq(userObjId))

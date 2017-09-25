@@ -113,7 +113,7 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        netObservale = mRxBus.register("load_circle", Integer.class);
+        netObservale = mRxBus.register(ConstantUtils.OBSER_LOAD_CIRCLE, Integer.class);
         isLoadObervable = mRxBus.register("isLoadF", Boolean.class);
         netObservale.subscribe(new Action1<Integer>() {
             @Override
@@ -568,7 +568,7 @@ public class FriendCircleFragment extends BaseSrFragment implements IEachView<Ea
    @Override
     public void onDestroy() {
         super.onDestroy();
-        mRxBus.unregister("load_circle", netObservale);
+        mRxBus.unregister(ConstantUtils.OBSER_LOAD_CIRCLE, netObservale);
         mRxBus.unregister("isLoadF", isLoadObervable);
     }
 

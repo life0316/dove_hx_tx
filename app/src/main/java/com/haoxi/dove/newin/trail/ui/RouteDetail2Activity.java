@@ -61,10 +61,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-
-/**
- * Created by lifei on 2017/6/27.
- */
 @ActivityFragmentInject(contentViewId = R.layout.activity_history)
 public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteView, LocationSource,EasyPermissions.PermissionCallbacks, ToSetHolderListener<InnerRouteBean>, MyItemClickListener {
 
@@ -105,16 +101,12 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
     private OnLocationChangedListener mChangedListener;
     private AMapLocation mAMapLocation;
 
-
     private int trailWidth = 10;
     private String trailColor = "#00ff00";
     private int trailPic = R.mipmap.icon_img_3;
 
-
     private Map<String,String> mTrailColorMap = new HashMap<>();
     private Map<String,Integer> mTrailPicMap = new HashMap<>();
-
-
 
     private int methodType = MethodType.METHOD_TYPE_FLY_BY_RECORDID;
     private List<Integer> mDataPics = new ArrayList<Integer>(Arrays.asList(
@@ -130,10 +122,6 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
 
     private List<String> mTraicColorList = new ArrayList<String>();
 
-
-    /**
-     * 需要进行检测的权限数组
-     */
     protected String[] needPermissions = {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -143,45 +131,35 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
 
     @Override
     protected void initInject() {
-
         DaggerRouteDetialComponent.builder().appComponent(getAppComponent())
                 .routeDetailMoudle(new RouteDetailMoudle(this,this))
                 .build().inject(this);
     }
 
     @OnClick(R.id.custom_toolbar_iv)
-    void backOncli(View view) {
+    void backOncli() {
         this.finish();
     }
 
-
     @OnClick(R.id.new_icon_wei)
     void addOnclick(View v) {
-//        Log.e(TAG, "点击添加信鸽、鸽环");
 //        showBottomPop2(v);
         showWindow(v);
     }
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mapView.onCreate(savedInstanceState);
-
         initMap();
-
         Intent intent = getIntent();
         if (intent != null) {
-
             flyRecordId = intent.getStringExtra("recordid");
-
 //            pointBeanArrayList = intent.getParcelableArrayListExtra("innerRouteBean");
-
             if (flyRecordId != null) {
                 mIdTv.setText("飞行记录id:"+ flyRecordId);
             }
         }
-
         String[] trailColorArr = getResources().getStringArray(R.array.TraicColor);
         for (String color : trailColorArr) {
             mTraicColorList.add(color);
@@ -190,14 +168,11 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
 
     @Override
     protected void init() {
-
         mTitleTv.setText("记录详情");
         mBackIv.setVisibility(View.VISIBLE);
-
         mMapTypeIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (isMapNormal) {
                     mAMap.setMapType(AMap.MAP_TYPE_NORMAL);
                     isMapNormal = false;
@@ -209,7 +184,6 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
                 }
             }
         });
-
     }
 
 
@@ -238,76 +212,54 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
         mAMap.setMyLocationEnabled(true);
         mAMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
         mAMap.setMapType(AMap.MAP_TYPE_NORMAL);
-
         //    mAMap.clear();
-
         initClient();
         initOption();
-
 
         AMap.OnMarkerClickListener listener = new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
                 TraUtils.showPop(RouteDetail2Activity.this,marker);
-
                 return true;
             }
         };
-
         mAMap.setOnMarkerClickListener(listener);
     }
 
     private void initOption() {
-
         //初始化定位参数
-
         mLocationClientOption = new AMapLocationClientOption();
-
         mLocationClientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
-
         mLocationClientOption.setNeedAddress(true);
-
         //设置是否只定位一次，
         mLocationClientOption.setOnceLocation(true);
         mLocationClientOption.setInterval(2000);
-
         if (mLocationClientOption.isOnceLocationLatest()) {
             mLocationClientOption.setOnceLocationLatest(true);
         }
         mLocationClientOption.setWifiActiveScan(true);
         mLocationClientOption.setMockEnable(false);
-
         mLocationClient.setLocationOption(mLocationClientOption);
         //mLocationClient.startLocation();
-
-
     }
 
     private void initClient() {
-
         //初始化定位
         mLocationClient = new AMapLocationClient((getApplicationContext()));
         //设置定位回调监听
         mLocationClient.setLocationListener(mLocationListener);
-
     }
 
     //声明定位回调监听
     public AMapLocationListener mLocationListener = new AMapLocationListener() {
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
-
             if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
-
                 RouteDetail2Activity.this.mAMapLocation = aMapLocation;
-
                 if (mChangedListener != null) {
                     mChangedListener.onLocationChanged(aMapLocation);
-
                     CameraUpdate cu = CameraUpdateFactory.zoomTo(15);
                     mAMap.moveCamera(cu);
-
                 }
             } else if (aMapLocation.getErrorCode() == 12) {
                 ApiUtils.showToast(RouteDetail2Activity.this, "缺少定位权限,定位失败");
@@ -321,7 +273,6 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-
         requestCodeQRCodePermissions();
     }
 
@@ -346,14 +297,11 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
-
         EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
-
     }
 
     @AfterPermissionGranted(REQUEST_CODE_HISTORY)
     private void requestCodeQRCodePermissions(){
-
         if (!EasyPermissions.hasPermissions(this,needPermissions)) {
             EasyPermissions.requestPermissions(this,"定位的权限",REQUEST_CODE_HISTORY,needPermissions);
         }else {
@@ -377,32 +325,21 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
         mLocationClient = null;
     }
 
-    @Override
-    public void toDo() {
-
-    }
-
     public Map<String,String> getParaMap(){
-
         Map<String,String> map = new HashMap<>();
-
         map.put("method",getMethod());
         map.put("sign",getSign());
         map.put("time",getTime());
         map.put("version",getVersion());
-
         map.put("userid",getUserObjId());
         map.put("token",getToken());
         map.put("fly_recordid",flyRecordId);
-
-
         Log.e("fafsewdfvd",map.toString());
         return map;
     }
 
     @Override
     public String getMethod() {
-
         String method = "";
         switch (methodType){
             case MethodType.METHOD_TYPE_FLY_SEARCH:
@@ -415,19 +352,16 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
                 method = MethodConstant.SEARCH_BY_FLY_RECORDID;
                 break;
         }
-
         return method;
     }
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-
 //        if (pointBeanArrayList != null && pointBeanArrayList.size() != 0) {
 //            toDrawTril(pointBeanArrayList);
 //        }else {
 //            mLocationClient.startLocation();
 //        }
-
         getDatas();
     }
 
@@ -441,18 +375,14 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-
         mLocationClient.startLocation();
-
     }
 
     public void toDrawTril(List<PointBean> list, String doveid) {
-
         if (list == null && list.size() == 0) {
             mLocationClient.startLocation();
             return;
         }
-
         ArrayList<LatLng> latLngs = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             PointBean pointBean = list.get(i);
@@ -478,27 +408,16 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
     @Override
     public void setRouteData(OurRouteBean routeData) {
         if (routeData.getData() != null && routeData.getData().size() != 0) {
-
             doveIds.clear();
-
             for (int i = 0; i < routeData.getData().size(); i++) {
-
                 InnerRouteBean innerRouteBean = routeData.getData().get(i);
                 doveIds.add(innerRouteBean);
-
                 Log.e("RouteDetail2Activity",  innerRouteBean.getDoveid() + "-----"+innerRouteBean.getFly_recordid()+"------"+innerRouteBean.getPoints().size());
                 List<PointBean> pointBeans = routeData.getData().get(i).getPoints();
-
                 mTrailColorMap.put(innerRouteBean.getDoveid(),mTraicColorList.get(i));
                 mTrailPicMap.put(innerRouteBean.getDoveid(),mDataPics.get(i));
-
                 toDrawTril(pointBeans,innerRouteBean.getDoveid());
-//                for (int j = 0; j < pointBeans.size(); j++) {
-//
-//                    Log.e("RouteDetail2Activity", pointBeans.get(j).getTime() + "-----time");
-//                    Log.e("RouteDetail2Activity", pointBeans.get(j).getLat() + "-----lat");
-//                    Log.e("RouteDetail2Activity", pointBeans.get(j).getLng() + "-----lng");
-//                }
+
             }
             mAdapter.addDatas(doveIds);
             initRecyclerVeiw();

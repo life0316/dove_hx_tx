@@ -17,6 +17,7 @@ import com.haoxi.dove.inject.DaggerAddRing2Component;
 import com.haoxi.dove.modules.mvp.views.IAddRingView;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.utils.SystemSwitchUtils;
@@ -31,10 +32,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-
-/**
- * Created by lifei on 2017/1/12.
- */
 
 @ActivityFragmentInject(contentViewId = R.layout.activity_addring)
 public class AddRing2Activity extends BaseActivity implements IAddRingView,EasyPermissions.PermissionCallbacks {
@@ -62,7 +59,6 @@ public class AddRing2Activity extends BaseActivity implements IAddRingView,EasyP
 
     @Override
     protected void initInject() {
-
         DaggerAddRing2Component.builder()
                 .appComponent(getAppComponent())
                 .addRing2Moudle(new AddRing2Moudle(this,this))
@@ -72,118 +68,73 @@ public class AddRing2Activity extends BaseActivity implements IAddRingView,EasyP
 
     @Override
     protected void init() {
-
         mBackIv.setVisibility(View.VISIBLE);
         mTitleTv.setText("添加鸽环");
-
     }
 
     @OnClick(R.id.custom_toolbar_iv)
     void backOnclic() {
-
         if (!isAdd) {
             mRxBus.post("isLoad",false);
         }
-
         this.finish();
     }
 
     @OnClick(R.id.act_addring_btn)
     void addRingOncli() {
-
         if ("".equals(getRingCode()) && getRingCode() != null) {
             ApiUtils.showToast(this, getString(R.string.add_ringcode_null));
             return;
         }
 
         if ((Boolean)numMap.get("ring_num")){
-
             ApiUtils.showToast(this,"最多只能添加 15 个鸽环");
-
             return;
         }
-
-//        JSONObject object = new JSONObject();
-//        object.put("USER_OBJ_ID",getUserObjId());
-//        object.put("RING_CODE",getRingCode());
-//        object.put("TOKEN",getToken());
-//
-//        codePresenter.toAddRing(object);
-
         ourCodePresenter.addRing(getParaMap());
-
-
     }
 
-    public Map<String,String> getParaMap(){
-
-        Map<String,String> map = new HashMap<>();
-
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("userid",getUserObjId());
-        map.put("token",getToken());
-        map.put("playerid",getUserObjId());
-
+    @Override
+    protected Map<String, String> getParaMap() {
+        Map<String,String> map = super.getParaMap();
+        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
+        map.put(MethodParams.PARAMS_TOKEN,getToken());
+        map.put(MethodParams.PARAMS_PLAYER_ID,getUserObjId());
         return map;
     }
 
-    /**
-     * 需要进行检测的权限数组
-     */
     protected String[] needPermissions = {
-
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.CAMERA
-
     };
 
-    /**
-     * 判断是否需要检测，防止不停的弹框
-     */
-    private boolean isNeedCheck = true;
-
     @OnClick(R.id.act_addring_scan)
-    void scan(View view){
-
+    void scan(){
         requestCodeQRCodePermissions();
-
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
-
         EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
-
     }
 
     public void tiaoz(){
-
-
         if (SystemSwitchUtils.isFlashlightOn()) {
-
             showErrorMsg("第三方应用开启了相机");
             return;
         }
-
         Intent intent = new Intent(AddRing2Activity.this,MyScanActivity.class);
         startActivityForResult(intent,REQUEST_CODE_SCAN);
-
     }
 
     @Override
     public String getUserObjId() {
-
         if (mUserObjId != null) {
             return mUserObjId;
         }
-
         return "";
     }
 
@@ -197,9 +148,7 @@ public class AddRing2Activity extends BaseActivity implements IAddRingView,EasyP
 
     @Override
     public String getRingCode() {
-
-        String ringCode = mRingCodeEt.getText().toString().trim();
-        return ringCode;
+        return mRingCodeEt.getText().toString().trim();
     }
 
     @Override
@@ -242,7 +191,6 @@ public class AddRing2Activity extends BaseActivity implements IAddRingView,EasyP
 
     @Override
     public void toDo() {
-
         isAdd = true;
         this.finish();
     }
@@ -254,24 +202,18 @@ public class AddRing2Activity extends BaseActivity implements IAddRingView,EasyP
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-
         tiaoz();
-
     }
 
     @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-
-    }
+    public void onPermissionsDenied(int requestCode, List<String> perms) {}
 
     @AfterPermissionGranted(REQUEST_CODE_SCAN)
     private void requestCodeQRCodePermissions(){
-
         if (!EasyPermissions.hasPermissions(this,needPermissions)) {
             EasyPermissions.requestPermissions(this,"打开相机和闪光灯的权限",REQUEST_CODE_SCAN,needPermissions);
         }else {
             tiaoz();
         }
-
     }
 }

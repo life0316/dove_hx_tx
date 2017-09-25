@@ -10,9 +10,6 @@ import com.haoxi.dove.inject.ActivityFragmentInject;
 
 import butterknife.BindView;
 
-/**
- * Created by lifei on 2017/5/15.
- */
 @ActivityFragmentInject(contentViewId = R.layout.activity_user_pro)
 public class UserProtocolActivity extends BaseActivity {
 

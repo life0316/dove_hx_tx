@@ -227,7 +227,10 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
     @Override
     public void onResume() {
         super.onResume();
-        getDatas();
+        if (isLoad) {
+            refreshLayout.autoRefresh();
+        }
+        isLoad = false;
     }
 
     public void getDatas() {
@@ -268,7 +271,6 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
         }
         return method;
     }
-
 
     public String getDeleteObjIds() {
         StringBuilder sb = new StringBuilder();
@@ -333,7 +335,7 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
     }
 
     @OnClick(R.id.mypigeon_select_delete)
-    void deleteOnCli(View view) {
+    void deleteOnCli() {
         routeBeanTemps.clear();
         //获取你选中的item
         Map<Integer, Boolean> map = titleAdapter.getMap();
@@ -408,15 +410,12 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
             mStopTimeTv.setText(innerRouteBean.getStop_time());
         }
 
-
         mRemoveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 flyRecordId = innerRouteBean.getFly_recordid();
                 methodType = MethodType.METHOD_TYPE_FLY_DELETE;
                 ourCodePresenter.deleteFly(getParaMap());
-
             }
         });
         mDismissIv.setOnClickListener(new View.OnClickListener() {
@@ -435,7 +434,6 @@ public class AllFlyRecordFragment  extends BaseRvFragment2 implements IGetOurRou
                 startActivity(intent);
             }
         });
-
         popDialog.show();
     }
 

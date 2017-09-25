@@ -26,7 +26,9 @@ import com.haoxi.dove.modules.mvp.views.IAddDynamicView;
 import com.haoxi.dove.modules.mvp.views.IUpdateImageView;
 import com.haoxi.dove.newin.bean.UploadImageBean;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
+import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.retrofit.MethodType;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.widget.CustomDialog;
 
@@ -250,13 +252,8 @@ public class ReleaseCircleActivity extends BaseActivity implements IAddDynamicVi
 
     @Override
     public void toDo() {
-
         tranTag = false;
-
-        Log.e("fafafaf","发表成功");
-
-        mRxBus.post("load_circle",4);
-
+        mRxBus.post(ConstantUtils.OBSER_LOAD_CIRCLE,4);
         ReleaseCircleActivity.this.finish();
 
     }
@@ -267,27 +264,17 @@ public class ReleaseCircleActivity extends BaseActivity implements IAddDynamicVi
 
         switch (methodType){
             case MethodType.METHOD_TYPE_ADD_CIRCLE:
-                method = "/app/circle/add";
+                method = MethodConstant.CIRCLE_ADD;
                 break;
             case MethodType.METHOD_TYPE_IMAGE_UPLOAD:
-                method = "/app/image/upload";
+                method = MethodConstant.IMAGE_UPLOAD;
                 break;
         }
         return method;
     }
 
-    @Override
-    public void onBackPressed() {
-//        mRxBus.post("load_dynamic",false);
-        mRxBus.post("isLoad",false);
-        super.onBackPressed();
-    }
-
     @OnClick(R.id.custom_toolbar_keep)
     void releaseMsg() {
-
-        Log.e("photoadapter",photoAdapter.getItemCount()+"------图片数量");
-
         if (TextUtils.equals("",getContent()) && selectedPhotos.size() == 0){
             return;
         }
@@ -339,12 +326,8 @@ public class ReleaseCircleActivity extends BaseActivity implements IAddDynamicVi
                 break;
             case 3:
                 map.put("content",getContent());
-                //map.put("pics",getPicsStr());
                 break;
         }
-
-        Log.e("kao",map.toString()+"------map");
-
         return map;
     }
 
@@ -415,15 +398,10 @@ public class ReleaseCircleActivity extends BaseActivity implements IAddDynamicVi
     @Override
     public void toUploadHeadPic(UploadImageBean uploadImageBean) {
 
-//        updatePamas = UPDATE_HEADPIC;
      String  updateHeadpic = uploadImageBean.getData();
-
-     Log.e("picCount",selectedPhotos.size()+"------picCount--"+picCount+"------"+picLists.size());
-
         if ((picCount < (selectedPhotos.size()))) {
             picCount ++;
             picLists.add(updateHeadpic);
-            Log.e("picCount","picCount--"+picCount+"------"+picLists.size());
         }
 
         if (picCount == selectedPhotos.size()){
@@ -432,10 +410,8 @@ public class ReleaseCircleActivity extends BaseActivity implements IAddDynamicVi
         }
     }
     public String getPicsStr(){
-        Log.e("picCount",picLists.size()+"-------picl");
         for (int i = 0; i < picLists.size(); i++) {
             String picStr = picLists.get(i);
-
             if (i == (picLists.size() - 1)) {
                 addPicSb.append(picStr);
             }else {

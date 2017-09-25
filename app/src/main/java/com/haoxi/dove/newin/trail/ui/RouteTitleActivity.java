@@ -27,14 +27,20 @@ import com.haoxi.dove.inject.RouteTitleMoudle;
 import com.haoxi.dove.newin.bean.InnerDoveData;
 import com.haoxi.dove.newin.bean.InnerRouteBean;
 import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.newin.bean.OurRouteBean;
 import com.haoxi.dove.newin.bean.PointBean;
 import com.haoxi.dove.newin.trail.presenter.RouteTitlePresenter;
 import com.haoxi.dove.utils.ApiUtils;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
+import com.haoxi.dove.utils.SpConstant;
+import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.widget.CustomDialog;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +53,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 @ActivityFragmentInject(contentViewId = R.layout.activity_route_title)
-public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView, SwipeRefreshLayout.OnRefreshListener, MyItemClickListener, RouteTitleAdapter.RecyclerViewOnItemClickListener, RouteTitleAdapter.MyItemCheckListener, View.OnClickListener {
+public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView, MyItemClickListener, RouteTitleAdapter.RecyclerViewOnItemClickListener, RouteTitleAdapter.MyItemCheckListener, View.OnClickListener, OnRefreshListener {
 
     private int methodType = MethodType.METHOD_TYPE_FLY_SEARCH;
 
@@ -57,8 +63,8 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
     LinearLayout mRefrashLl;
     @BindView(R.id.fragment_mypigeon_show_add)
     LinearLayout mShowAddLv;
-    @BindView(R.id.fragment_mypigeon_srl)
-    SwipeRefreshLayout mSrl;
+    @BindView(R.id.refreshLayout)
+    RefreshLayout refreshLayout;
     @BindView(R.id.fragment_mypigeon_swiprv)
     RecyclerView mRecyclerView;
     @BindView(R.id.mypigeon_select)
@@ -71,6 +77,8 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
     ImageView mBackIv;
     @BindView(R.id.custom_toolbar_tv)
     TextView mTitleTv;
+    @BindView(R.id.custom_toolbar_keep)
+    TextView mCancleTv;
 
     @Inject
     RouteTitlePresenter titlePresenter;
@@ -92,10 +100,7 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
     private List<InnerRouteBean> routeBeanList = new ArrayList<>();
     private List<InnerRouteBean> routeBeanTemps = new ArrayList<>();
 
-    @Override
-    public void onRefresh() {
-        getDatas();
-    }
+    private boolean isLoad = true;
 
     @Override
     protected void initInject() {
@@ -109,6 +114,7 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
     @Override
     protected void init() {
         mTitleTv.setText("行程记录");
+        mCancleTv.setText("取消");
         mBackIv.setVisibility(View.VISIBLE);
         mBackIv.setOnClickListener(this);
         Intent intent = getIntent();
@@ -121,11 +127,8 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
         mRecyclerView.setAdapter(titleAdapter);
 
-        mSrl.setOnRefreshListener(this);
-        mSrl.setColorSchemeColors(getResources().getColor(android.R.color.holo_blue_bright),
-                getResources().getColor(android.R.color.holo_green_light),
-                getResources().getColor(android.R.color.holo_orange_light),
-                getResources().getColor(android.R.color.holo_red_light));
+        refreshLayout.setEnableLoadmore(false);
+        refreshLayout.setOnRefreshListener(this);
 
         mSelectCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -168,34 +171,48 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
     @Override
     protected void onResume() {
         super.onResume();
-        getDatas();
+        if (isLoad) {
+            refreshLayout.autoRefresh();
+            isLoad = false;
+        }
     }
 
     public void getDatas() {
         if (!ApiUtils.isNetworkConnected(this)) {
-            //
         } else {
             methodType = MethodType.METHOD_TYPE_FLY_SEARCH;
             titlePresenter.getRouteFormNets(getParaMap());
         }
     }
 
-    public Map<String,String> getParaMap(){
-        Map<String,String> map = new HashMap<>();
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("userid",getUserObjId());
-        map.put("token",getToken());
+    @OnClick(R.id.custom_toolbar_keep)
+    void cancleOnClick(){
+        chang();
+    }
+    private void chang(){
+        if (titleAdapter != null) {
+            titleAdapter.setIsShow(false);
+            titleAdapter.setLongClickTag(false);
+            longClickTag = false;
+            titleAdapter.notifyDataSetChanged();
+        }
+        mSelectRv.setVisibility(View.GONE);
+        mSelectCb.setChecked(false);
+        refreshLayout.setEnableRefresh(true);
+        mCancleTv.setVisibility(View.GONE);
+    }
+    @Override
+    protected Map<String, String> getParaMap() {
+        Map<String,String> map =  super.getParaMap();
+        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
+        map.put(MethodParams.PARAMS_TOKEN,getToken());
         switch (methodType){
             case MethodType.METHOD_TYPE_FLY_SEARCH:
-                map.put("doveid",doveid);
+                map.put(MethodParams.PARAMS_DOVE_ID,doveid);
                 break;
             case MethodType.METHOD_TYPE_FLY_DELETE:
-                map.put("fly_recordid",flyRecordId);
+                map.put(MethodParams.PARAMS_FLY_RECORDID,flyRecordId);
         }
-//        Log.e("fafsewdfvd",map.toString());
         return map;
     }
 
@@ -242,21 +259,10 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
         setRefrash(false);
         routeBeanList.clear();
         if (routeData.getData() != null && routeData.getData().size() != 0) {
-//
-//            for (int i = 0; i < routeData.getData().size(); i++) {
-//
-//                List<PointBean> pointBeans = routeData.getData().get(i).getPoints();
-//
-//                for (int j = 0; j < pointBeans.size(); j++) {
-//
-//                    Log.e("pointBeans",pointBeans.get(j).getTime()+"-----time");
-//                    Log.e("pointBeans",pointBeans.get(j).getLat()+"-----lat");
-//                    Log.e("pointBeans",pointBeans.get(j).getLng()+"-----lng");
-//                }
-//            }
             routeBeanList.addAll(routeData.getData());
             titleAdapter.addData(routeBeanList);
-            mSrl.setEnabled(true);
+            refreshLayout.setEnableRefresh(true);
+            refreshLayout.setEnableLoadmore(true);
             mShowAddLv.setVisibility(View.GONE);
 
             mSelectRv.setVisibility(View.GONE);
@@ -265,9 +271,9 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
             titleAdapter.setLongClickTag(false);
             titleAdapter.setLongIntTag(0);
             this.longClickTag = false;
-
         } else {
-            mSrl.setEnabled(false);
+            refreshLayout.setEnableRefresh(false);
+            refreshLayout.setEnableLoadmore(false);
             titleAdapter.addData(routeBeanList);
             mShowAddLv.setVisibility(View.VISIBLE);
             mSelectRv.setVisibility(View.GONE);
@@ -280,15 +286,13 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
 
     @Override
     public void setRefrash(boolean isRefrash) {
-        mSrl.setRefreshing(isRefrash);
+        refreshLayout.finishLoadmore();
+        refreshLayout.finishRefresh();
     }
 
     @Override
     public void onItemClick(View view, int count) {
         countTemp = count;
-
-        Log.e("count", count + "-----d--" + routeBeanList.size());
-
         if (count >= routeBeanList.size()) {
             mSelectCb.setChecked(true);
         } else {
@@ -309,20 +313,18 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
     @Override
     public boolean onItemLongClickListener(View view, int position, boolean longClickTag) {
         this.longClickTag = false;
-
         if (!longClickTag) {
             //长按事件
+            mCancleTv.setVisibility(View.VISIBLE);
             titleAdapter.setShowBox();
             //设置选中的项
             titleAdapter.setSelectItem(position);
             titleAdapter.notifyDataSetChanged();
-
             mSelectRv.setVisibility(View.VISIBLE);
-            mSrl.setEnabled(false);
-
+            refreshLayout.setEnableLoadmore(false);
+            refreshLayout.setEnableRefresh(false);
             titleAdapter.setLongClickTag(true);
             return false;
-
         }
         return true;
     }
@@ -377,7 +379,6 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
     }
     @Override
     public void onBackPressed() {
-//        titleAdapter.getLongClickTag();
         if (titleAdapter.getLongClickTag()) {
             mSelectRv.setVisibility(View.GONE);
             mSelectCb.setChecked(false);
@@ -415,9 +416,7 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
         params.height = (width * 52) / 72;
 
         layout.setLayoutParams(params);
-
         ImageView mDismissIv = (ImageView) view.findViewById(R.id.show_marker_dismiss);
-
 
         if (innerRouteBean.getDoveid() != null) {
             mDoveNameTv.setText(innerRouteBean.getDoveid());
@@ -435,11 +434,9 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
             mStopTimeTv.setText(innerRouteBean.getStop_time());
         }
 
-
         mRemoveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 flyRecordId = innerRouteBean.getFly_recordid();
                 methodType = MethodType.METHOD_TYPE_FLY_DELETE;
                 ourCodePresenter.deleteFly(getParaMap());
@@ -463,7 +460,6 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
                 popDialog.dismiss();
             }
         });
-
         popDialog.show();
     }
 
@@ -474,5 +470,10 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+       getDatas();
     }
 }

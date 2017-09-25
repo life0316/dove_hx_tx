@@ -18,6 +18,7 @@ import com.haoxi.dove.inject.DaggerAddRingComponent;
 import com.haoxi.dove.modules.mvp.views.IAddRingView;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
@@ -44,7 +45,6 @@ public class AddRingActivity extends BaseActivity implements IAddRingView {
     @Inject
     RxBus mRxBus;
 
-    private boolean isAdd = false;
     private static final int REQUEST_CODE_SCAN = 0x0000;
     private static final String DECODED_CONTENT_KEY = "codedContent";
     private static final String DECODED_BITMAP_KEY = "codedBitmap";
@@ -84,16 +84,13 @@ public class AddRingActivity extends BaseActivity implements IAddRingView {
         }
         ourCodePresenter.addRing(getParaMap());
     }
-    public Map<String,String> getParaMap(){
-        Map<String,String> map = new HashMap<>();
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("userid",getUserObjId());
-        map.put("token",getToken());
-        map.put("playerid",getUserObjId());
-        map.put("ring_code",getRingCode());
+    @Override
+    protected Map<String, String> getParaMap() {
+        Map<String,String> map = super.getParaMap();
+        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
+        map.put(MethodParams.PARAMS_TOKEN,getToken());
+        map.put(MethodParams.PARAMS_PLAYER_ID,getUserObjId());
+        map.put(MethodParams.PARAMS_RING_CODE,getRingCode());
         return map;
     }
 
@@ -143,10 +140,8 @@ public class AddRingActivity extends BaseActivity implements IAddRingView {
     }
 
     public void tiaoz(){
-
         Intent intent = new Intent(AddRingActivity.this,CaptureActivity.class);
         startActivityForResult(intent,REQUEST_CODE_SCAN);
-
     }
 
     @Override
@@ -181,7 +176,6 @@ public class AddRingActivity extends BaseActivity implements IAddRingView {
                 if (!"Scan failed!".equals(content)) {
                     if (ApiUtils.isNumeric(content)){
                         if (content.length() > 15) {
-
                             content = content.substring(0,15);
                         }
                         mRingCodeEt.setText(content);
@@ -196,8 +190,7 @@ public class AddRingActivity extends BaseActivity implements IAddRingView {
 
     @Override
     public void toDo() {
-        isAdd = true;
-        mRxBus.post("isLoad",true);
+        mRxBus.post(ConstantUtils.OBSER_LOAD_RING,true);
         this.finish();
     }
 

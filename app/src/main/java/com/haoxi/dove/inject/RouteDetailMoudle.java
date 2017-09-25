@@ -11,17 +11,10 @@ import com.haoxi.dove.newin.trail.ui.RouteDetail2Activity;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by lifei on 2017/3/29.
- */
-
 @Module
 public class RouteDetailMoudle {
-
     private RouteDetail2Activity mView;
-
     private Context mContext;
-
 
     public RouteDetailMoudle(Context mContext, RouteDetail2Activity mView){
         this.mView = mView;

@@ -62,12 +62,11 @@ public class TransCircleActivity  extends BaseActivity implements View.OnClickLi
     private String playerHead = "";
 
     private InnerCircleBean innerCircleBean;
-    private boolean isShare = false;
     private int circleTag;
 
     @Override
     public void toDo() {
-        mRxBus.post("load_circle",circleTag);
+        mRxBus.post(ConstantUtils.OBSER_LOAD_CIRCLE,circleTag);
         finish();
     }
 

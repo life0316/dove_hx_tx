@@ -16,11 +16,6 @@ import com.haoxi.dove.newin.bean.InnerDoveData;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @创建者 Administrator
- * @创建时间 2017/2/7 11:41
- * @描述
- */
 public class TraAdpter2 extends RecyclerView.Adapter<TraAdpter2.MyHolder> implements View.OnClickListener {
 
     private List<InnerDoveData> pigeonDatas = new ArrayList<>();

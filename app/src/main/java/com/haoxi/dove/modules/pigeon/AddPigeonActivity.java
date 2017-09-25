@@ -1,6 +1,5 @@
 package com.haoxi.dove.modules.pigeon;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +17,7 @@ import com.haoxi.dove.modules.mvp.views.IAddPigeonView;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.utils.ApiUtils;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.utils.SpUtils;
 import com.haoxi.dove.utils.StringUtils;
@@ -306,7 +306,7 @@ public class AddPigeonActivity extends BaseActivity implements IAddPigeonView {
     @Override
     public void toDo() {
         isAdd = true;
-        mRxBus.post("isLoad",true);
+        mRxBus.post(ConstantUtils.OBSER_LOAD_DOVE,true);
         this.finish();
     }
 

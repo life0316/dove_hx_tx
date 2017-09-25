@@ -18,13 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @创建者 Administrator
- * @创建时间 2017/2/7 11:41
- * @描述
- */
 public class TraAdpter extends RecyclerView.Adapter<TraAdpter.MyHolder> implements View.OnClickListener {
-
     private List<InnerDoveData> pigeonDatas = new ArrayList<>();
     private Context mContext;
 

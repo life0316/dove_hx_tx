@@ -3,9 +3,6 @@ package com.haoxi.dove.newin.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by lifei on 2017/6/27.
- */
 public class PointBean implements Parcelable {
 
     private String time;

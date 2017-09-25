@@ -5,18 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.multidex.MultiDex;
-//import android.util.Log;
-//
-//import com.alibaba.sdk.android.push.CloudPushService;
-//import com.alibaba.sdk.android.push.CommonCallback;
-//import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
 import com.haoxi.dove.bean.DaoMaster;
 import com.haoxi.dove.bean.DaoSession;
-import com.haoxi.dove.bean.RealFlyBean;
 import com.haoxi.dove.inject.AppComponent;
 import com.haoxi.dove.inject.AppMoudle;
 import com.haoxi.dove.inject.DaggerAppComponent;
@@ -51,18 +45,10 @@ public class MyApplication extends Application {
     private Map<String,ArrayList<MarkerOptions>> markerOptionsMap = new HashMap<>();
     private Map<String,ArrayList<Marker>> markerMap = new HashMap<>();
     private Map<String,Boolean> numMap = new HashMap<>();
-
-    private List<RealFlyBean> currentFlyBeans = new ArrayList<>();
     private List<String> mateList = new ArrayList<>();
-
-    public List<RealFlyBean> getCurrentFlyBeans() {
-        return currentFlyBeans;
-    }
-
     public Map<String, ArrayList<MarkerOptions>> getMarkerOptionsMap() {
         return markerOptionsMap;
     }
-
     public Map<String, ArrayList<Marker>> getMarkerMap() {
         return markerMap;
     }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -88,9 +89,9 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
     @Inject
     Context mContext;
 
-    private Observable<Boolean> isLoadObservable;
     private Observable<Boolean> dataObservable;
     private Observable<Integer> mTagNumObservable;
+    private Observable<Boolean> ringObservable;
     private List<String> mateList;
     private CustomDialog dialog;
     private Observable<String> exitObservable;
@@ -101,7 +102,7 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mateList = mApplication.getMateList();
-        isLoadObservable = mRxBus.register("isLoad", Boolean.class);
+        dataObservable = mRxBus.register(ConstantUtils.OBSER_LOAD_DATA, Boolean.class);
         exitObservable = mRxBus.register(ConstantUtils.OBSER_EXIT,String.class);
 
         exitObservable.subscribe(new Action1<String>() {
@@ -207,7 +208,9 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
         super.onResume();
         mTagNumObservable = mRxBus.register("tagnum", Integer.class);
         dataObservable = mRxBus.register("isLoadData", Boolean.class);
+        ringObservable = mRxBus.register(ConstantUtils.OBSER_LOAD_RING, Boolean.class);
         setObservable();
+        Log.e("fasdnqaf",isLoad+"------r");
         if (isLoad) {
 //            getDatas();
             refreshLayout.autoRefresh();
@@ -225,10 +228,10 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
     }
 
     public void setObservable() {
-        isLoadObservable.subscribe(new Action1<Boolean>() {
+        ringObservable.subscribe(new Action1<Boolean>() {
             @Override
-            public void call(Boolean aIsLoad) {
-                isLoad = aIsLoad;
+            public void call(Boolean aBoolean) {
+                isLoad = aBoolean;
             }
         });
         dataObservable.subscribe(new Action1<Boolean>() {
@@ -414,9 +417,9 @@ public class MyRingFragment extends BaseRvFragment2 implements IGetRingView, MyR
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mRxBus.unregister("isLoad", isLoadObservable);
         mRxBus.unregister("tagnum", mTagNumObservable);
-        mRxBus.unregister("isLoadData", dataObservable);
+        mRxBus.unregister(ConstantUtils.OBSER_LOAD_DATA, dataObservable);
+        mRxBus.unregister(ConstantUtils.OBSER_LOAD_RING, ringObservable);
     }
 
     @Override

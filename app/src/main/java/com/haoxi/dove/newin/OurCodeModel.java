@@ -1,30 +1,17 @@
 package com.haoxi.dove.newin;
 
-import android.util.Log;
 
 import com.haoxi.dove.base.BaseModel;
 import com.haoxi.dove.base.BaseSubscriber;
 import com.haoxi.dove.callback.RequestCallback;
 import com.haoxi.dove.newin.bean.OurCode;
-
 import java.util.Map;
-
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-
-/**
- * Created by lifei on 2017/3/29.
- */
-
 public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
-
     private static final String TAG = "OurCodeModel";
-
-
-    public OurCodeModel() {
-    }
 
     @Override
     public void getValidCode(Map<String, String> map,final RequestCallback<OurCode> requestCallback) {
@@ -41,8 +28,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        //Log.e(TAG,codesBean.getCODES()+"----"+TAG);
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
+                        }
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -64,16 +52,8 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                            case 3015:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
                         return 200 == codesBean.getCode();
                     }
@@ -97,17 +77,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -129,16 +101,8 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                            case 3015:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
                         return 200 == codesBean.getCode();
                     }
@@ -162,17 +126,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                     .filter(new Func1<OurCode, Boolean>() {
                         @Override
                         public Boolean call(OurCode codesBean) {
-
-                            Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                            switch (codesBean.getCode()) {
-                                case 500:
-                                case 602:
-                                case 603:
-                                    requestCallback.requestError(codesBean.getMsg());
-                                    break;
+                            if (codesBean.getCode() != 200){
+                                requestCallback.requestError(codesBean.getMsg());
                             }
-
                             return 200 == codesBean.getCode();
                         }
                     })
@@ -196,17 +152,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e("codesBean", codesBean.getCode() + "---c-");
-
-                        switch (codesBean.getCode()){
-                            case 604:
-                            case 500:
-                            case 3021:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -229,17 +177,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -262,17 +202,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -295,15 +227,8 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 3019:
-                            case 3020:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
                         return 200 == codesBean.getCode();
                     }
@@ -328,17 +253,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -362,17 +279,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -396,17 +305,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"---ringwithdove--"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -430,58 +331,15 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<>(requestCallback));
-
     }
-
-//    @Override
-//    public void startFly(Map<String, String> map,final RequestCallback<OurCode> requestCallback) {
-//        ourNewService.startFly(map)
-//                .subscribeOn(Schedulers.io())
-//                .unsubscribeOn(Schedulers.io())
-//                .doOnSubscribe(new Action0() {
-//                    @Override
-//                    public void call() {
-//                        requestCallback.beforeRequest();
-//                    }
-//                })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .filter(new Func1<OurCode, Boolean>() {
-//                    @Override
-//                    public Boolean call(OurCode codesBean) {
-//
-//                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-//
-//                        switch (codesBean.getCode()) {
-//                            case 500:
-//                            case 602:
-//                            case 603:
-//                                requestCallback.requestError(codesBean.getMsg());
-//                                break;
-//                        }
-//
-//                        return 200 == codesBean.getCode();
-//                    }
-//                })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new BaseSubscriber<>(requestCallback));
-//
-//    }
 
     @Override
     public void endFly(Map<String, String> map,final RequestCallback<OurCode> requestCallback) {
@@ -498,17 +356,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -532,17 +382,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -566,17 +408,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -601,16 +435,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                     @Override
                     public Boolean call(OurCode codesBean) {
 
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -634,17 +461,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -668,15 +487,8 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
 
                         return 200 == codesBean.getCode();
@@ -701,17 +513,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -735,17 +539,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -769,17 +565,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -803,16 +591,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -835,17 +616,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -869,17 +642,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })
@@ -903,17 +668,9 @@ public class OurCodeModel extends BaseModel implements IOuerCodeMode<OurCode> {
                 .filter(new Func1<OurCode, Boolean>() {
                     @Override
                     public Boolean call(OurCode codesBean) {
-
-                        Log.e(TAG,codesBean.getCode()+"-----"+codesBean.getMsg());
-
-                        switch (codesBean.getCode()) {
-                            case 500:
-                            case 602:
-                            case 603:
-                                requestCallback.requestError(codesBean.getMsg());
-                                break;
+                        if (codesBean.getCode() != 200){
+                            requestCallback.requestError(codesBean.getMsg());
                         }
-
                         return 200 == codesBean.getCode();
                     }
                 })

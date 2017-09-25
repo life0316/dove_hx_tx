@@ -9,14 +9,8 @@ import org.greenrobot.greendao.annotation.Id;
 
 import java.util.ArrayList;
 import org.greenrobot.greendao.annotation.Generated;
-
-/**
- * Created by lifei on 2017/6/27.
- */
-
 @Entity
 public class InnerRouteBean {
-
     @Id
     private Long id;
 

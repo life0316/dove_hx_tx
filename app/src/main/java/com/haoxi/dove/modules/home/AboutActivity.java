@@ -48,7 +48,7 @@ public class AboutActivity extends BaseActivity implements IAboutView {
     protected void init() {
         mBackIv.setVisibility(View.VISIBLE);
         mTitleTv.setText("关于信鸽");
-        presenter = new VersionPresenter(new AboutModel(this));
+        presenter = new VersionPresenter(new AboutModel());
         presenter.attachView(this);
         String appName = ApiUtils.getAppName(this);
         String versionName = ApiUtils.getVersionName(this);
@@ -62,14 +62,14 @@ public class AboutActivity extends BaseActivity implements IAboutView {
 
     @OnClick(R.id.activity_about_brief)
     void briefOnCli() {
-//        Intent intent = new Intent(this, WebViewActivity.class);
-//        intent.putExtra("title_tag","about");
-//        startActivity(intent);
-        Intent intent = new Intent();
-        intent.setAction("android.intent.action.VIEW");
-        Uri contentUri = Uri.parse(ConstantUtils.APP_INTRO_URL);
-        intent.setData(contentUri);
+        Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra("title_tag","about");
         startActivity(intent);
+//        Intent intent = new Intent();
+//        intent.setAction("android.intent.action.VIEW");
+//        Uri contentUri = Uri.parse(ConstantUtils.APP_INTRO_URL);
+//        intent.setData(contentUri);
+//        startActivity(intent);
     }
 
     @OnClick(R.id.custom_toolbar_iv)
@@ -143,18 +143,7 @@ public class AboutActivity extends BaseActivity implements IAboutView {
                 if (!ApiUtils.isNetworkConnected(AboutActivity.this)){
                     ApiUtils.showToast(AboutActivity.this,getString(R.string.net_conn_2));
                     return;
-                }
-//                netTag = true;
-//                mHandler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (netTag) {
-//                            hideProgress();
-//                            ApiUtils.showToast(AboutActivity.this, getString(R.string.net_conn_1));
-//                        }
-//                    }
-//                }, 1000 * 15);
-
+            }
                 //升级操作，下载apk
                 presenter.downloadApk(apkUrl);
                 Log.e("update","下载apk");

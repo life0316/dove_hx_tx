@@ -4,28 +4,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-/**
- * Created by Administrator on 2017\7\5 0005.
- */
-
 public class SpUtils {
-
     private SpUtils(){
         throw  new AssertionError();
     }
-
     public static String getString(Context context,String key){
         return getString(context,key,"");
     }
-
     public static String getString(Context context,String key,String defaultValue){
         return PreferenceManager.getDefaultSharedPreferences(context).getString(key,defaultValue);
     }
-
     public static int getInt(Context context,String key){
         return getInt(context,key,0);
     }
-
     public static int getInt(Context context,String key,int defaultValue){
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(key,defaultValue);
     }

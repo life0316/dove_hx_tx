@@ -25,6 +25,7 @@ import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.utils.ApiUtils;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.widget.CustomDialog;
 
@@ -103,7 +104,6 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
 
     @OnClick(R.id.custom_toolbar_iv)
     void backOnCli() {
-        mRxBus.post("isLoad", false);
         finish();
     }
 
@@ -194,7 +194,7 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
     @Override
     public void toDo() {
         getDatas();
-        mRxBus.post("refrash",0);
+        mRxBus.post(ConstantUtils.OBSER_LOAD_DATA,0);
     }
 
     @Override
@@ -209,11 +209,5 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
                 break;
         }
         return method;
-    }
-
-    @Override
-    public void onBackPressed() {
-        mRxBus.post("isLoad", false);
-        super.onBackPressed();
     }
 }

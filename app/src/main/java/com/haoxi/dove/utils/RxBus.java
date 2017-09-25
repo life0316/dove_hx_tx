@@ -11,17 +11,9 @@ import rx.Observable;
 import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;
-
-/**
- * Created by lifei on 2017/3/9.
- */
-
 public class RxBus {
-
     private static RxBus rxBus;
-
     private static Subject<Object,Object> _bus = new SerializedSubject<>(PublishSubject.create());
-
     /**
      * 存储某个标签的 subject集合
      */

@@ -150,8 +150,6 @@ public class CircleDetialActivity extends BaseActivity implements IEachView<Each
     @Override
     public void toDo() {
 
-//        InnerCircleBean innerCircleBean = (InnerCircleBean) myLmAdapter.getItem(currentPosition);
-
         switch (methodType){
             case MethodType.METHOD_TYPE_DELETE_ALL:
 
@@ -175,18 +173,8 @@ public class CircleDetialActivity extends BaseActivity implements IEachView<Each
                 myLmAdapter.notifyItemRemoved(currentPosition);
                 myLmAdapter.notifyDataSetChanged();
 
-//                innerCirclePresenter.deleteCircle(innerCircleBean);
-//                mRxBus.post("load_circle",0);
-//                mRxBus.post("load_circle",2);
-
                 break;
         }
-    }
-
-    private void loadCircle(){
-//        mRxBus.post("load_circle",0);
-//        mRxBus.post("load_circle",1);
-//        mRxBus.post("load_circle",2);
     }
 
     @Override
@@ -244,7 +232,7 @@ public class CircleDetialActivity extends BaseActivity implements IEachView<Each
 
     @Override
     protected void init() {
-        netObservale = mRxBus.register("load_circle", Integer.class);
+        netObservale = mRxBus.register(ConstantUtils.OBSER_LOAD_CIRCLE, Integer.class);
         netObservale.subscribe(new Action1<Integer>() {
             @Override
             public void call(Integer integer) {
@@ -286,57 +274,14 @@ public class CircleDetialActivity extends BaseActivity implements IEachView<Each
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadmoreListener(this);
 
-
         myLmAdapter = new CircleAdapter(this,0);
-
         recyclerView.setAdapter(myLmAdapter);
 
         myLmAdapter.setOnHolderListener(this);
         myLmAdapter.setMyItemClickListener(this);
-
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//
-//                //在 newState为滑到底部时
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE){
-//                    //如果没有隐藏 footview ，那么最后一个条目的位置就比我们的getItemCount 少 1，
-//
-//                    if (myLmAdapter.isFadeTips() == false && lastVisibleItem + 1 == myLmAdapter.getItemCount()){
-//                        mHandler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                //然后调用 加载更多更新recyclerview
-//                                updateRecyclerView();
-//                            }
-//                        },500);
-//                    }
-//
-//                    //如果隐藏了提示条，但是又是上拉加载时，那么最后一个条目就要比 getItemCount  少 2
-//                    if (myLmAdapter.isFadeTips() == true && lastVisibleItem + 2 == myLmAdapter.getItemCount()){
-//                        mHandler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                //然后调用 加载更多更新recyclerview
-//                                updateRecyclerView();
-//                            }
-//                        },500);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-//            }
-//        });
-
         mciv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -767,24 +712,6 @@ public class CircleDetialActivity extends BaseActivity implements IEachView<Each
             holder.mUserIcon.setImageResource(R.mipmap.btn_img_photo_default);
         }
 
-//        holder.mUserIcon.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                currentPosition = position;
-//
-//                if (innerCircleBean.isIs_friend() || innerCircleBean.getUserid().equals(getUserObJId())){
-//                    Intent intent = new Intent(Ci,CircleDetialActivity.class);
-//                    intent.putExtra("friendid",innerCircleBean.getUserid());
-//                    intent.putExtra("name",innerCircleBean.getUsername());
-//                    intent.putExtra("innerCircleBean",innerCircleBean);
-////                    intent.putExtra("current_position",currentPosition);
-//                    intent.putExtra("circle_tag",tag);
-//                    startActivity(intent);
-//                }
-//            }
-//        });
-
         if (!TextUtils.isEmpty(data.getCreate_time()) && !"".equals(data.getCreate_time())) {
             holder.mCreateTimeTv.setText(innerCircleBean.getCreate_time());
         }
@@ -1007,6 +934,6 @@ public class CircleDetialActivity extends BaseActivity implements IEachView<Each
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRxBus.unregister("load_circle", netObservale);
+        mRxBus.unregister(ConstantUtils.OBSER_LOAD_CIRCLE, netObservale);
     }
 }

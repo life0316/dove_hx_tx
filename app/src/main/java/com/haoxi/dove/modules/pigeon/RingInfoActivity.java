@@ -32,6 +32,7 @@ import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.utils.ApiUtils;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.widget.BottomPopView;
 import com.haoxi.dove.widget.RecycleviewDaviding;
@@ -236,7 +237,7 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
     void backIv() {
 
         if (isSetting || isMate) {
-            RxBus.getInstance().post("isLoad", true);
+            RxBus.getInstance().post(ConstantUtils.OBSER_LOAD_DATA, true);
         }
         this.finish();
     }
@@ -244,7 +245,7 @@ public class RingInfoActivity extends BaseActivity implements IRingInfoView {
     @Override
     public void onBackPressed() {
         if (isSetting || isMate) {
-            RxBus.getInstance().post("isLoad", true);
+            RxBus.getInstance().post(ConstantUtils.OBSER_LOAD_DATA, true);
         }
         super.onBackPressed();
     }

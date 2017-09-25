@@ -30,25 +30,7 @@ public class SavePicByUrlUtils {
     private Context context;
 
     public static void downloadImg(final Context context, IOurNewService ourNewService, final String imgUrl, final SaveImgCallback saveImgCallback){
-
-//        Call<ResponseBody> resultCall = ourNewService.downloadImage(imgUrl);
-
-//        resultCall.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//
-//                writeResponseBodyToDisk(context,imgUrl,response.body(),saveImgCallback);
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                saveImgCallback.saveImaFailure("下载异常");
-//            }
-//        });
-
         Observable<ResponseBody> resultCall = ourNewService.downloadImage(imgUrl);
-
         resultCall
                 .subscribeOn(Schedulers.io())
                 //.observeOn(AndroidSchedulers.mainThread())

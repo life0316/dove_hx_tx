@@ -1,20 +1,12 @@
 package com.haoxi.dove.modules.mvp.models;
 
-import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.haoxi.dove.base.BaseModel;
 import com.haoxi.dove.base.BaseSubscriber;
-import com.haoxi.dove.bean.VersionBean;
-import com.haoxi.dove.callback.MyModelCallback;
 import com.haoxi.dove.callback.MyProgressCallback;
 import com.haoxi.dove.callback.RequestCallback;
 import com.haoxi.dove.newin.bean.OurVerBean;
-import com.haoxi.dove.utils.ConstantUtils;
-import com.haoxi.dove.utils.OkhttpUtils;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -33,20 +25,12 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class AboutModel extends BaseModel implements IAboutModel<OurVerBean> {
-
-    private Context mContext;
-
-    public AboutModel(Context mContext) {
-        this.mContext = mContext;
-    }
-
     @Override
     public void downloadApk(String apkUrl, final MyProgressCallback progressCallback) {
         OkHttpClient mOkHttpClient = new OkHttpClient();
         Request request = new Request.Builder().url(apkUrl).build();
         Call call = mOkHttpClient.newCall(request);
         call.enqueue(new Callback() {
-
             @SuppressWarnings("resource")
             @Override
             public void onResponse(Response response) throws IOException {

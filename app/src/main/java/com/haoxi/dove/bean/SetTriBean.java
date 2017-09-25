@@ -8,13 +8,8 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Unique;
 
-/**
- * Created by lifei on 2016/10/27.
- */
-
 @Entity
 public class SetTriBean implements Parcelable {
-
 
     @Id
     Long id;

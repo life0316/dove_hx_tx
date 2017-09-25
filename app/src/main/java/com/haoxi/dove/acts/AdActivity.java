@@ -66,7 +66,7 @@ public class AdActivity extends BaseActivity implements EasyPermissions.Permissi
 
     @Override
     protected void init() {
-        presenter = new LoginPresenter(new LoginModel(this));
+        presenter = new LoginPresenter(new LoginModel());
         presenter.attachView(this);
         isAutoCb = SpUtils.getBoolean(this, SpConstant.IS_AUTO);
         int width = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);

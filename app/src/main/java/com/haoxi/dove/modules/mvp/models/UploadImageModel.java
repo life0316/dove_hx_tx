@@ -18,21 +18,9 @@ import rx.functions.Action0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by Administrator on 2017\6\9 0009.
- */
-
 public class UploadImageModel extends BaseModel implements IUploadImage<UploadImageBean> {
     @Override
     public void uploageImage(Map<String, RequestBody> map,final RequestCallback<UploadImageBean> requestCallback) {
-
-        File file = new File("/storage/emulated/0/com.kingroot.master/notifyPic/km_2.jpg.png");
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/otcet-stream"), file);
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("image", file.getName(), requestBody);
-
-        Log.e("UploadImageBean",map.toString()+"-----map");
-
         ourNewService2.getUploadPic(map)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -45,13 +33,14 @@ public class UploadImageModel extends BaseModel implements IUploadImage<UploadIm
                 .filter(new Func1<UploadImageBean, Boolean>() {
                     @Override
                     public Boolean call(UploadImageBean user) {
-
                         int codes = user.getCode();
-                        Log.e("UploadImageBean",codes+"-----codes");
+                        if (codes != 200){
+                            requestCallback.requestError(user.getMsg());
+                        }
                         return 200 == user.getCode();
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseSubscriber<UploadImageBean>(requestCallback));
+                .subscribe(new BaseSubscriber<>(requestCallback));
     }
 }

@@ -88,13 +88,13 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
     public void onResume() {
         super.onResume();
         if (isLoad) {
-            getDatas();
+            refreshLayout.autoRefresh();
         }
         isLoad = false;
     }
     public void getDatas() {
         if (!ApiUtils.isNetworkConnected(getActivity())) {
-            mPresenter.getDatas();
+            //mPresenter.getDatas();
         } else {
             methodType = MethodType.METHOD_TYPE_DOVE_SEARCH;
             mPresenter.getDataFromNets(getParaMap());
@@ -107,7 +107,7 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
         map.put(MethodParams.PARAMS_TOKEN,getToken());
         switch (methodType){
             case MethodType.METHOD_TYPE_DOVE_SEARCH:
-                map.put("playerid",getUserObjId());
+                map.put(MethodParams.PARAMS_PLAYER_ID,getUserObjId());
                 break;
         }
         return map;

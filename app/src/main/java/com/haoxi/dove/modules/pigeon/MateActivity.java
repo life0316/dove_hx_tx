@@ -34,6 +34,7 @@ import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.utils.ApiUtils;
+import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.widget.RecycleviewDaviding;
 
@@ -54,14 +55,12 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
 
     @BindView(R.id.tl_custom)
     Toolbar mToolbar;
-
     @BindView(R.id.custom_toolbar_iv)
     ImageView mBackIv;
     @BindView(R.id.custom_toolbar_tv)
     TextView  mTitleTv;
     @BindView(R.id.custom_toolbar_keep)
     TextView  mKeepTv;
-
     @BindView(R.id.act_mate_rv)
     RecyclerView mRv;
     @BindView(R.id.act_mate_show)
@@ -70,42 +69,29 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
     private AlertDialog.Builder builder;
     private AlertDialog         dialog;
     private RecyclerView mMateRv;
-
     private List<String>        hasMateRings = new ArrayList<>();
     private Map<String, String> keepMates    = new HashMap<>();
     private Map<String, InnerDoveData> keepIddMates    = new HashMap<>();
-
     private List<InnerDoveData> tempPigeons = new ArrayList<>();
     private List<InnerRing> tempRings   = new ArrayList<>();
-
     private List<InnerDoveData> myPigeonBeen = new ArrayList<>();
-
-
     private int methodType = MethodType.METHOD_TYPE_RING_SEARCH;
-
     private String tempPigeonObjId = "";
     private String tempRingObjId   = "";
-
     private boolean isMate = false;
 
     @Inject
     MatePigeonAdapter mAdapter;
-
     @Inject
     MatePigeonsAdapter mRingsAdapter;
-
     @Inject
     MyPigeonPresenter pigeonPresenter;
-
     @Inject
     OurCodePresenter ourCodePresenter;
-
     @Inject
     MyRingPresenter ringPresenter;
-
     @Inject
     RxBus mRxBus;
-
     @Inject
     DaoSession daoSession;
     private int mateSize;
@@ -124,7 +110,6 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
 
     @Override
     protected void init() {
-
         isLoadObservable = mRxBus.register("isLoad",Boolean.class);
         isSceenObservable = mRxBus.register("isScreen",Boolean.class);
 
@@ -134,7 +119,6 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
                 isLoad = !aBoolean;
             }
         });
-
         isLoadObservable.subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean aIsLoad) {
@@ -167,7 +151,6 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
         }
     }
 
-
     private void getRingData(){
         if (!ApiUtils.isNetworkConnected(this)) {
             ringPresenter.getDatas();
@@ -178,39 +161,30 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
     }
     @OnClick(R.id.custom_toolbar_keep)
     void keepOnclick() {
-
         ringsArray.clear();
         pigeonsArray.clear();
-
         for (int i = 0; i < tempRings.size(); i++) {
-
             Log.e("mateactivity",(keepMates.get(tempRings.get(i).getRingid()) != null)+"---s--5");
             if (keepMates.get(tempRings.get(i).getRingid()) != null && !"".equals(keepMates.get(tempRings.get(i).getRingid()))){
-
                 String str1 = keepMates.get(tempRings.get(i).getRingid());
-
                 for (int j =i+1; j < tempRings.size(); j++) {
                     if (keepMates.get(tempRings.get(j).getRingid()) != null){
                         String str2 = keepMates.get(tempRings.get(j).getRingid());
-
                         if (str1.equals(str2)){
                             ApiUtils.showToast(MateActivity.this,"鸽环绑定重复");
                             return;
                         }
                     }
                 }
-
                 ringsArray.add(tempRings.get(i).getRingid());
                 Log.e("mateactivity",keepMates.get(tempRings.get(i).getRingid())+"---s--51");
                 pigeonsArray.add(keepMates.get(tempRings.get(i).getRingid()));
             }
         }
-
         if (pigeonsArray.size() == 0){
             ApiUtils.showToast(this,"请添加匹配");
             return;
         }
-
         if (mateSize + ringsArray.size() > 15) {
             ApiUtils.showToast(this,"超过最大匹配数");
             return;
@@ -222,12 +196,8 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
     private JSONArray ringsArray = new JSONArray();
     private JSONArray pigeonsArray = new JSONArray();
 
-
     @OnClick(R.id.custom_toolbar_iv)
     void backOnclick() {
-        if (!isMate) {
-            mRxBus.post("isLoad",false);
-        }
         this.finish();
     }
 
@@ -235,41 +205,31 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
     public String getUserObjId() {
         return mUserObjId;
     }
-
     @Override
     public String getToken() {
         return mToken;
     }
-
     private List<InnerRing> myRingBeen = new ArrayList<>();
-
     private boolean isFirst = true;
-
     @Override
     public void setRingData(List<InnerRing> ringData) {
-
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
-
         if (ringData == null){
             ringData = new ArrayList<>();
         }
-
         if (isFirst) {
-
             for (int i = 0; i < ringData.size(); i++) {
                 if ("".equals(ringData.get(i).getDove_code()) || ringData.get(i).getDove_code() == null || "-1".equals(ringData.get(i).getDove_code()) ){
                     myRingBeen.add(ringData.get(i));
                 }
             }
-
         }else {
             myRingBeen = ringData;
         }
 
         this.tempRings = myRingBeen;
-
         if (tempRings.size() == 0 && myRingBeen.size() == 0){
             mShowRl.setVisibility(View.VISIBLE);
             mKeepTv.setVisibility(View.GONE);
@@ -293,12 +253,9 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
 
     @Override
     public void setPigeonData(List<InnerDoveData> pigeonData) {
-
         doveIdMate.clear();
         for (int i = 0; i < tempRings.size(); i++) {
-
             String doveid = keepMates.get(tempRings.get(i).getRingid());
-
             if (doveid != null && !"".equals(doveid)) {
                 doveIdMate.add(doveid);
             }
@@ -324,24 +281,18 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
         }
 
         if (myPigeonBeen.size() == 0 || myPigeonBeen == null) {
-
             ApiUtils.showToast(this,"没有可匹配的信鸽");
-
             return;
         }
         mAdapter.addDatas(myPigeonBeen);
         dialog.show();
-
         if (mAdapter != null) {
-
             mAdapter.setAddItemClickListener(new MatePigeonAdapter.AddItemClickListener() {
                 @Override
                 public void addItemClick(String msg, int position, InnerDoveData bean) {
-
                     switch (msg){
                         case "取消":
                             isFirst = false;
-
                             tempPigeonObjId = myPigeonBeen.get(position).getDoveid();
                             hasMateRings.remove(tempPigeonObjId);
                             keepMates.put(tempRingObjId, "");
@@ -359,17 +310,11 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
                             break;
                         case "添加":
                             isFirst = false;
-
                             tempPigeonObjId = myPigeonBeen.get(position).getDoveid();
-
-
                             Log.e("mateactivity", tempRingObjId + "-----mate----" + tempPigeonObjId);
-
                             hasMateRings.add(tempPigeonObjId);
-
                             keepMates.put(tempRingObjId, tempPigeonObjId);
                             keepIddMates.put(tempRingObjId,bean);
-
                             for (int i = 0; i < tempRings.size(); i++) {
                                 if (tempRingObjId.equals(tempRings.get(i).getRingid())) {
                                     tempRings.get(i).setDove_code(myPigeonBeen.get(position).getFoot_ring());
@@ -403,9 +348,7 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
     public void setMatePigeon() {
         builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.mate_pigeon_dialog, null);
-
         mMateRv = (RecyclerView) view.findViewById(R.id.mate_pigeon_rv);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mMateRv.addItemDecoration(new RecycleviewDaviding(this, R.drawable.daviding));
         mMateRv.setLayoutManager(linearLayoutManager);
@@ -476,14 +419,11 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
 
     }
     public Map<String,String> getParaMap(){
-
         Map<String,String> map = new HashMap<>();
-
         map.put("method",getMethod());
         map.put("sign",getSign());
         map.put("time",getTime());
         map.put("version",getVersion());
-
         map.put("userid",getUserObjId());
         map.put("token",getToken());
         map.put("playerid",getUserObjId());
@@ -512,27 +452,16 @@ public class MateActivity extends BaseActivity implements IMateView,IGetPigeonVi
 
     @Override
     public void mateSuccess(Object obj) {
-
         ApiUtils.showToast(this,(String)obj);
-
         this.finish();
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        if (!isMate) {
-            mRxBus.post("isLoad",false);
-        }
-        super.onBackPressed();
     }
 
     @Override
     public void toDo() {
         isMate = true;
+        mRxBus.post(ConstantUtils.OBSER_LOAD_DATA,true);
         this.finish();
     }
-
 
     @Override
     public String getMethod() {

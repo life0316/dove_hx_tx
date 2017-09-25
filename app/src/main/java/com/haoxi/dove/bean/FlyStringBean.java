@@ -1,9 +1,5 @@
 package com.haoxi.dove.bean;
 
-/**
- * Created by Administrator on 2017\7\7 0007.
- */
-
 public class FlyStringBean {
 
     String title;

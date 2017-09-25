@@ -51,9 +51,7 @@ import rx.Observable;
 import rx.functions.Action1;
 
 public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView, MyPigeonAdapter.MyItemCheckListener, MyPigeonAdapter.RecyclerViewOnItemClickListener, OnRefreshListener {
-
     private static final String TAG = "MyPigeonFragment";
-
     @BindView(R.id.fragment_mypigeon_tv_refrash) TextView mRefrashTv;
     @BindView(R.id.fragment_mypigeon_ll_refrash) LinearLayout mRefrashLl;
     @BindView(R.id.fragment_mypigeon_show_add) LinearLayout mShowAddLv;
@@ -78,9 +76,9 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     @Inject
     RxBus mRxBus;
 
-    private Observable<Boolean> isLoadObservable;
     private Observable<Integer> mTagNumObservable;
     private Observable<Boolean> dataObservable;
+    private Observable<Boolean> doveObservable;
 
     private List<String> mPigeonCodes;
     private List<InnerDoveData> pigeonBeans = new ArrayList<>();
@@ -179,9 +177,10 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     public void onResume() {
         super.onResume();
         mTagNumObservable = mRxBus.register("tagnum", Integer.class);
-        isLoadObservable = mRxBus.register("isLoad", Boolean.class);
         dataObservable = mRxBus.register("isLoadData", Boolean.class);
+        doveObservable = mRxBus.register(ConstantUtils.OBSER_LOAD_DOVE, Boolean.class);
         setObservable();
+        Log.e("fasdnqaf",isLoad+"------d");
         if (isLoad) {
             getDatas();
         }
@@ -189,6 +188,7 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     }
 
     public void getDatas() {
+
         if (!ApiUtils.isNetworkConnected(getActivity())) {
             mPresenter.getDatas();
         } else {
@@ -214,7 +214,7 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     }
 
     public void setObservable() {
-        isLoadObservable.subscribe(new Action1<Boolean>() {
+        doveObservable.subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean aBoolean) {
                 isLoad = aBoolean;
@@ -438,9 +438,9 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mRxBus.unregister("isLoad", isLoadObservable);
         mRxBus.unregister("tagnum", mTagNumObservable);
-        mRxBus.unregister("isLoadData", dataObservable);
+        mRxBus.unregister(ConstantUtils.OBSER_LOAD_DATA, dataObservable);
+        mRxBus.unregister(ConstantUtils.OBSER_LOAD_DOVE, doveObservable);
     }
 
     @Override

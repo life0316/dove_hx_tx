@@ -22,14 +22,8 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by lifei on 2017/3/30.
- */
-
 public class PigeonModel extends BaseModel implements IGetModel<OurDoveBean> {
-
     private static final String TAG = "PigeonModel";
-
     @Override
     public void getDatasFromNets(Map<String, String> map,final RequestCallback<OurDoveBean> requestCallback) {
                 ourNewService.searchDove(map)
@@ -44,37 +38,17 @@ public class PigeonModel extends BaseModel implements IGetModel<OurDoveBean> {
                         .filter(new Func1<OurDoveBean, Boolean>() {
                             @Override
                             public Boolean call(OurDoveBean user) {
-
                                 int codes = user.getCode();
                                 if (user.getData() != null) {
                                     for (int i = 0; i < user.getData().size(); i++) {
                                         Log.e(TAG,user.getData().get(i).getDoveid()+"----doveid");
                                         Log.e(TAG,user.getData().get(i).getRing_code()+"----ringcode");
                                         Log.e(TAG,user.getData().get(i).getFly_status()+"----Fly_status");
-
                                         Log.e(TAG,user.getData().get(i).getFly_recordid()+"----Fly_recordid");
                                     }
                                 }
-
-                                switch (codes){
-                                    case 3012:
-                                        requestCallback.requestError("手机号码格式错误");
-                                        break;
-                                    case 3013:
-                                        requestCallback.requestError("密码错误");
-                                        break;
-                                    case 3014:
-                                        requestCallback.requestError("验证码请求单日达到上限");
-                                        break;
-                                    case 3015:
-                                        requestCallback.requestError("验证码验证失败");
-                                        break;
-                                    case 3016:
-                                        requestCallback.requestError("该手机号已被注册");
-                                        break;
-                                    case 3017:
-                                        requestCallback.requestError("登录失败");
-                                        break;
+                                if (codes != 200){
+                                    requestCallback.requestError(user.getMsg());
                                 }
                                 return 200 == user.getCode();
                             }
@@ -83,20 +57,12 @@ public class PigeonModel extends BaseModel implements IGetModel<OurDoveBean> {
                     @Override
                     public void call(OurDoveBean ourDoveBean) {
                         MyApplication.getMyBaseApplication().getmPigeonCodes().clear();
-
-                        List<SetTriBean> setTriBeanList = new ArrayList<SetTriBean>();
-
+                        List<SetTriBean> setTriBeanList = new ArrayList<>();
                         List<InnerDoveData> innerDoveDatas = ourDoveBean.data;
-
                         for (int i = 0; i < innerDoveDatas.size(); i++) {
-
                             final InnerDoveData innerDoveData = innerDoveDatas.get(i);
-
                             if (!"".equals(innerDoveData.getRing_code()) && innerDoveData.getRing_code() != null) {
-//                                myPigeonBean.setPIGEON_STATUS("已匹配");
-
                                 if ("true".equals(innerDoveData.getFly_status()) || innerDoveData.getFly_status()) {
-
                                     List<SetTriBean> triBeanList = MyApplication.getDaoSession().getSetTriBeanDao()
                                             .queryBuilder()
                                             .where(SetTriBeanDao.Properties.USER_OBJ_ID.eq(innerDoveData.getPlayerid()),
@@ -108,25 +74,21 @@ public class PigeonModel extends BaseModel implements IGetModel<OurDoveBean> {
                                         setTriBean.setUSER_OBJ_ID(innerDoveData.getPlayerid());
                                         setTriBean.setOBJ_ID(innerDoveData.getDoveid());
                                         setTriBean.setIsFlying(1);
-
                                         setTriBean.setTrilPic(SpUtils.getInt(MyApplication.getContext(),"pic",0));
                                         setTriBean.setTrilWidth(SpUtils.getInt(MyApplication.getContext(),"thickness",10));
                                         setTriBean.setTrilColor(SpUtils.getString(MyApplication.getContext(),"color","#00ff00"));
-
                                         setTriBeanList.add(setTriBean);
                                     }
                                 }
                             }
-//                            MyApplication.getMyBaseApplication().getmPigeonCodes().add(innerDoveData.getFoot_ring());
                             MyApplication.getDaoSession().getInnerDoveDataDao().insertOrReplaceInTx(innerDoveData);
                         }
-
                         if (setTriBeanList.size() != 0) {
                             MyApplication.getDaoSession().getSetTriBeanDao().insertOrReplaceInTx(setTriBeanList);
                         }
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseSubscriber<OurDoveBean>(requestCallback));
+                .subscribe(new BaseSubscriber<>(requestCallback));
     }
 }

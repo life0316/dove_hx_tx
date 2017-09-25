@@ -98,7 +98,7 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<EachCi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        netObservale = mRxBus.register("load_circle", Integer.class);
+        netObservale = mRxBus.register(ConstantUtils.OBSER_LOAD_CIRCLE, Integer.class);
         netObservale.subscribe(new Action1<Integer>() {
             @Override
             public void call(Integer integer) {
@@ -624,5 +624,11 @@ public class MyCircleFragment extends BaseSrFragment implements IEachView<EachCi
         });
         ApiUtils.setDialogWindow(mDialog);
         mDialog.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        mRxBus.unregister(ConstantUtils.OBSER_LOAD_CIRCLE,netObservale);
+        super.onDestroy();
     }
 }

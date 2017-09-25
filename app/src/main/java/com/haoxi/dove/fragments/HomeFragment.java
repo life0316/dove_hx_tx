@@ -55,7 +55,7 @@ public class HomeFragment extends BaseFragment implements IGetInfo {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        infoPresenter = new UserInfoPresenter(new UserInfoModel(getActivity()));
+        infoPresenter = new UserInfoPresenter(new UserInfoModel());
         infoPresenter.attachView(this);
 
         mHomeCiv.setOnClickListener(new View.OnClickListener() {

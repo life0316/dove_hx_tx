@@ -8,18 +8,10 @@ import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
 
 import dagger.Module;
 import dagger.Provides;
-
-/**
- * Created by lifei on 2017/3/29.
- */
-
 @Module
 public class AddRingMoudle {
-
     private AddRingActivity mView;
-
     private Context mContext;
-
 
     public AddRingMoudle(Context mContext, AddRingActivity mView){
         this.mView = mView;

@@ -10,19 +10,10 @@ import com.haoxi.dove.newin.trail.presenter.RouteTitlePresenter;
 
 import dagger.Module;
 import dagger.Provides;
-
-/**
- * Created by lifei on 2017/3/29.
- */
-
 @Module
 public class RouteFlyPMoudle {
-
     private AllFlyRecordFragment mView;
-
     private Context mContext;
-
-
     public RouteFlyPMoudle(Context mContext, AllFlyRecordFragment mView){
         this.mView = mView;
         this.mContext = mContext;

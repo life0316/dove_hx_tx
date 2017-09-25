@@ -10,10 +10,6 @@ import com.haoxi.dove.newin.bean.OurVerBean;
 
 import java.util.Map;
 
-/**
- * Created by lifei on 2017/1/14.
- */
-
 public class VersionPresenter extends BasePresenter<IAboutView,OurVerBean> implements IVersionPresenter {
 
     private IAboutModel aboutModel;
