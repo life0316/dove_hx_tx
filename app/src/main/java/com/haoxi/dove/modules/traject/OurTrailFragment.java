@@ -429,8 +429,8 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 //        DecimalFormat    df   = new DecimalFormat("######0.000");
 //        mLatlngTv.setText("东经" + df.format(Double.valueOf(eachLongitude)) + " 北纬" + df.format(Math.rint(Double.valueOf(eachLatitude))));
 
-        String resultLng = StringUtils.format4(Double.valueOf(eachLongitude));
-        String resultLat =  StringUtils.format4(Double.valueOf(eachLatitude));
+        String resultLng = StringUtils.format3(Double.valueOf(eachLongitude));
+        String resultLat =  StringUtils.format3(Double.valueOf(eachLatitude));
         mLatlngTv.setText("东经" + resultLng + " 北纬" + resultLat);
         mMileageTv.setText(eachDistance);
         mDirectionTv.setText("方向：" + eachDirection);
@@ -499,30 +499,24 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
     private boolean isMapNormal = false;
 
-
     private void initDrawer() {
-
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout, mToolbar, 0, 0) {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
             }
-
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
             }
         };
 
-
         mDrawerToggle.syncState();
         //noinspection deprecation
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
         mMapTypeIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (isMapNormal) {
                     mAMap.setMapType(AMap.MAP_TYPE_NORMAL);
                     isMapNormal = false;
@@ -574,9 +568,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 //                setTriPresenter.getDaoWithObjId(getUserObjId());
 //            }
         }
-
-
-
         isLoad = false;
     }
 

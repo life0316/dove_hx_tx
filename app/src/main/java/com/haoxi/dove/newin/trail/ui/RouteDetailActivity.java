@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,10 +51,14 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     MapView mapView;
     @BindView(R.id.custom_toolbar_iv)
     ImageView mBackIv;
+    @BindView(R.id.new_icon)
+    ImageView mMapTypeIv;
     @BindView(R.id.custom_toolbar_tv)
     TextView mTitleTv;
     @BindView(R.id.activity_newfly_ring)
     TextView mIdTv;
+    @BindView(R.id.activity_newfly_dove)
+    TextView mDoveIdTv;
 
     private AMap mAMap;
     private UiSettings mUiset;
@@ -67,20 +72,30 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     private SharedPreferences mTrailSp;
     private ArrayList<PointBean> pointBeanArrayList = new ArrayList<>();
 
+    private boolean isMapNormal = false;
+
     protected String[] needPermissions = {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.READ_PHONE_STATE
     };
 
-    @Override
-    protected void initInject() {
-
-    }
-
     @OnClick(R.id.custom_toolbar_iv)
     void backOncli() {
         this.finish();
+    }
+
+    @OnClick(R.id.new_icon)
+    void weiXing(){
+        if (isMapNormal) {
+            mAMap.setMapType(AMap.MAP_TYPE_NORMAL);
+            isMapNormal = false;
+            mMapTypeIv.setImageResource(R.mipmap.icon_map_2);
+        } else {
+            mAMap.setMapType(AMap.MAP_TYPE_SATELLITE);
+            isMapNormal = true;
+            mMapTypeIv.setImageResource(R.mipmap.icon_map_1);
+        }
     }
 
     @Override
@@ -91,9 +106,14 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
         Intent intent = getIntent();
         if (intent != null) {
             String flyRecordId = intent.getStringExtra("recordid");
+            String doveid = intent.getStringExtra("doveid");
             pointBeanArrayList = intent.getParcelableArrayListExtra("innerRouteBean");
             if (flyRecordId != null) {
                 mIdTv.setText("飞行记录id:"+flyRecordId);
+            }
+            if (doveid != null) {
+                mDoveIdTv.setVisibility(View.VISIBLE);
+                mDoveIdTv.setText("信鸽:"+doveid);
             }
         }
     }
@@ -144,7 +164,7 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
         AMap.OnMarkerClickListener listener = new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                showPop(marker);
+                TraUtils.showPop2(RouteDetailActivity.this,marker);
                 return true;
             }
         };
@@ -175,35 +195,27 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
         mLocationClient = new AMapLocationClient((getApplicationContext()));
         //设置定位回调监听
         mLocationClient.setLocationListener(mLocationListener);
-
-//        AMap.OnMarkerClickListener listener = new AMap.OnMarkerClickListener() {
-//            @Override
-//            public boolean onMarkerClick(Marker marker) {
-//
-//                Log.e("mafafaf", marker.getTitle() + "----title");
-//
-//                showPop(marker);
-//                return true;
-//            }
-//        };
-//        mAMap.setOnMarkerClickListener(listener);
     }
 
     //声明定位回调监听
     public AMapLocationListener mLocationListener = new AMapLocationListener() {
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
-            if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
-                RouteDetailActivity.this.mAMapLocation = aMapLocation;
-                if (mChangedListener != null) {
-                    mChangedListener.onLocationChanged(aMapLocation);
-                    CameraUpdate cu = CameraUpdateFactory.zoomTo(15);
-                    mAMap.moveCamera(cu);
+            if (aMapLocation != null) {
+                if (aMapLocation.getErrorCode() == 0) {
+                    RouteDetailActivity.this.mAMapLocation = aMapLocation;
+                    if (mChangedListener != null) {
+                        mChangedListener.onLocationChanged(aMapLocation);
+                        CameraUpdate cu = CameraUpdateFactory.zoomTo(15);
+                        mAMap.moveCamera(cu);
+                    }
+                } else if (aMapLocation.getErrorCode() == 12) {
+                    ApiUtils.showToast(RouteDetailActivity.this, "缺少定位权限,定位失败");
+                } else if (aMapLocation.getErrorCode() == 4) {
+                    ApiUtils.showToast(RouteDetailActivity.this, "当前网络较差,请求服务器异常,定位失败");
                 }
-            } else if (aMapLocation.getErrorCode() == 12) {
-                ApiUtils.showToast(RouteDetailActivity.this, "缺少定位权限,定位失败");
-            } else if (aMapLocation.getErrorCode() == 4) {
-                ApiUtils.showToast(RouteDetailActivity.this, "当前网络较差,请求服务器异常,定位失败");
+            }else {
+                ApiUtils.showToast(RouteDetailActivity.this, "定位失败");
             }
         }
     };
@@ -234,8 +246,8 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,@NonNull String[] permissions,
+                                          @NonNull int[] grantResults) {
         EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
     }
 
@@ -261,17 +273,13 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
 
     @Override
     public void deactivate() {
-        mChangedListener = null;
+
         if (mChangedListener != null) {
             mLocationClient.stopLocation();
             mLocationClient.onDestroy();
+            mChangedListener = null;
         }
         mLocationClient = null;
-    }
-
-    @Override
-    public void toDo() {
-
     }
 
     @Override
@@ -294,72 +302,23 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     }
 
     public void toDrawTril(List<PointBean> list) {
-        if (list == null && list.size() == 0) {
+        if (list == null || list.size() == 0) {
             mLocationClient.startLocation();
             return;
         }
 
-        ArrayList<LatLng> latLngs = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            PointBean pointBean = list.get(i);
-//            latLngs.add(ApiUtils.transform(Double.parseDouble(pointBean.getLat()), Double.parseDouble(pointBean.getLat())));
-            //经纬度反了
-//            latLngs.add(ApiUtils.transform(pointBean.getLng(),pointBean.getLat()));
-            latLngs.add(ApiUtils.transform(pointBean.getLat(),pointBean.getLng()));
-        }
+//        ArrayList<LatLng> latLngs = new ArrayList<>();
+//        for (int i = 0; i < list.size(); i++) {
+//            PointBean pointBean = list.get(i);
+////            latLngs.add(ApiUtils.transform(Double.parseDouble(pointBean.getLat()), Double.parseDouble(pointBean.getLat())));
+//            //经纬度反了
+////            latLngs.add(ApiUtils.transform(pointBean.getLng(),pointBean.getLat()));
+//            latLngs.add(ApiUtils.transform(pointBean.getLat(),pointBean.getLng()));
+//        }
 //        TraUtils.drawHistoryFromList(mAMap, latLngs, trailPic, Color.parseColor(trailColor), trailWidth);
+
         TraUtils.drawHistoryFromPointBean(mAMap,list, trailPic, Color.parseColor(trailColor), trailWidth);
     }
 
-    private void showPop(Marker marker) {
-        String markerTitle = marker.getTitle();
-        String[] eachTitle = markerTitle.split("#");
-        String createTime = eachTitle[0];
-        String eachSpeed = eachTitle[1];
-        String eachDirection = eachTitle[2];
-        String eachLongitude = eachTitle[3];
-        String eachLatitude = eachTitle[4];
-        String eachHeight = eachTitle[5];
-        String eachDistance = eachTitle[6];
-        final Dialog popDialog = new Dialog(this, R.style.DialogTheme2);
-        View view = View.inflate(this, R.layout.layout_show_marker2, null);
-        popDialog.setCancelable(false);
-        popDialog.setContentView(view);
-        LinearLayout layout = (LinearLayout) view.findViewById(R.id.show_marker_ll);
-        int width = getWindowManager().getDefaultDisplay().getWidth();
-        ViewGroup.LayoutParams params = layout.getLayoutParams();
-        params.width = (width * 62) / 72;
-        params.height =(width * 42) / 72;
-        layout.setLayoutParams(params);
-        //时间
-        TextView mCreateTimeTv = (TextView) view.findViewById(R.id.show_marker_time);
-        TextView mSpeedTv = (TextView) view.findViewById(R.id.show_marker_speed);
-        TextView mHeightTv = (TextView) view.findViewById(R.id.show_marker_height);
-        //纬经度
-        TextView mLatlngTv = (TextView) view.findViewById(R.id.show_marker_latlng);
-        //方向
-        TextView mDirectionTv = (TextView) view.findViewById(R.id.show_marker_direction);
-        //总飞行
-        TextView mMileageTv = (TextView) view.findViewById(R.id.show_marker_mileage);
-        ImageView mDismissIv = (ImageView) view.findViewById(R.id.show_marker_dismiss);
 
-        mCreateTimeTv.setText(createTime);
-        mSpeedTv.setText(eachSpeed);
-        mHeightTv.setText(String.valueOf(Double.valueOf(eachHeight) - 20));
-
-        String resultLng = StringUtils.format4(Double.valueOf(eachLongitude));
-        String resultLat =  StringUtils.format4(Double.valueOf(eachLatitude));
-        mLatlngTv.setText("东经" + resultLng + " 北纬" + resultLat);
-        mMileageTv.setText(eachDistance);
-        mDirectionTv.setText("方向：" + eachDirection);
-
-        mDismissIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popDialog.dismiss();
-            }
-        });
-
-        popDialog.show();
-    }
 }

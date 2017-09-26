@@ -21,8 +21,8 @@ public class StringUtils {
         return isCheaked;
     }
 
-    public static String format4(double value) {
-        return String.format("%.4f", value).toString();
+    public static String format3(double value) {
+        return String.format("%.3f", value).toString();
     }
 
 

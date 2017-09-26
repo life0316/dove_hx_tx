@@ -140,7 +140,6 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
                         titleAdapter.notifyDataSetChanged();
                     }
                 } else {
-
                     if (!(countTemp > 0 && countTemp < routeBeanList.size())) {
                         Map<Integer, Boolean> m = titleAdapter.getMap();
                         for (int i = 0; i < m.size(); i++) {
@@ -455,6 +454,7 @@ public class RouteTitleActivity extends BaseActivity implements IGetOurRouteView
             public void onClick(View v) {
                 Intent intent = new Intent(RouteTitleActivity.this,RouteDetailActivity.class);
                 intent.putExtra("recordid",innerRouteBean.getFly_recordid());
+                intent.putExtra("doveid",innerRouteBean.getDoveid());
                 intent.putParcelableArrayListExtra("innerRouteBean",innerRouteBean.getPoints());
                 startActivity(intent);
                 popDialog.dismiss();

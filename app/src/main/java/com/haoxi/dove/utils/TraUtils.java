@@ -430,9 +430,9 @@ public class TraUtils {
         float eachDistance = 0;
 
         PointBean firstPointBean;
-        PointBean lastPointBean;
+        final PointBean lastPointBean;
 
-        final ArrayList<LatLng> latLngs = new ArrayList<>();
+        final ArrayList<LatLng> latLngs1 = new ArrayList<>();
 
 //        float distance = 0;
 
@@ -450,15 +450,15 @@ public class TraUtils {
             lastPointBean = pointBeen.get(pointBeen.size() - 1);
 
             //这里暂时因为服务器经纬度弄反了
-//            firstLatLng = ApiUtils.transform(firstPointBean.getLng(),firstPointBean.getLat());
-//            lastLatLng = ApiUtils.transform(lastPointBean.getLng(),lastPointBean.getLat());
-           firstLatLng = ApiUtils.transform(firstPointBean.getLat(),firstPointBean.getLng());
-            lastLatLng = ApiUtils.transform(lastPointBean.getLat(),lastPointBean.getLng());
+            firstLatLng = ApiUtils.transform(firstPointBean.getLng(),firstPointBean.getLat());
+            lastLatLng = ApiUtils.transform(lastPointBean.getLng(),lastPointBean.getLat());
+//           firstLatLng = ApiUtils.transform(firstPointBean.getLat(),firstPointBean.getLng());
+//            lastLatLng = ApiUtils.transform(lastPointBean.getLat(),lastPointBean.getLng());
 
             if (pointBeen.size() > 1) {
-
-//                LatLng  prelastLatLng = ApiUtils.transform(pointBeen.get(pointBeen.size() - 2).getLng(),pointBeen.get(pointBeen.size() - 2).getLat());
-                LatLng  prelastLatLng = ApiUtils.transform(pointBeen.get(pointBeen.size() - 2).getLat(),pointBeen.get(pointBeen.size() - 2).getLng());
+                //这里暂时因为服务器经纬度弄反了
+                LatLng  prelastLatLng = ApiUtils.transform(pointBeen.get(pointBeen.size() - 2).getLng(),pointBeen.get(pointBeen.size() - 2).getLat());
+//                LatLng  prelastLatLng = ApiUtils.transform(pointBeen.get(pointBeen.size() - 2).getLat(),pointBeen.get(pointBeen.size() - 2).getLng());
                 endDistance = AMapUtils.calculateLineDistance(prelastLatLng, lastLatLng);
                 lastDir = getDir(lastLatLng.latitude,lastLatLng.longitude,prelastLatLng.latitude,prelastLatLng.longitude);
             }
@@ -469,11 +469,14 @@ public class TraUtils {
         ArrayList<MarkerOptions> optionsList = new ArrayList<>();
 
         for (int i = 0; i < pointBeen.size() - 1; i++) {
-
-            latLngs.add(ApiUtils.transform(pointBeen.get(i).getLat(),pointBeen.get(i).getLng()));
+            //这里暂时因为服务器经纬度弄反了
+            latLngs1.add(ApiUtils.transform(pointBeen.get(i).getLng(),pointBeen.get(i).getLat()));
+//          latLngs.add(ApiUtils.transform(pointBeen.get(i).getLat(),pointBeen.get(i).getLng()));
 
             if (i == pointBeen.size() / 2) {
-                middleLatLng = ApiUtils.transform(pointBeen.get(i).getLat(),pointBeen.get(i).getLng());
+                //这里暂时因为服务器经纬度弄反了
+                middleLatLng = ApiUtils.transform(pointBeen.get(i).getLng(),pointBeen.get(i).getLat());
+//                middleLatLng = ApiUtils.transform(pointBeen.get(i).getLat(),pointBeen.get(i).getLng());
             }
 
             //创建markeroptions对象
@@ -499,10 +502,10 @@ public class TraUtils {
                 optionsList.add(options);
             } else {
 
-//                LatLng pigeonLatLng = ApiUtils.transform(pointBeen.get(i).getLng(),pointBeen.get(i).getLat());
-//                LatLng preLatLng = ApiUtils.transform(pointBeen.get(i - 1).getLng(), pointBeen.get(i - 1).getLat());
-                LatLng pigeonLatLng = ApiUtils.transform(pointBeen.get(i).getLat(),pointBeen.get(i).getLng());
-                LatLng preLatLng = ApiUtils.transform( pointBeen.get(i - 1).getLat(),pointBeen.get(i - 1).getLng());
+                LatLng pigeonLatLng = ApiUtils.transform(pointBeen.get(i).getLng(),pointBeen.get(i).getLat());
+                LatLng preLatLng = ApiUtils.transform(pointBeen.get(i - 1).getLng(), pointBeen.get(i - 1).getLat());
+//                LatLng pigeonLatLng = ApiUtils.transform(pointBeen.get(i).getLat(),pointBeen.get(i).getLng());
+//                LatLng preLatLng = ApiUtils.transform( pointBeen.get(i - 1).getLat(),pointBeen.get(i - 1).getLng());
 
                 //eachDistance = AMapUtils.calculateLineDistance(preLatLng, pigeonLatLng);
 
@@ -571,7 +574,8 @@ public class TraUtils {
 
         mAMap.addMarkers(optionsList, true);
 
-        latLngs.add(lastLatLng);
+        latLngs1.add(lastLatLng);
+
 
 
         new Thread(new Runnable() {
@@ -580,11 +584,72 @@ public class TraUtils {
 
                 //画轨迹
                 PolylineOptions polylineOptions = new PolylineOptions();
-                polylineOptions.addAll(latLngs).color(color).width(width).zIndex(1).isGeodesic();
+                if (latLngs1.size()<2 ){
+                    polylineOptions.addAll(latLngs1).color(color).width(width).zIndex(1).isGeodesic();
+                }else {
+                    polylineOptions.addAll(moreMoreLatLng(pointBeen,pointBeen.size(),10)).color(color).width(width).zIndex(1).isGeodesic();
+                }
+//                polylineOptions.addAll(latLngs1).color(color).width(width).zIndex(1).isGeodesic();
+
                 mAMap.addPolyline(polylineOptions);
 
             }
         }).start();
+    }
+    public static void showPop2(Activity context, Marker marker) {
+        String markerTitle = marker.getTitle();
+        String[] eachTitle = markerTitle.split("#");
+        String createTime = eachTitle[0];
+        String eachSpeed = eachTitle[1];
+        String eachDirection = eachTitle[2];
+        String eachLongitude = eachTitle[3];
+        String eachLatitude = eachTitle[4];
+        String eachHeight = eachTitle[5];
+        String eachDistance = eachTitle[6];
+        final Dialog popDialog = new Dialog(context, R.style.DialogTheme2);
+        View view = View.inflate(context, R.layout.layout_show_marker3, null);
+        popDialog.setCancelable(false);
+        popDialog.setContentView(view);
+        LinearLayout layout = (LinearLayout) view.findViewById(R.id.show_marker_ll);
+        @SuppressWarnings("deprecation")
+        int width = context.getWindowManager().getDefaultDisplay().getWidth();
+        ViewGroup.LayoutParams params = layout.getLayoutParams();
+        params.width = (width * 62) / 72;
+        params.height =(width * 68) / 72;
+//        params.height =width;
+        layout.setLayoutParams(params);
+        //时间
+        TextView mCreateTimeTv = (TextView) view.findViewById(R.id.show_marker_time);
+        TextView mSpeedTv = (TextView) view.findViewById(R.id.show_marker_speed);
+        TextView mHeightTv = (TextView) view.findViewById(R.id.show_marker_height);
+        //纬经度
+        TextView mLatTv = (TextView) view.findViewById(R.id.show_marker_lat);
+        TextView mlngTv = (TextView) view.findViewById(R.id.show_marker_lng);
+        //方向
+        TextView mDirectionTv = (TextView) view.findViewById(R.id.show_marker_direction);
+        //总飞行
+        TextView mMileageTv = (TextView) view.findViewById(R.id.show_marker_mileage);
+        ImageView mDismissIv = (ImageView) view.findViewById(R.id.show_marker_dismiss);
+
+        mCreateTimeTv.setText(createTime);
+        mSpeedTv.setText(eachSpeed);
+        mHeightTv.setText(String.valueOf(Double.valueOf(eachHeight) - 20));
+
+        String resultLng = StringUtils.format3(Double.valueOf(eachLongitude));
+        String resultLat =  StringUtils.format3(Double.valueOf(eachLatitude));
+        mLatTv.setText(resultLat);
+        mlngTv.setText(resultLng);
+        mMileageTv.setText(eachDistance);
+        mDirectionTv.setText("方向：" + eachDirection);
+
+        mDismissIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popDialog.dismiss();
+            }
+        });
+
+        popDialog.show();
     }
     public static void showPop(Activity context, Marker marker) {
 
@@ -668,4 +733,74 @@ public class TraUtils {
             return "西南";  //西南
         }
     }
+    private static ArrayList<LatLng> moreMoreLatLng(List<PointBean> latLngs,int innum,int multiples){
+
+        int outNum = 0;
+//        if (innum<2 || multiples <1){
+//            return latLngs;
+//        }
+        final ArrayList<LatLng> latLngs1 = new ArrayList<>();
+
+        for (int i = 0; i < innum - 1; i++) {
+            int multiplesTemp = multiples;
+
+            double p0x,p1x,p2x,p3x;
+            double p0y,p1y,p2y,p3y;
+
+            p1x=latLngs.get(i).getLat();
+            p1y=latLngs.get(i).getLng();
+            p2x=latLngs.get(i+1) .getLat();
+            p2y=latLngs.get(i+1).getLng();
+            if (i==0) {
+                p0x=2*p1x-p2x;
+                p0y=2*p1y-p2y;
+            }
+            else{
+                p0x=latLngs.get(i-1).getLat();
+                p0y=latLngs.get(i-1).getLng();
+            }
+            if (i+1==innum-1) {
+                p3x=2*p2x-p1x;
+                p3y=2*p2y-p1y;
+            }
+            else{
+                p3x=latLngs.get(i+2).getLat();
+                p3y=latLngs.get(i+2).getLng();
+            }
+
+            for (int mum=0; mum<multiplesTemp; mum++) {
+                double t=mum/(double)multiplesTemp;
+                double out_x=
+                        p0x * (-0.5*t*t*t + t*t - 0.5*t) +
+                                p1x * (1.5*t*t*t - 2.5*t*t + 1.0) +
+                                p2x * (-1.5*t*t*t + 2.0*t*t + 0.5*t) +
+                                p3x * (0.5*t*t*t - 0.5*t*t);
+                double out_y=
+                        p0y * (-0.5*t*t*t + t*t - 0.5*t) +
+                                p1y * (1.5*t*t*t - 2.5*t*t + 1.0) +
+                                p2y * (-1.5*t*t*t + 2.0*t*t + 0.5*t) +
+                                p3y * (0.5*t*t*t - 0.5*t*t);
+//
+//                {
+//                    double padd = 0.3;
+//                    out_x= p1x+
+//                            (p2x-p0x)*padd*t+
+//                            ((p2x-p1x)*3.0 - (p3x-p1x)*padd - (p2x-p0x)*2.0*padd)*t*t+
+//                            ((p2x-p1x)*(-2.0) +(p3x-p1x)*padd +(p2x-p0x)*padd)*t*t*t;
+//                    out_y= p1y+
+//                            (p2y-p0y)*padd*t+
+//                            ((p2y-p1y)*3.0 - (p3y-p1y)*padd - (p2y-p0y)*2.0*padd)*t*t+
+//                            ((p2y-p1y)*(-2.0) +(p3y-p1y)*padd +(p2y-p0y)*padd)*t*t*t;
+//                }
+
+//                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(out_x, out_y);
+                LatLng latLng = ApiUtils.transform(out_y,out_x);
+                latLngs1.add(outNum,latLng);
+                outNum++;
+            }
+        }
+        LatLng latLng = ApiUtils.transform(latLngs.get(innum-1).getLng(),latLngs.get(innum-1).getLat());
+        latLngs1.add(outNum,latLng);
+        return latLngs1;
+        }
 }

@@ -44,6 +44,7 @@ import com.haoxi.dove.newin.bean.OurRouteBean;
 import com.haoxi.dove.newin.bean.PointBean;
 import com.haoxi.dove.newin.trail.presenter.RouteTitlePresenter;
 import com.haoxi.dove.retrofit.MethodConstant;
+import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.retrofit.MethodType;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.RxBus;
@@ -51,6 +52,7 @@ import com.haoxi.dove.utils.TraUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,35 +67,29 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteView, LocationSource,EasyPermissions.PermissionCallbacks, ToSetHolderListener<InnerRouteBean>, MyItemClickListener {
 
     private static final int REQUEST_CODE_HISTORY = 0x0000;
-
     @BindView(R.id.activity_pegionfly_mapview)
     MapView mapView;
-
     @BindView(R.id.custom_toolbar_iv)
     ImageView mBackIv;
     @BindView(R.id.custom_toolbar_tv)
     TextView mTitleTv;
     @BindView(R.id.activity_newfly_ring)
     TextView mIdTv;
-
     @BindView(R.id.new_icon)
     ImageView mMapTypeIv;
+    @BindView(R.id.new_icon_wei)
 
+    ImageView mDoveSelectIv;
     @Inject
     RouteTitlePresenter titlePresenter;
-
     @Inject
     RxBus mRxBus;
-
     @Inject
     Context mContext;
-
     @Inject
     MyDoveAdapter mAdapter;
 
     private boolean isMapNormal = false;
-
-
     private AMap mAMap;
     private UiSettings mUiset;
     public AMapLocationClient mLocationClient = null;
@@ -143,7 +139,6 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
 
     @OnClick(R.id.new_icon_wei)
     void addOnclick(View v) {
-//        showBottomPop2(v);
         showWindow(v);
     }
 
@@ -155,21 +150,19 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
         Intent intent = getIntent();
         if (intent != null) {
             flyRecordId = intent.getStringExtra("recordid");
-//            pointBeanArrayList = intent.getParcelableArrayListExtra("innerRouteBean");
             if (flyRecordId != null) {
                 mIdTv.setText("飞行记录id:"+ flyRecordId);
             }
         }
         String[] trailColorArr = getResources().getStringArray(R.array.TraicColor);
-        for (String color : trailColorArr) {
-            mTraicColorList.add(color);
-        }
+        Collections.addAll(mTraicColorList, trailColorArr);
     }
 
     @Override
     protected void init() {
         mTitleTv.setText("记录详情");
         mBackIv.setVisibility(View.VISIBLE);
+        mDoveSelectIv.setVisibility(View.VISIBLE);
         mMapTypeIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,24 +195,21 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
 
         //自定义定位小蓝点
         MyLocationStyle myLocationStyle = new MyLocationStyle();
-        //    myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_img_2));
         myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
         myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
 
         mAMap.setLocationSource(this);
-
         mAMap.setMyLocationStyle(myLocationStyle);
         mAMap.setMyLocationEnabled(true);
         mAMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
         mAMap.setMapType(AMap.MAP_TYPE_NORMAL);
-        //    mAMap.clear();
         initClient();
         initOption();
 
         AMap.OnMarkerClickListener listener = new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                TraUtils.showPop(RouteDetail2Activity.this,marker);
+                TraUtils.showPop2(RouteDetail2Activity.this,marker);
                 return true;
             }
         };
@@ -305,7 +295,6 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
         if (!EasyPermissions.hasPermissions(this,needPermissions)) {
             EasyPermissions.requestPermissions(this,"定位的权限",REQUEST_CODE_HISTORY,needPermissions);
         }else {
-
             getDatas();
         }
     }
@@ -317,24 +306,20 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
 
     @Override
     public void deactivate() {
-        mChangedListener = null;
         if (mChangedListener != null) {
             mLocationClient.stopLocation();
             mLocationClient.onDestroy();
+            mChangedListener = null;
         }
         mLocationClient = null;
     }
 
-    public Map<String,String> getParaMap(){
-        Map<String,String> map = new HashMap<>();
-        map.put("method",getMethod());
-        map.put("sign",getSign());
-        map.put("time",getTime());
-        map.put("version",getVersion());
-        map.put("userid",getUserObjId());
-        map.put("token",getToken());
-        map.put("fly_recordid",flyRecordId);
-        Log.e("fafsewdfvd",map.toString());
+    @Override
+    protected Map<String, String> getParaMap() {
+        Map<String, String> map =  super.getParaMap();
+        map.put(MethodParams.PARAMS_USER_OBJ,getUserObjId());
+        map.put(MethodParams.PARAMS_TOKEN,getToken());
+        map.put(MethodParams.PARAMS_FLY_RECORDID,flyRecordId);
         return map;
     }
 
@@ -357,11 +342,6 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-//        if (pointBeanArrayList != null && pointBeanArrayList.size() != 0) {
-//            toDrawTril(pointBeanArrayList);
-//        }else {
-//            mLocationClient.startLocation();
-//        }
         getDatas();
     }
 
@@ -379,19 +359,19 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
     }
 
     public void toDrawTril(List<PointBean> list, String doveid) {
-        if (list == null && list.size() == 0) {
+        if (list == null || list.size() == 0) {
             mLocationClient.startLocation();
             return;
         }
-        ArrayList<LatLng> latLngs = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            PointBean pointBean = list.get(i);
-//            latLngs.add(ApiUtils.transform(Double.parseDouble(pointBean.getLat()), Double.parseDouble(pointBean.getLat())));
-            //经纬度反了
-//            latLngs.add(ApiUtils.transform(pointBean.getLng(),pointBean.getLat()));
-            latLngs.add(ApiUtils.transform(pointBean.getLat(),pointBean.getLng()));
-        }
-//        TraUtils.drawHistoryFromList(mAMap, latLngs, trailPic, Color.parseColor(trailColor), trailWidth);
+///*        ArrayList<LatLng> latLngs = new ArrayList<>();
+//        for (int i = 0; i < list.size(); i++) {
+//            PointBean pointBean = list.get(i);
+////            latLngs.add(ApiUtils.transform(Double.parseDouble(pointBean.getLat()), Double.parseDouble(pointBean.getLat())));
+//            //经纬度反了
+////            latLngs.add(ApiUtils.transform(pointBean.getLng(),pointBean.getLat()));
+//            latLngs.add(ApiUtils.transform(pointBean.getLat(),pointBean.getLng()));
+//        }
+////        TraUtils.drawHistoryFromList(mAMap, latLngs, trailPic, Color.parseColor(trailColor), trailWidth);*/
         TraUtils.drawHistoryFromPointBean(mAMap, list, mTrailPicMap.get(doveid), Color.parseColor(mTrailColorMap.get(doveid)), trailWidth);
     }
 
@@ -439,12 +419,11 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setToSetHolderListener(this);
         mAdapter.setOnItemClickListener(this);
-
     }
 
     private void showWindow(View view){
         if (mRecyclerView != null && doveIds.size() != 0) {
-            int height = 0;
+            int height;
             if (doveIds.size() > 6){
                 height = (int) (getResources().getDimension(R.dimen.DIP_40_DP) * 6);
             }else {
@@ -455,10 +434,9 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
 
             mPopupWindow.setFocusable(true);
             mPopupWindow.setOutsideTouchable(true);
+            //noinspection deprecation
             mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-
             mPopupWindow.showAsDropDown(view,10,10);
-
             final WindowManager.LayoutParams params = getWindow().getAttributes();
             params.alpha = 0.5f;
             getWindow().setAttributes(params);
@@ -477,21 +455,14 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
 
     @Override
     public void onItemClick(View view, int position) {
-
         InnerRouteBean innerRouteBean = doveIds.get(position);
-
         if (innerRouteBean != null) {
-
             List<PointBean> pointBeanList = innerRouteBean.getPoints();
-
             if (pointBeanList != null && pointBeanList.size() > 0) {
-
                 PointBean lastPointBean = pointBeanList.get(pointBeanList.size() - 1);
-
                 //鸽子当前位置,,测试数据  经纬度反了
-//                LatLng lastLatLng = ApiUtils.transform(lastPointBean.getLng(),lastPointBean.getLat());
-                LatLng lastLatLng = ApiUtils.transform(lastPointBean.getLat(),lastPointBean.getLng());
-
+                LatLng lastLatLng = ApiUtils.transform(lastPointBean.getLng(),lastPointBean.getLat());
+//                LatLng lastLatLng = ApiUtils.transform(lastPointBean.getLat(),lastPointBean.getLng());
                 if (lastLatLng != null) {
                     cu = CameraUpdateFactory.changeLatLng(lastLatLng);
                     //更新地图显示区域
@@ -504,7 +475,6 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
     @Override
     public void toSetHolder(MyRouteHolder holder, InnerRouteBean data, int position) {
         holder.mTitleTv.setText(data.getDoveid());
-
         Drawable likeLift = getResources().getDrawable(mTrailPicMap.get(data.getDoveid()));
         likeLift.setBounds(0, 0, (int) getResources().getDimension(R.dimen.DIP_20_DP), (int) getResources().getDimension(R.dimen.DIP_20_DP));
         holder.mTitleTv.setCompoundDrawables(likeLift, null, null, null);
