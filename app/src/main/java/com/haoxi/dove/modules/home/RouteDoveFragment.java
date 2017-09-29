@@ -150,10 +150,10 @@ public class RouteDoveFragment extends BaseRvFragment2 implements IGetPigeonView
             mShowAddTv.setText("暂时还没有行程记录");
         }
     }
-    @Override
-    public void setRefrash(boolean isRefrash) {
-        refreshLayout.finishRefresh(isRefrash);
-    }
+//    @Override
+//    public void setRefrash(boolean isRefrash) {
+//        refreshLayout.finishRefresh(isRefrash);
+//    }
     @Override
     protected void inject() {
         DaggerRouteDFComponent.builder()

@@ -72,16 +72,14 @@ public class MyPigeonPresenter extends BasePresenter<IGetPigeonView,OurDoveBean>
         super.requestSuccess(data);
 
         if (isRefrash) {
-            getMvpView().setRefrash(false);
+            //getMvpView().setRefrash(false);
             isRefrash = false;
         }
         getMvpView().setPigeonData(data.getData());
     }
 
     public void getDatasRefrash(Map<String,String> map) {
-
         isRefrash = true;
-
         getDataFromNets(map);
     }
 
@@ -89,7 +87,7 @@ public class MyPigeonPresenter extends BasePresenter<IGetPigeonView,OurDoveBean>
     public void requestComplete() {
         super.requestComplete();
         if (isRefrash) {
-            getMvpView().setRefrash(false);
+            //getMvpView().setRefrash(false);
             isRefrash = false;
         }
     }
@@ -106,7 +104,7 @@ public class MyPigeonPresenter extends BasePresenter<IGetPigeonView,OurDoveBean>
                 break;
         }
         if (isRefrash) {
-            getMvpView().setRefrash(false);
+           // getMvpView().setRefrash(false);
             isRefrash = false;
         }
     }

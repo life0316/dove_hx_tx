@@ -33,10 +33,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-/**
- * Created by lifei on 2017/6/27.
- */
-
 @ActivityFragmentInject(contentViewId = R.layout.activity_base_srl_rv)
 public class RouteDoveActivity extends BaseActivity implements IGetPigeonView, SwipeRefreshLayout.OnRefreshListener, ToSetHolderListener<InnerDoveData>,MyItemClickListener {
 
@@ -159,7 +155,6 @@ public class RouteDoveActivity extends BaseActivity implements IGetPigeonView, S
 
     @Override
     public void onRefresh() {
-
         getDatas();
     }
 
@@ -185,10 +180,10 @@ public class RouteDoveActivity extends BaseActivity implements IGetPigeonView, S
         }
     }
 
-    @Override
-    public void setRefrash(boolean isRefrash) {
-            mSrl.setRefreshing(isRefrash);
-    }
+//    @Override
+//    public void setRefrash(boolean isRefrash) {
+//            mSrl.setRefreshing(isRefrash);
+//    }
 
     @Override
     public void toSetHolder(MyRouteHolder holder, InnerDoveData data, int position) {
@@ -197,13 +192,10 @@ public class RouteDoveActivity extends BaseActivity implements IGetPigeonView, S
 
     @Override
     public void onItemClick(View view, int position) {
-
         InnerDoveData doveData = doveDatas.get(position);
-
         Intent intent = new Intent(RouteDoveActivity.this,RouteTitleActivity.class);
         intent.putExtra("dove",doveData);
         startActivity(intent);
-
     }
 
     @Override
