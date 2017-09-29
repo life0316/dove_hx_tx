@@ -36,7 +36,6 @@ import java.util.Map;
 import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity implements MvpView {
-//    protected String mLoginNetwork = "";
     protected String mToken        = "";
     protected String mUserObjId    = "";
     protected String mUserPhone    = "";

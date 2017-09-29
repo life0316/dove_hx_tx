@@ -37,5 +37,4 @@ public interface ITraFragView extends MvpView {
 
     //点击开始后去查询
     void setTri(SetTriBean setTriBean);
-
 }

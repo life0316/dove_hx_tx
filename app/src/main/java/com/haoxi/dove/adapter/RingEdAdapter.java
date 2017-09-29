@@ -15,16 +15,10 @@ import com.haoxi.dove.newin.bean.InnerRing;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by lifei on 2017/1/14.
- */
 public class RingEdAdapter extends BaseExpandableListAdapter {
-
     class ExpandableChildHolder{
-
         ImageView pigeonHead;
         TextView circleNumber;
-
     }
 
     class ExpandableGroupHolder{
@@ -39,11 +33,8 @@ public class RingEdAdapter extends BaseExpandableListAdapter {
     private LayoutInflater mGroupInflater;
     private LayoutInflater mChildInflater;
 
-
     public RingEdAdapter(Context mContext){
         this.mContext = mContext;
-
-
         mGroupInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mChildInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -67,7 +58,6 @@ public class RingEdAdapter extends BaseExpandableListAdapter {
             groupData.get(groupPosition).setIconUp(false);
             notifyDataSetChanged();
         }
-
     }
 
     @Override
@@ -156,12 +146,8 @@ public class RingEdAdapter extends BaseExpandableListAdapter {
         }else {
             holder = (ExpandableChildHolder)convertView.getTag();
         }
-
-
         InnerRing circleBean = this.childData.get(groupPosition).get(childPosition);
-
         holder.circleNumber.setText("鸽环编号："+circleBean.getRing_code());
-
         holder.pigeonHead.setImageResource(R.mipmap.icon_img1);
         return convertView;
     }

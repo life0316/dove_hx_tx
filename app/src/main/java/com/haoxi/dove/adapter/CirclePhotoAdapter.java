@@ -22,20 +22,14 @@ public class CirclePhotoAdapter extends RecyclerView.Adapter<CirclePhotoAdapter.
 
   private ArrayList<String> photoPaths = new ArrayList<>();
   private LayoutInflater inflater;
-
-
   private MyItemClickListener myItemClickListener;
 
   public void setMyItemClickListener(MyItemClickListener myItemClickListener) {
     this.myItemClickListener = myItemClickListener;
   }
-
-
   private Context mContext;
-
 //  public final static int TYPE_ADD = 1;
   private final static int TYPE_PHOTO = 2;
-
 //  public final static int MAX = 9;
   private final static int MAX = 3;
 
@@ -43,14 +37,11 @@ public class CirclePhotoAdapter extends RecyclerView.Adapter<CirclePhotoAdapter.
     this.photoPaths = photoPaths;
     this.mContext = mContext;
     inflater = LayoutInflater.from(mContext);
-
   }
 
   public void addPhotos(ArrayList<String> photoPaths){
     this.photoPaths = photoPaths;
   }
-
-
   @Override public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View itemView = null;
     switch (viewType) {
@@ -61,31 +52,20 @@ public class CirclePhotoAdapter extends RecyclerView.Adapter<CirclePhotoAdapter.
     return new PhotoViewHolder(itemView,myItemClickListener);
   }
 
-
   @Override
   public void onBindViewHolder(final PhotoViewHolder holder, final int position) {
-
     if (getItemViewType(position) == TYPE_PHOTO) {
-
       String path = photoPaths.get(position);
       final Uri uri;
-
       if (path.startsWith("http")) {
         uri = Uri.parse(path);
       } else {
         uri = Uri.fromFile(new File(path));
       }
-
       //Uri uri = Uri.fromFile(new File(photoPaths.get(position)));
-
 //      holder.ivPhoto.setTag(uri.toString());
-      Log.e("fadfebdqqqqqq",uri+"-------1");
-
-
       boolean canLoadImage = AndroidLifecycleUtils.canLoadImage(holder.ivPhoto.getContext());
-
       if (canLoadImage) {
-
         Glide.with(mContext)
                 .load(uri)
                 .asBitmap()
@@ -104,7 +84,6 @@ public class CirclePhotoAdapter extends RecyclerView.Adapter<CirclePhotoAdapter.
     }
   }
 
-
   @Override public int getItemCount() {
     int count = photoPaths.size();
     if (count > MAX) {
@@ -120,7 +99,6 @@ public class CirclePhotoAdapter extends RecyclerView.Adapter<CirclePhotoAdapter.
   }
 
   public static class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
     public MyItemClickListener mItemClickListener;
     private ImageView ivPhoto;
     private View vSelected;

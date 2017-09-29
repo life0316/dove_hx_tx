@@ -20,16 +20,11 @@ public class MatePigeonsAdapter extends RecyclerView.Adapter<MatePigeonsAdapter.
 
     //条目点击监听
     private MyItemClickListener mItemClickListener;
-
     //长按条目监听
     private MyItemLongClickListener mItemLongClickListener;
-
     private List<InnerRing> mRingLists = new ArrayList<>();
-
     private Context mContext;
-
     public MatePigeonsAdapter(Context mContext) {
-
         this.mContext = mContext;
     }
 
@@ -38,23 +33,17 @@ public class MatePigeonsAdapter extends RecyclerView.Adapter<MatePigeonsAdapter.
         notifyDataSetChanged();
     }
 
-
     @Override
     public MateHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_rv_mate_pigeons, null);
-
         return new MateHolder(mContext, view, mItemClickListener, mItemLongClickListener);
     }
 
     @Override
     public void onBindViewHolder(final MateHolder holder, final int position) {
-
         final InnerRing bean = mRingLists.get(position);
         holder.ringCode.setText(bean.getRing_code());
-
         if (bean.getDove_code() != null){
-
             holder.pegionCode.setText(bean.getDove_code());
         }
     }
@@ -78,10 +67,8 @@ public class MatePigeonsAdapter extends RecyclerView.Adapter<MatePigeonsAdapter.
     }
 
     class MateHolder extends BasicRvHolder {
-
         TextView ringCode;
         TextView pegionCode;
-
         MateHolder(Context mContext, View itemView, MyItemClickListener myItemClickListener, MyItemLongClickListener myItemLongClickListener) {
             super(mContext, itemView, myItemClickListener, myItemLongClickListener);
             ringCode = (TextView) itemView.findViewById(R.id.item_mate_pigeons_tv);

@@ -22,4 +22,6 @@ public class MethodParams {
     public static String PARAMS_CIRCLE_ID = "circleid";
     public static String PARAMS_CONTENT = "content";
     public static String PARAMS_COMMENT_ID = "commentid";
+    public static String PARAMS_DOVE_IDS = "dove_ids";
+
 }

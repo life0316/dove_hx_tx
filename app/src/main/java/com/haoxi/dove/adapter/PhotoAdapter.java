@@ -13,33 +13,24 @@ import java.util.ArrayList;
 import me.iwf.photopicker.R;
 import me.iwf.photopicker.utils.AndroidLifecycleUtils;
 
-/**
- * Created by donglua on 15/5/31.
- */
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
-
   private ArrayList<String> photoPaths = new ArrayList<String>();
   private LayoutInflater inflater;
-
   private Context mContext;
 
   public final static int TYPE_ADD = 1;
   public final static int TYPE_PHOTO = 2;
-
 //  public final static int MAX = 9;
   public final static int MAX = 3;
-
   public PhotoAdapter(Context mContext, ArrayList<String> photoPaths) {
     this.photoPaths = photoPaths;
     this.mContext = mContext;
     inflater = LayoutInflater.from(mContext);
-
   }
 
   public void addPhotos(ArrayList<String> photoPaths){
     this.photoPaths = photoPaths;
   }
-
 
   @Override public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View itemView = null;
@@ -60,9 +51,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     if (getItemViewType(position) == TYPE_PHOTO) {
       Uri uri = Uri.fromFile(new File(photoPaths.get(position)));
-
       boolean canLoadImage = AndroidLifecycleUtils.canLoadImage(holder.ivPhoto.getContext());
-
       if (canLoadImage) {
         Glide.with(mContext)
                 .load(uri)
@@ -76,7 +65,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
       }
     }
   }
-
 
   @Override public int getItemCount() {
     int count = photoPaths.size() + 1;

@@ -15,56 +15,37 @@ import com.zly.www.easyrecyclerview.adapter.viewholder.BaseViewHolder;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
-/**
- * Created by Administrator on 2017\6\22 0022.
- */
-
 public class RefrashFabRvAdapter extends CommonAdapter<InnerFab, RefrashFabRvAdapter.MyRefrashHolder> {
 
-
     private MyItemClickListener myItemClickListener;
-
     public void setMyItemClickListener(MyItemClickListener myItemClickListener) {
         this.myItemClickListener = myItemClickListener;
     }
 
     @Override
     public MyRefrashHolder createCustomViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_fab, null);
-
         MyRefrashHolder holder = new MyRefrashHolder(getContext(),view,myItemClickListener);
-
         return holder;
     }
 
     @Override
     public void bindCustomViewHolder(MyRefrashHolder holder,InnerFab innerData, int position) {
-
         onHolderListener.toInitHolder(holder,position,innerData);
     }
 
     public class MyRefrashHolder extends BaseViewHolder implements View.OnClickListener{
-
         public MyItemClickListener mItemClickListener;
         public Context mContext;
-
         public CircleImageView civ;
-
         public TextView fabName;
-
 
         public MyRefrashHolder(Context mContext, View itemView, MyItemClickListener myItemClickListener) {
             super(itemView);
-
             this.mItemClickListener = myItemClickListener;
-
             itemView.setOnClickListener(this);
-
             civ = (CircleImageView) itemView.findViewById(R.id.item_fab_civ);
             fabName = (TextView) itemView.findViewById(R.id.item_fab_name);
-
         }
 
         @Override

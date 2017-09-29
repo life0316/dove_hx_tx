@@ -28,6 +28,9 @@ import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
 import com.haoxi.dove.widget.CustomDialog;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +43,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 @ActivityFragmentInject(contentViewId = R.layout.activity_mycircle)
-public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
+public class MyPigeonActivity extends BaseActivity implements IGetPigeonView, OnRefreshListener {
     private int methodType = MethodType.METHOD_TYPE_DOVE_SEARCH;
     @BindView(R.id.act_myring_pigeon)
     ExpandableListView mElistview;
@@ -48,6 +51,8 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
     ImageView mBackIv;
     @BindView(R.id.custom_toolbar_tv)
     TextView mTitleTv;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     private List<IsMateBean> groupDatas;
     private List<InnerDoveData> hasBatchDatas;
     private List<InnerDoveData> noBatchDatas;
@@ -88,6 +93,7 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
         mElistview.setGroupIndicator(null);
         adapter = new PigeonEdAdapter(this);
         mElistview.setAdapter(adapter);
+        refreshLayout.setOnRefreshListener(this);
         adapter.setExpandItemClickListener(new ExpandItemClickListener() {
             @Override
             public void itemClick(InnerDoveData doveData,int position, String pigeonCode, String pigeonObjId, String ringObjID, String ringCode) {
@@ -99,7 +105,7 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
     @Override
     protected void onResume() {
         super.onResume();
-        getDatas();
+        refreshLayout.autoRefresh();
     }
 
     @OnClick(R.id.custom_toolbar_iv)
@@ -117,6 +123,9 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
     }
     @Override
     public void setPigeonData(List<InnerDoveData> pigeonData) {
+        if (refreshLayout.isRefreshing()){
+            refreshLayout.finishRefresh(false);
+        }
         childDatas.clear();
         hasBatchDatas.clear();
         noBatchDatas.clear();
@@ -135,9 +144,10 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
         adapter.addDatas(groupDatas, childDatas);
     }
 
-    @Override
-    public void setRefrash(boolean isRefrash) {
-    }
+//    @Override
+//    public void setRefrash(boolean isRefrash) {
+//        refreshLayout.finishRefresh(isRefrash);
+//    }
 
     public void getDatas() {
         if (!ApiUtils.isNetworkConnected(this)) {
@@ -209,5 +219,10 @@ public class MyPigeonActivity extends BaseActivity implements IGetPigeonView {
                 break;
         }
         return method;
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        getDatas();
     }
 }

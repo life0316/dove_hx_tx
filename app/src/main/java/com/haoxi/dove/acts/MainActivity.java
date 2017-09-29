@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
@@ -21,7 +20,7 @@ import com.haoxi.dove.inject.ActivityFragmentInject;
 import com.haoxi.dove.inject.DaggerMainComponent;
 import com.haoxi.dove.inject.MainMoudle;
 import com.haoxi.dove.base.BaseActivity;
-import com.haoxi.dove.modules.traject.OurTrailFragment;
+import com.haoxi.dove.newtraject.NewTrailFragment;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.ConstantUtils;
 import com.haoxi.dove.utils.RxBus;
@@ -51,7 +50,7 @@ public class MainActivity extends BaseActivity{
     RxBus mRxBus;
 
     PigeonFragment mTab1;
-    OurTrailFragment mTab2;
+    NewTrailFragment mTab2;
     PigeonCircleFragment mTab3;
     HomeFragment mTab4;
 
@@ -150,7 +149,7 @@ public class MainActivity extends BaseActivity{
                 break;
             case 1:
                 if (mTab2 == null) {
-                    mTab2 = OurTrailFragment.newInstance("轨迹");
+                    mTab2 = NewTrailFragment.newInstance("轨迹");
                     ft.add(R.id.act_main_cvp, mTab2);
                 } else {
                     ft.show(mTab2);

@@ -9,5 +9,5 @@ public interface IGetPigeonView extends MvpView {
     String getUserObjId();
     String getToken();
     void setPigeonData(List<InnerDoveData> pigeonData);
-    void setRefrash(boolean isRefrash);
+    //void setRefrash(boolean isRefrash);
 }

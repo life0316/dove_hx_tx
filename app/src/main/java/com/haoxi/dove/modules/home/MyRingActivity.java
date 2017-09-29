@@ -20,6 +20,9 @@ import com.haoxi.dove.retrofit.MethodConstant;
 import com.haoxi.dove.retrofit.MethodParams;
 import com.haoxi.dove.utils.ApiUtils;
 import com.haoxi.dove.utils.RxBus;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +33,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 
 @ActivityFragmentInject(contentViewId = R.layout.activity_mycircle)
-public class MyRingActivity extends BaseActivity implements IGetRingView {
+public class MyRingActivity extends BaseActivity implements IGetRingView, OnRefreshListener {
 
     @BindView(R.id.act_myring_pigeon)
     ExpandableListView mElistview;
@@ -38,7 +41,8 @@ public class MyRingActivity extends BaseActivity implements IGetRingView {
     ImageView          mBackIv;
     @BindView(R.id.custom_toolbar_tv)
     TextView           mTitleTv;
-
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     @BindView(R.id.fragment_mypigeon_ll_refrash)
     LinearLayout refrashLl;
     private List<IsMateBean>             groupDatas;
@@ -72,6 +76,7 @@ public class MyRingActivity extends BaseActivity implements IGetRingView {
         mTitleTv.setText("我的鸽环");
         mElistview.setGroupIndicator(null);
         mElistview.setAdapter(adapter);
+        refreshLayout.setOnRefreshListener(this);
         mBackIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +95,7 @@ public class MyRingActivity extends BaseActivity implements IGetRingView {
     @Override
     protected void onResume() {
         super.onResume();
-        getDatas();
+        refreshLayout.autoRefresh();
     }
 
     public void getDatas() {
@@ -119,6 +124,9 @@ public class MyRingActivity extends BaseActivity implements IGetRingView {
     }
     @Override
     public void setRingData(List<InnerRing> ringData) {
+        if (refreshLayout.isRefreshing()){
+            refreshLayout.finishRefresh();
+        }
         childDatas.clear();
         hasBatchDatas.clear();
         noBatchDatas.clear();
@@ -137,10 +145,16 @@ public class MyRingActivity extends BaseActivity implements IGetRingView {
     }
     @Override
     public void setRefrash(boolean isRefrash) {
+        refreshLayout.finishRefresh(isRefrash);
     }
 
     @Override
     public String getMethod() {
         return MethodConstant.RING_SEARCH;
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        getDatas();
     }
 }

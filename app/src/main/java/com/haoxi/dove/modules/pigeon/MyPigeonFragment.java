@@ -300,7 +300,7 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
 
     @Override
     public void setPigeonData(List<InnerDoveData> pigeonData) {
-        setRefrash(false);
+        //setRefrash(false);
         pigeonBeans.clear();
         if (dialog != null) {
             if (dialog.isShowing()) {
@@ -329,10 +329,10 @@ public class MyPigeonFragment extends BaseRvFragment2 implements IGetPigeonView,
         pigeonAdapter.setLongIntTag(0);
     }
 
-    @Override
-    public void setRefrash(boolean isRefrash) {
-        refreshLayout.finishRefresh(isRefrash);
-    }
+//    @Override
+//    public void setRefrash(boolean isRefrash) {
+//        refreshLayout.finishRefresh(isRefrash);
+//    }
 
     @Override
     public void itemChecked(View view, int count) {

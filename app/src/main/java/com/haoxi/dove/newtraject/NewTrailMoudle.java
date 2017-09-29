@@ -1,4 +1,4 @@
-package com.haoxi.dove.inject;
+package com.haoxi.dove.newtraject;
 
 import android.content.Context;
 
@@ -16,14 +16,10 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class OurTrailFragMoudle {
-
-    private OurTrailFragment mView;
-
+public class NewTrailMoudle {
+    private NewTrailFragment mView;
     private Context mContext;
-
-
-    public OurTrailFragMoudle(Context mContext, OurTrailFragment mView){
+    public NewTrailMoudle(Context mContext, NewTrailFragment mView){
         this.mView = mView;
         this.mContext = mContext;
     }
@@ -40,35 +36,18 @@ public class OurTrailFragMoudle {
         return new MyPigeonPresenter(mView);
     }
 
-    @PerFragment
-    @Provides
-    public TraFragPresenter provideTraFragPresenter(){
-        return new TraFragPresenter(mView);
-    }
 
-    @PerFragment
-    @Provides
-    public StartFlyPresenter provideStartFlyPresenter(){
-        return new StartFlyPresenter(mView);
-    }
+//    @PerFragment
+//    @Provides
+//    public StartFlyPresenter provideStartFlyPresenter(){
+//        return new StartFlyPresenter(mView);
+//    }
 
-    @PerFragment
-    @Provides
-    public SetTriPresenter2 provideSetTriPresenter(){
-        return new SetTriPresenter2(mView);
-    }
 
     @PerFragment
     @Provides
     public TraAdpter provideTraAdapter(){
         return new TraAdpter(mContext);
     }
-
-    @PerFragment
-    @Provides
-    public OurFragPresenter provideOurFragPresenter(){
-        return new OurFragPresenter(mView);
-    }
-
 
 }

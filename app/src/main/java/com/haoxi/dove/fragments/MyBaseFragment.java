@@ -106,27 +106,20 @@ public abstract class MyBaseFragment extends Fragment {
         setupAdapter(adapter);
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
-
         cancleObservable = RxBus.getInstance().register("cancle", Boolean.class);
-
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         RxBus.getInstance().unregister("cancle", cancleObservable);
     }
-
     protected void isPaging(boolean ispag) {
         mViewPager.setPagingEnabled(ispag);
     }
-
     protected abstract void initToolbar(View view);
-
     public abstract void setupAdapter(MyBaseAdapter adapter);
 
 }

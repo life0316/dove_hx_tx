@@ -13,67 +13,46 @@ public class SetTriBean implements Parcelable {
 
     @Id
     Long id;
-
     private String USER_OBJ_ID;
-
     @Unique
     private String OBJ_ID;        //信鸽基本信息主键
-
     private String RING_OBJ_ID;   //绑定的鸽环信息主键
-
     private int trilWidth;
     private int trilPic;
     private String trilColor;
-
     private boolean startFly;
     private int isFlying = 0;
-
     private int isShowMark ;         //默认显示，不为0时隐藏
-
-
     public int isShowMark() {
         return isShowMark;
     }
-
     public void setShowMark(int showMark) {
         isShowMark = showMark;
     }
-
     public String getRING_OBJ_ID() {
         return RING_OBJ_ID;
     }
-
     public void setRING_OBJ_ID(String RING_OBJ_ID) {
         this.RING_OBJ_ID = RING_OBJ_ID;
     }
-
     public String getUSER_OBJ_ID() {
         return USER_OBJ_ID;
     }
-
     public void setUSER_OBJ_ID(String USER_OBJ_ID) {
         this.USER_OBJ_ID = USER_OBJ_ID;
     }
-
-
     public String getOBJ_ID() {
         return OBJ_ID;
     }
-
     public void setOBJ_ID(String OBJ_ID) {
         this.OBJ_ID = OBJ_ID;
     }
-
-
     @Override
     public int describeContents() {
         return 0;
     }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
-
         dest.writeString(OBJ_ID);
         dest.writeString(USER_OBJ_ID);
         dest.writeInt(isFlying);

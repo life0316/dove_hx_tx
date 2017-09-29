@@ -33,11 +33,6 @@ public class StartFlyPresenter extends BasePresenter<ITraFragView, StartFlyBean>
     @Override
     public void requestSuccess(StartFlyBean startFlyBean) {
         super.requestSuccess(startFlyBean);
-
-//        getMvpView().updatePlayerInfo(data);
-
-
-
         getMvpView().toSetStartFly(startFlyBean);
     }
 

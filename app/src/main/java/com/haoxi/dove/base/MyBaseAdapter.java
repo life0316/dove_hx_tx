@@ -42,7 +42,6 @@ public class MyBaseAdapter extends FragmentPagerAdapter {
         fragments.clear();
         mFragmentTitleList.clear();
         bundles.clear();
-    //    notifyDataSetChanged();
     }
 
     @Override

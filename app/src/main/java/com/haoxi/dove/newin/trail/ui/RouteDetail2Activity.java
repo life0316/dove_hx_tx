@@ -363,16 +363,8 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
             mLocationClient.startLocation();
             return;
         }
-///*        ArrayList<LatLng> latLngs = new ArrayList<>();
-//        for (int i = 0; i < list.size(); i++) {
-//            PointBean pointBean = list.get(i);
-////            latLngs.add(ApiUtils.transform(Double.parseDouble(pointBean.getLat()), Double.parseDouble(pointBean.getLat())));
-//            //经纬度反了
-////            latLngs.add(ApiUtils.transform(pointBean.getLng(),pointBean.getLat()));
-//            latLngs.add(ApiUtils.transform(pointBean.getLat(),pointBean.getLng()));
-//        }
-////        TraUtils.drawHistoryFromList(mAMap, latLngs, trailPic, Color.parseColor(trailColor), trailWidth);*/
-        TraUtils.drawHistoryFromPointBean(mAMap, list, mTrailPicMap.get(doveid), Color.parseColor(mTrailColorMap.get(doveid)), trailWidth);
+//        TraUtils.drawHistoryFromPointBean(mAMap, list, mTrailPicMap.get(doveid), Color.parseColor(mTrailColorMap.get(doveid)), trailWidth);
+        TraUtils.drawHistoryFromPointBean1(mAMap, list, mTrailPicMap.get(doveid), Color.parseColor(mTrailColorMap.get(doveid)), trailWidth);
     }
 
     @Override
@@ -471,7 +463,6 @@ public class RouteDetail2Activity extends BaseActivity implements IGetOurRouteVi
             }
         }
     }
-
     @Override
     public void toSetHolder(MyRouteHolder holder, InnerRouteBean data, int position) {
         holder.mTitleTv.setText(data.getDoveid());

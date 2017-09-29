@@ -7,13 +7,10 @@ import com.haoxi.dove.newin.bean.OurUser;
 import java.util.Map;
 
 public class LoginPresenter extends BasePresenter<ILoginView, OurUser> implements ILoginPresenter {
-
     private ILoginModel loginModel;
-
     public LoginPresenter(ILoginModel loginModel) {
         this.loginModel = loginModel;
     }
-
     @Override
     public void getDataFromNets(Map<String,String> map) {
         checkViewAttached();
@@ -24,7 +21,6 @@ public class LoginPresenter extends BasePresenter<ILoginView, OurUser> implement
     @Override
     public void requestSuccess(OurUser data) {
         super.requestSuccess(data);
-
         if (isViewAttached()) {
             getMvpView().hideProgress();
             getMvpView().toGetDetail(data);

@@ -23,55 +23,33 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by lifei on 2017/1/6.
- */
-
 public class RouteTitleAdapter extends MyBaseRvAdapter<RouteTitleAdapter.MyPigeonHolder> implements View.OnClickListener, View.OnLongClickListener {
-
     private static final String TAG = "MyPigeonAdapter";
-
     private List<InnerRouteBean> datas = new ArrayList<>();
-
     private Context mContext;
-
     private MyPigeonHolder holder;
-
     private Map<Integer, Boolean> map = new HashMap<>();
-
     //是否显示单选框,默认false
     private boolean isshowBox = false;
-
     //接口实例
     private RecyclerViewOnItemClickListener onItemClickListener;
-
     private Boolean longClickTag = false;
-
     private int count;
-
-
     private List<Integer> checkPosList = new ArrayList<>();
     private List<Integer> unCheckPosList = new ArrayList<>();
-
 
     public MyPigeonHolder getHolder() {
         return holder;
     }
-
     private MyItemCheckListener mItemCheckListener;
-
     public MyItemCheckListener getItemCheckListener() {
         return mItemCheckListener;
     }
-
     public Boolean getLongClickTag() {
         return longClickTag;
     }
-
     public interface MyItemCheckListener {
-
         void itemChecked(View view, int count);
-
     }
 
     public void setItemCheckListener(MyItemCheckListener itemCheckListener) {
@@ -80,17 +58,12 @@ public class RouteTitleAdapter extends MyBaseRvAdapter<RouteTitleAdapter.MyPigeo
 
     public RouteTitleAdapter(Context mContext) {
         this.mContext = mContext;
-
-
         initMap();
-
     }
 
     public void addData(List<InnerRouteBean> datas) {
         this.datas = datas;
-
         initMap();
-
         notifyDataSetChanged();
     }
 
@@ -102,9 +75,7 @@ public class RouteTitleAdapter extends MyBaseRvAdapter<RouteTitleAdapter.MyPigeo
         }
     }
 
-
     public void addDatas(List<InnerRouteBean> datas) {
-        //this.datas = datas;
         this.datas.clear();
         this.datas.addAll(datas);
         checkPosList.clear();
@@ -134,7 +105,7 @@ public class RouteTitleAdapter extends MyBaseRvAdapter<RouteTitleAdapter.MyPigeo
     public void setOpen(boolean isopen) {
         if (datas != null) {
             for (int i = 0; i < datas.size(); i++) {
-                ((InnerRouteBean) datas.get(i)).setOpen(isopen);
+                datas.get(i).setOpen(isopen);
             }
             notifyDataSetChanged();
         }
@@ -162,8 +133,7 @@ public class RouteTitleAdapter extends MyBaseRvAdapter<RouteTitleAdapter.MyPigeo
     @Override
     public void onBindViewHolder(final MyPigeonHolder holder, final int position) {
 
-        final InnerRouteBean routeBean = (InnerRouteBean) datas.get(position);
-
+        final InnerRouteBean routeBean = datas.get(position);
 
         //长按显示/隐藏
         if (isshowBox) {
@@ -171,19 +141,15 @@ public class RouteTitleAdapter extends MyBaseRvAdapter<RouteTitleAdapter.MyPigeo
         } else {
             holder.mCheckBox.setVisibility(View.GONE);
         }
-
         //设置Tag
         holder.root.setTag(position);
-
         holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //用map集合保存
                 map.put(position, isChecked);
                 count = 0;
-
                 for (int i = 0; i < map.size(); i++) {
-
                     if (map.get(i)) {
                         count++;
                     }
@@ -192,51 +158,38 @@ public class RouteTitleAdapter extends MyBaseRvAdapter<RouteTitleAdapter.MyPigeo
             }
         });
 
-
         if (!map.containsKey(position)) {
             map.put(position, false);
         }
-
         holder.mCheckBox.setChecked(map.get(position));
-
         holder.mTitle.setText(routeBean.getFly_recordid());
-
     }
 
     @Override
     public void onClick(View v) {
         if (onItemClickListener != null) {
-
             //注意这里使用getTag方法获取数据
             onItemClickListener.onItemClickListener(v, (Integer) v.getTag(), longClickTag);
         }
-
     }
 
     private int longIntTag = 0;
-
     public void setLongIntTag(int longIntTag) {
         this.longIntTag = longIntTag;
     }
-
     @Override
     public boolean onLongClick(View v) {
-
         Log.e("longClickTag", longClickTag + "-----onLongClick");
         if (longClickTag) {
             longIntTag = 1;
         }
-
         if (longIntTag == 1) {
             return false;
         }
-
         //不管显示隐藏，清空状态
         initMap();
-        //longClickTag = true;
         return longClickTag ? false : onItemClickListener != null && onItemClickListener.onItemLongClickListener(v, (Integer) v.getTag(), longClickTag);
     }
-
 
     //设置是否显示CheckBox
     public void setShowBox() {
@@ -254,27 +207,19 @@ public class RouteTitleAdapter extends MyBaseRvAdapter<RouteTitleAdapter.MyPigeo
 
     //点击item选中CheckBox
     public void setSelectItem(int position) {
-
-        Log.e("longClickTag", map.get(position) + "-----map.get(position)");
-
         //对当前状态取反
         if (map.get(position)) {
             map.put(position, false);
         } else {
             map.put(position, true);
         }
-
         count = 0;
-
         for (int i = 0; i < map.size(); i++) {
-
             if (map.get(i)) {
                 count++;
             }
         }
-
         mItemCheckListener.itemChecked(null, count);
-
         notifyItemChanged(position);
     }
 
@@ -292,21 +237,13 @@ public class RouteTitleAdapter extends MyBaseRvAdapter<RouteTitleAdapter.MyPigeo
 
         @BindView(R.id.item_rv_route_cb)
         public CheckBox mCheckBox;
-
         @BindView(R.id.item_rv_route_title)
         public TextView mTitle;
-
-
         public View root;
-
-
         public MyPigeonHolder(View itemView) {
-
             super(itemView);
-
             ButterKnife.bind(this, itemView);
             this.root = itemView;
-
         }
     }
 
@@ -314,7 +251,6 @@ public class RouteTitleAdapter extends MyBaseRvAdapter<RouteTitleAdapter.MyPigeo
     public interface RecyclerViewOnItemClickListener {
         //点击事件
         void onItemClickListener(View view, int position, boolean longClickTag);
-
         //长按事件
         boolean onItemLongClickListener(View view, int position, boolean longClickTag);
     }

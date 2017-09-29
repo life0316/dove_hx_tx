@@ -2,12 +2,18 @@ package com.haoxi.dove.utils;
 
 public class ConstantUtils {
 
+    public static final String TYPE_START_FLY = "START_FLY";
+    public static final String TYPE_ALL_START_FLY = "ALL_START_FLY";
+    public static final String TYPE_ALL_END_FLY = "ALL_END_FLY";
+    public static final String TYPE_END_FLY = "END_FLY";
+    public static final String TYPE_SINGLE_END_FLY = "SINGLE_END_FLY";
+
     public static final String APP_SECRET = "99fcf7399865105573df904f72888f19";
 
     public static final String PACKAGE_NAME ="com.haoxi.dove";
 
-//    public static final String HEADPIC = "http://111.231.54.111:8087/";
-    public static final String HEADPIC  = "http://118.178.227.194:8087/";
+    public static final String HEADPIC = "http://111.231.54.111:8087/";
+//    public static final String HEADPIC  = "http://118.178.227.194:8087/";
     //    public static String APP_INTRO_URL = "http://118.178.227.194/app/html/app_intro";
     public static String APP_INTRO_URL = "http://111.231.54.111/gehuan/app/html/app_intro";
 

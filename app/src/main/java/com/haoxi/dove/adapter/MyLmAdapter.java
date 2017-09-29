@@ -26,16 +26,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MyLmAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<T> datas = new ArrayList<>(); // 数据源
     private Context context;    // 上下文Context
-
     private int normalType = 0;     // 第一种ViewType，正常的item
-
     private boolean hasMore = true;   // 变量，是否有更多数据
     private boolean fadeTips = false; // 变量，是否隐藏了底部的提示
-
     private Handler mHandler = new Handler(Looper.getMainLooper()); //获取主线程的Handler
-
     private MyItemClickListener myItemClickListener;
-
     public void setMyItemClickListener(MyItemClickListener myItemClickListener) {
         this.myItemClickListener = myItemClickListener;
     }
@@ -82,43 +77,27 @@ public class MyLmAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public MyItemClickListener mItemClickListener;
         public Context mContext;
-
         public Button mCommentBtn;
         public Button mTranspondBtn;
         public Button mPraiseBtn;
         public Button mAddFriendBtn;
-
         public TextView mContentTv;
-
         public CircleImageView mUserIcon;
-
         public TextView mUserName;
-
         public TextView mCreateTimeTv;
         public ImageView mDownIv;
-
         public ImageView mContentImage;
-
         public RecyclerView mRecyclerView;
-
         public FrameLayout transpondFl;
-
-
-
-        //
         public TextView mTranContentTv;
         public TextView mTranName;
         public ImageView mTranContentImage;
         public RecyclerView mTranRv;
 
-
         public MyRefrashHolder(Context mContext, View itemView, MyItemClickListener myItemClickListener) {
             super(mContext,itemView,myItemClickListener,null);
-
             this.mItemClickListener = myItemClickListener;
-
             itemView.setOnClickListener(this);
-
             mTranspondBtn = (Button) itemView.findViewById(R.id.friend_share);
             mPraiseBtn = (Button) itemView.findViewById(R.id.friend_dislike);
             mCommentBtn = (Button) itemView.findViewById(R.id.friend_comments);
@@ -129,9 +108,7 @@ public class MyLmAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mUserIcon = (CircleImageView) itemView.findViewById(R.id.de_icon);
             mUserName = (TextView)itemView.findViewById(R.id.friend_name);
             mRecyclerView = (RecyclerView) itemView.findViewById(R.id.item_isfriend_rv);
-
             mContentImage = (ImageView)itemView.findViewById(R.id.item_isfriend_imageview);
-
             transpondFl = (FrameLayout) itemView.findViewById(R.id.item_tran_fl);
             mTranContentTv = (TextView)itemView.findViewById(R.id.tran_circle_text);
             mTranName = (TextView)itemView.findViewById(R.id.tran_circle_name);
@@ -142,7 +119,6 @@ public class MyLmAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @Override
         public void onClick(View v) {
-
             if (mItemClickListener != null){
                 mItemClickListener.onItemClick(v,getPosition());
             }
@@ -152,7 +128,6 @@ public class MyLmAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
     // // 底部footView的ViewHolder，用以缓存findView操作
     class FootHolder extends RecyclerView.ViewHolder {
         private TextView tips;
-
          FootHolder(View itemView) {
             super(itemView);
             tips = (TextView) itemView.findViewById(R.id.tips);
@@ -169,9 +144,7 @@ public class MyLmAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // 根据返回的ViewType，绑定不同的布局文件，这里只有两种
         if (viewType == normalType) {
-
             View view = LayoutInflater.from(context).inflate(layoutRes == 0?R.layout.item_friend_circle:layoutRes, null);
-
             if (holdType == 1){
                 return new CommentHolder(context,view,myItemClickListener);
             }else {

@@ -277,20 +277,9 @@ public class TraUtils {
 
     public static void drawTraInnerRoute(final String firstTime,final String pigeonObjId, final int isShow, final boolean isFisrtTri, final AMap mAMap, final InnerRouteBean innerRouteBean, final int icon, final int color, final int width) {
 
-        //final List<Marker> markerTris = new ArrayList<>();
-
         float currentDistance = 0;
         final Map<String, ArrayList<Marker>> markerMap = MyApplication.getMyBaseApplication().getMarkerMap();
         Map<String, ArrayList<MarkerOptions>> markerOptionsMap = MyApplication.getMyBaseApplication().getMarkerOptionsMap();
-
-//        for (int i = 0; i < innerRouteBean.getPoints().size(); i++) {
-//            Log.e("OurTrailFragment----", innerRouteBean.getPoints().size()+ "-------trailFromDao -----9");
-//            Log.e("OurTrailFragment----", innerRouteBean.getPoints().get(i).getTime()+ "-------trailFromDao -----9");
-//            Log.e("OurTrailFragment----", innerRouteBean.getPoints().get(i).getLat()+ "-------trailFromDao -----9");
-//            Log.e("OurTrailFragment----", innerRouteBean.getPoints().get(i).getLng()+ "-------trailFromDao -----9");
-//        }
-//
-//        Log.e("OurTrailFragment----", isShow+ "-------trailFromDao -----9");
         List<LatLng> latLngs = new ArrayList<>();
         if (newMarker != null) {
             newMarker.remove();
@@ -421,7 +410,7 @@ public class TraUtils {
         mAMap.addPolyline(polylineOptions);
     }
 
-
+    //这里暂时因为服务器经纬度弄反了
     public static void drawHistoryFromPointBean(final AMap mAMap, final List<PointBean> pointBeen, int icon, final int color, final int width) {
 
         float fastSpeed = 0;
@@ -698,7 +687,6 @@ public class TraUtils {
         TextView mMileageTv = (TextView) view.findViewById(R.id.show_marker_mileage);
         ImageView mDismissIv = (ImageView) view.findViewById(R.id.show_marker_dismiss);
 
-
         mCreateTimeTv.setText(createTime);
         mSpeedTv.setText(eachSpeed);
         mHeightTv.setText(String.valueOf(Double.valueOf(eachHeight) - 20));
@@ -794,13 +782,174 @@ public class TraUtils {
 //                }
 
 //                CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(out_x, out_y);
-                LatLng latLng = ApiUtils.transform(out_y,out_x);
+//                LatLng latLng = ApiUtils.transform(out_y,out_x);
+                LatLng latLng = ApiUtils.transform(out_x,out_y);
                 latLngs1.add(outNum,latLng);
                 outNum++;
             }
         }
-        LatLng latLng = ApiUtils.transform(latLngs.get(innum-1).getLng(),latLngs.get(innum-1).getLat());
+//        LatLng latLng = ApiUtils.transform(latLngs.get(innum-1).getLng(),latLngs.get(innum-1).getLat());
+        LatLng latLng = ApiUtils.transform(latLngs.get(innum-1).getLat(),latLngs.get(innum-1).getLng());
         latLngs1.add(outNum,latLng);
         return latLngs1;
         }
+
+
+        //正确的
+    public static void drawHistoryFromPointBean1(final AMap mAMap, final List<PointBean> pointBeen, int icon, final int color, final int width) {
+
+        float fastSpeed = 0;
+        float lowSpeed = 0;
+        float eachDistance = 0;
+        PointBean firstPointBean;
+        final PointBean lastPointBean;
+        final ArrayList<LatLng> latLngs1 = new ArrayList<>();
+        float endDistance = 0;
+
+        if (addMarker != null) {
+            addMarker.destroy();
+        }
+
+        if (pointBeen.size() == 0) {
+            return;
+        } else {
+
+            firstPointBean = pointBeen.get(0);
+            lastPointBean = pointBeen.get(pointBeen.size() - 1);
+
+           firstLatLng = ApiUtils.transform(firstPointBean.getLat(),firstPointBean.getLng());
+            lastLatLng = ApiUtils.transform(lastPointBean.getLat(),lastPointBean.getLng());
+
+            if (pointBeen.size() > 1) {
+                LatLng  prelastLatLng = ApiUtils.transform(pointBeen.get(pointBeen.size() - 2).getLat(),pointBeen.get(pointBeen.size() - 2).getLng());
+                endDistance = AMapUtils.calculateLineDistance(prelastLatLng, lastLatLng);
+                lastDir = getDir(lastLatLng.latitude,lastLatLng.longitude,prelastLatLng.latitude,prelastLatLng.longitude);
+            }
+        }
+
+        LatLng middleLatLng = null;
+
+        ArrayList<MarkerOptions> optionsList = new ArrayList<>();
+
+        for (int i = 0; i < pointBeen.size() - 1; i++) {
+          latLngs1.add(ApiUtils.transform(pointBeen.get(i).getLat(),pointBeen.get(i).getLng()));
+            if (i == pointBeen.size() / 2) {
+                middleLatLng = ApiUtils.transform(pointBeen.get(i).getLat(),pointBeen.get(i).getLng());
+            }
+
+            //创建markeroptions对象
+            MarkerOptions options = new MarkerOptions();
+
+            if (i == 0) {
+
+                fastSpeed = pointBeen.get(0).getSpeed();
+                lowSpeed = pointBeen.get(0).getSpeed();
+
+                options.position(firstLatLng).title(pointBeen.get(0).getTime()
+                        + "#" + pointBeen.get(0).getSpeed()
+                        + "#" + pointBeen.get(0).getDir()
+                        + "#" + pointBeen.get(0).getLng()
+                        + "#" + pointBeen.get(0).getLat()
+                        + "#" + pointBeen.get(0).getHeight()
+                        + "#" + String.valueOf(0)
+
+                );
+
+                //设置图标
+                options.icon(BitmapDescriptorFactory.fromResource(R.mipmap.start_location));
+                optionsList.add(options);
+            } else {
+
+                LatLng pigeonLatLng = ApiUtils.transform(pointBeen.get(i).getLat(),pointBeen.get(i).getLng());
+                LatLng preLatLng = ApiUtils.transform( pointBeen.get(i - 1).getLat(),pointBeen.get(i - 1).getLng());
+
+                //eachDistance = AMapUtils.calculateLineDistance(preLatLng, pigeonLatLng);
+
+                Log.e("eachDistance",eachDistance+"----1");
+
+                eachDistance += AMapUtils.calculateLineDistance(preLatLng, pigeonLatLng);
+
+                Log.e("eachDistance",eachDistance+"--------2");
+
+                //eachDistance = (float) (Math.round(eachDistance / 1000 * 100)) / 100;
+
+
+                if (pointBeen.get(i).getSpeed() > fastSpeed) {
+                    fastSpeed = pointBeen.get(i).getSpeed();
+                }
+                if (pointBeen.get(i).getSpeed() < lowSpeed) {
+                    lowSpeed = pointBeen.get(i).getSpeed();
+                }
+
+                String dir = getDir(pigeonLatLng.latitude,pigeonLatLng.latitude,preLatLng.latitude,preLatLng.longitude);
+
+                //设置markeroptions
+                options.position(pigeonLatLng).title(pointBeen.get(i).getTime()
+                        + "#" + pointBeen.get(i).getSpeed()
+                        + "#" + dir
+                        + "#" + pointBeen.get(i).getLng()
+                        + "#" + pointBeen.get(i).getLat()
+                        + "#" + pointBeen.get(i).getHeight()
+                        + "#" + String.valueOf(((float) (Math.round(eachDistance / 1000 * 100)) / 100))
+                );
+
+                //设置图标
+                options.icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker2));
+                optionsList.add(options);
+            }
+        }
+
+        //设置地址定位
+        //创建一个设置经纬度的cameraupdate
+        CameraUpdate cu = CameraUpdateFactory.changeLatLng(middleLatLng == null?firstLatLng:middleLatLng);
+        //更新地图显示区域
+        mAMap.moveCamera(cu);
+
+        //创建markeroptions对象
+        MarkerOptions option2 = new MarkerOptions();
+
+        endDistance += eachDistance;
+
+        Log.e("eachDistance",eachDistance+"--------2---"+endDistance);
+
+        endDistance = (float) (Math.round(endDistance / 1000 * 100)) / 100;
+
+        Log.e("eachDistance","-----------"+endDistance);
+
+        //设置markeroptions
+        option2.position(lastLatLng).title(lastPointBean.getTime()
+                + "#" + lastPointBean.getSpeed()
+                + "#" + lastDir
+                + "#" + lastPointBean.getLng()
+                + "#" + lastPointBean.getLat()
+                + "#" + lastPointBean.getHeight()
+                + "#" + String.valueOf(endDistance)
+        );
+        option2.icon(BitmapDescriptorFactory.fromResource(icon));
+        optionsList.add(option2);
+
+        mAMap.addMarkers(optionsList, true);
+
+        latLngs1.add(lastLatLng);
+
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                //画轨迹
+                PolylineOptions polylineOptions = new PolylineOptions();
+                if (latLngs1.size()<2 ){
+                    polylineOptions.addAll(latLngs1).color(color).width(width).zIndex(1).isGeodesic();
+                }else {
+                    polylineOptions.addAll(moreMoreLatLng(pointBeen,pointBeen.size(),10)).color(color).width(width).zIndex(1).isGeodesic();
+                }
+//                polylineOptions.addAll(latLngs1).color(color).width(width).zIndex(1).isGeodesic();
+
+                mAMap.addPolyline(polylineOptions);
+
+            }
+        }).start();
+    }
 }

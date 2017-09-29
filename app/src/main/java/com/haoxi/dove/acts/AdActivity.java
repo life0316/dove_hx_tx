@@ -60,11 +60,6 @@ public class AdActivity extends BaseActivity implements EasyPermissions.Permissi
     }
 
     @Override
-    protected void initInject() {
-
-    }
-
-    @Override
     protected void init() {
         presenter = new LoginPresenter(new LoginModel());
         presenter.attachView(this);
@@ -77,7 +72,6 @@ public class AdActivity extends BaseActivity implements EasyPermissions.Permissi
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("addddddddd","onResume");
         if (SpUtils.getBoolean(AdActivity.this,SpConstant.CLICK_AD)){
             toDo(100);
         }else {
@@ -104,15 +98,7 @@ public class AdActivity extends BaseActivity implements EasyPermissions.Permissi
             @Override
             public void onNoAD(int i) {
                 Log.e("addd",i+"---------onNoAD");
-
                 toDo(100);
-//                switch (i){
-//                    case 1:
-//                    case 2:
-//                    case 3:
-//                        toDo(3000);
-//                        break;
-//                }
             }
             @Override
             public void onADDismissed() {
@@ -120,24 +106,15 @@ public class AdActivity extends BaseActivity implements EasyPermissions.Permissi
                     toDo(500);
                 }
             }
-
             @Override
-            public void onADPresent() {
-                Log.e("addd","---------onADPresent");
-            }
-
+            public void onADPresent(){}
             @Override
             public void onADClicked() {
-                Log.e("addd","---------onADClicked");
-
                 SpUtils.putBoolean(AdActivity.this,SpConstant.CLICK_AD,true);
             }
 
             @Override
-            public void onADTick(long l) {
-
-                Log.e("addd",l+"---------onADTick");
-            }
+            public void onADTick(long l) {}
         },"428");
     }
 

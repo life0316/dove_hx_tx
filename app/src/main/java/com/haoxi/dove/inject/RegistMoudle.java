@@ -6,13 +6,8 @@ import com.haoxi.dove.inject.scopes.PerFragment;
 import com.haoxi.dove.modules.loginregist.RegistActivity;
 import com.haoxi.dove.modules.loginregist.presenter.RegistPresenter2;
 import com.haoxi.dove.newin.trail.presenter.OurCodePresenter;
-
 import dagger.Module;
 import dagger.Provides;
-
-/**
- * Created by lifei on 2017/3/29.
- */
 
 @Module
 public class RegistMoudle {

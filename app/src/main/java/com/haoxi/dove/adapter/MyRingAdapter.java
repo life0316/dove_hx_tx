@@ -25,57 +25,38 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by lifei on 2017/1/10.
- */
 public class MyRingAdapter extends MyBaseRvAdapter<MyRingAdapter.MyCircleHolder>  implements View.OnClickListener, View.OnLongClickListener {
 
     private List<InnerRing> datas = new ArrayList<>();
-
     private MyCircleHolder holder;
-
     private Context mContext;
-
     private List<Integer> checkPosList = new ArrayList<>();
     private List<Integer> unCheckPosList = new ArrayList<>();
-
     private Map<Integer,Boolean> map = new HashMap<>();
-
     //是否显示单选框,默认false
     private boolean isshowBox = false;
-
     //接口实例
     private RecyclerViewOnItemClickListener onItemClickListener;
-
     private Boolean longClickTag = false;
-
     private MyItemCheckListener mItemCheckListener;
-
     private int count;
     private final List<String> mateList;
-
     public boolean isshowBox() {
         return isshowBox;
     }
-
     public MyItemCheckListener getItemCheckListener() {
         return mItemCheckListener;
     }
-
     public Boolean getLongClickTag() {
         return longClickTag;
     }
-
     public interface MyItemCheckListener {
-
         void itemChecked(View view,int count);
-
     }
 
     public void setItemCheckListener(MyItemCheckListener itemCheckListener) {
         mItemCheckListener = itemCheckListener;
     }
-
 
     public MyCircleHolder getHolder() {
         return holder;
@@ -83,7 +64,6 @@ public class MyRingAdapter extends MyBaseRvAdapter<MyRingAdapter.MyCircleHolder>
 
     public MyRingAdapter(Context mContext) {
         this.mContext = mContext;
-
         mateList = MyApplication.getMyBaseApplication().getMateList();
     }
 
@@ -143,20 +123,15 @@ public class MyRingAdapter extends MyBaseRvAdapter<MyRingAdapter.MyCircleHolder>
     public MyCircleHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.itme_myring, null);
         MyCircleHolder viewHolder = new MyCircleHolder(view);
-
         this.holder = viewHolder;
-
         view.setOnClickListener(this);
         view.setOnLongClickListener(this);
-
-
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(final MyCircleHolder holder, final int position) {
         final InnerRing ringBean = (InnerRing)datas.get(position);
-
         //长按显示/隐藏
         if (isshowBox) {
             holder.mCheckBox.setVisibility(View.VISIBLE);
@@ -172,67 +147,32 @@ public class MyRingAdapter extends MyBaseRvAdapter<MyRingAdapter.MyCircleHolder>
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //用map集合保存
                 map.put(position, isChecked);
-
                 count = 0;
-
                 for (int i = 0; i < map.size(); i++) {
-
                     if (map.get(i) != null && map.get(i)) {
                         count++;
                     }
                 }
-
                 if (mItemCheckListener != null) {
 
                     mItemCheckListener.itemChecked(buttonView,count);
                 }
             }
         });
-
-
-        // 设置CheckBox的状态
-//        if (map.get(position) == null) {
-//            map.put(position, false);
-//        }
-
         if (!map.containsKey(position)){
             map.put(position,false);
         }
-
         holder.mCheckBox.setChecked(map.get(position));
-
         if (!"-1".equals(ringBean.getRing_code())) {
             holder.mCircleId.setText(ringBean.getRing_code());
         }
 
-//        if (!"".equals(ringBean.getRING_STATUS()) && ringBean.getRING_STATUS() != null){
-//            switch (ringBean.getRING_STATUS()){
-//                case "1":
-//                    holder.mActivite.setText("已激活");
-//                    holder.mActivite.setTextColor(Color.GREEN);
-//
-//                    break;
-//                case "2":
-//                    holder.mActivite.setText("未激活");
-//                    holder.mActivite.setTextColor(Color.GRAY);
-//                    break;
-//            }
-//        }
-//
         if (!"".equals(ringBean.getDoveid()) && !"-1".equals(ringBean.getDoveid()) && ringBean.getDoveid() != null){
-
-//            holder.mMate.setText("匹配:"+ringBean.get());
-//            holder.mMate.setTextColor(Color.GREEN);
-//            if (!mateList.contains(ringBean.getFOOT_RING_CODE())) {
-//                mateList.add(ringBean.getFOOT_RING_CODE());
-//            }
             holder.mMate.setText("匹配:"+ringBean.getDoveid());
             holder.mMate.setTextColor(Color.GREEN);
             if (!mateList.contains(ringBean.getDoveid())) {
                 mateList.add(ringBean.getDoveid());
             }
-
-
         }else {
             holder.mMate.setText("未匹配");
             holder.mMate.setTextColor(Color.GREEN);
@@ -260,25 +200,19 @@ public class MyRingAdapter extends MyBaseRvAdapter<MyRingAdapter.MyCircleHolder>
 
     @Override
     public boolean onLongClick(View v) {
-
         if (longClickTag) {
             longIntTag = 1;
         }
-
         if (longIntTag == 1) {
             return false;
         }
-
-
         //不管显示隐藏，清空状态
         initMap();
-        //longClickTag = true;
         return longClickTag?false :onItemClickListener != null && onItemClickListener.onItemLongClickListener(v, (Integer) v.getTag(),longClickTag);
     }
 
     public void setLongClickTag(boolean flag){
         this.longClickTag = flag;
-
         if (flag) {
             longIntTag = 1;
         }else {
@@ -304,18 +238,13 @@ public class MyRingAdapter extends MyBaseRvAdapter<MyRingAdapter.MyCircleHolder>
         } else {
             map.put(position, true);
         }
-
         count = 0;
-
         for (int i = 0; i < map.size(); i++) {
-
             if (map.get(i)) {
                 count++;
             }
         }
-
         if (mItemCheckListener != null) {
-
             mItemCheckListener.itemChecked(null,count);
         }
         notifyItemChanged(position);
@@ -334,26 +263,20 @@ public class MyRingAdapter extends MyBaseRvAdapter<MyRingAdapter.MyCircleHolder>
     public interface RecyclerViewOnItemClickListener {
         //点击事件
         void onItemClickListener(View view, int position,boolean longClickTag);
-
         //长按事件
         boolean onItemLongClickListener(View view, int position,boolean longClickTag);
     }
 
 
     class MyCircleHolder extends RecyclerView.ViewHolder  {
-
         @BindView(R.id.item_rv_mycircle_id) public TextView mCircleId;
         @BindView(R.id.item_rv_mycircle_activate) public TextView mActivite;
         @BindView(R.id.item_rv_mycircle_mate) public TextView mMate;
-
         @BindView(R.id.ch)
         public CheckBox mCheckBox;
-
         public View root;
-
         public MyCircleHolder(View itemView) {
             super(itemView);
-
             ButterKnife.bind(this, itemView);
             this.root = itemView;
         }

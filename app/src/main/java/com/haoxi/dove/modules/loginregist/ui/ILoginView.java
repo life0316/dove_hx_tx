@@ -6,11 +6,6 @@ import com.haoxi.dove.newin.bean.OurUserInfo;
 
 
 public interface ILoginView extends MvpView {
-
     void toGetDetail(OurUser user);
-
-//    void toMainActivity(OurUserInfo userInfo);
-
     void loginFail(String msg);
-
 }

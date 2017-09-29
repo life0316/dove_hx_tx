@@ -1,11 +1,6 @@
 package com.haoxi.dove.newin.bean;
 
-/**
- * Created by Administrator on 2017\7\6 0006.
- */
-
 public class StartFlyBean {
-
 
     private int code;
     private String msg;

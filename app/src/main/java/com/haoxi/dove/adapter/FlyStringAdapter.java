@@ -26,69 +26,41 @@ import butterknife.ButterKnife;
 
 @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 public class FlyStringAdapter extends MyBaseRvAdapter<FlyStringAdapter.MyPigeonHolder> implements View.OnClickListener, View.OnLongClickListener {
-
-
     private List<FlyStringBean> datas = new ArrayList<>();
-
     private Context mContext;
-
     private MyPigeonHolder holder;
-
     @SuppressLint("UseSparseArrays")
     private Map<Integer, Boolean> map = new HashMap<>();
-
     //是否显示单选框,默认false
     private boolean isshowBox = false;
-
     //接口实例
     private RecyclerViewOnItemClickListener onItemClickListener;
-
     private Boolean longClickTag = false;
-
     private int count;
-
-
     private List<Integer> checkPosList = new ArrayList<>();
     private List<Integer> unCheckPosList = new ArrayList<>();
-
-
     public MyPigeonHolder getHolder() {
         return holder;
     }
-
     private MyItemCheckListener mItemCheckListener;
-
-//    public MyItemCheckListener getItemCheckListener() {
-//        return mItemCheckListener;
-//    }
-
     public Boolean getLongClickTag() {
         return longClickTag;
     }
-
     public interface MyItemCheckListener {
-
         void itemChecked(View view, int count);
-
     }
-
     public void setItemCheckListener(MyItemCheckListener itemCheckListener) {
         mItemCheckListener = itemCheckListener;
     }
 
     public FlyStringAdapter(Context mContext) {
         this.mContext = mContext;
-
-
         initMap();
-
     }
 
     public void addData(List<FlyStringBean> datas) {
         this.datas = datas;
-
         initMap();
-
         notifyDataSetChanged();
     }
 
@@ -100,9 +72,7 @@ public class FlyStringAdapter extends MyBaseRvAdapter<FlyStringAdapter.MyPigeonH
         }
     }
 
-
     public void addDatas(List<FlyStringBean> datas) {
-        //this.datas = datas;
         this.datas.clear();
         this.datas.addAll(datas);
         checkPosList.clear();
@@ -138,42 +108,32 @@ public class FlyStringAdapter extends MyBaseRvAdapter<FlyStringAdapter.MyPigeonH
 
     @Override
     public MyPigeonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.itme_route_title, null);
         MyPigeonHolder viewHolder = new MyPigeonHolder(view);
-
         this.holder = viewHolder;
-
         view.setOnClickListener(this);
         view.setOnLongClickListener(this);
-
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(final MyPigeonHolder holder, @SuppressLint("RecyclerView") final int position) {
-
         final FlyStringBean routeBean = datas.get(position);
-
         //长按显示/隐藏
         if (isshowBox) {
             holder.mCheckBox.setVisibility(View.VISIBLE);
         } else {
             holder.mCheckBox.setVisibility(View.GONE);
         }
-
         //设置Tag
         holder.root.setTag(position);
-
         holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //用map集合保存
                 map.put(position, isChecked);
                 count = 0;
-
                 for (int i = 0; i < map.size(); i++) {
-
                     if (map.get(i)) {
                         count++;
                     }
@@ -192,30 +152,23 @@ public class FlyStringAdapter extends MyBaseRvAdapter<FlyStringAdapter.MyPigeonH
     @Override
     public void onClick(View v) {
         if (onItemClickListener != null) {
-
             //注意这里使用getTag方法获取数据
             onItemClickListener.onItemClickListener(v, (Integer) v.getTag(), longClickTag);
         }
-
     }
 
     private int longIntTag = 0;
-
     public void setLongIntTag(int longIntTag) {
         this.longIntTag = longIntTag;
     }
-
     @Override
     public boolean onLongClick(View v) {
-
         if (longClickTag) {
             longIntTag = 1;
         }
-
         if (longIntTag == 1) {
             return false;
         }
-
         //不管显示隐藏，清空状态
         initMap();
         //longClickTag = true;
@@ -239,27 +192,20 @@ public class FlyStringAdapter extends MyBaseRvAdapter<FlyStringAdapter.MyPigeonH
 
     //点击item选中CheckBox
     public void setSelectItem(int position) {
-
         Log.e("longClickTag", map.get(position) + "-----map.get(position)");
-
         //对当前状态取反
         if (map.get(position)) {
             map.put(position, false);
         } else {
             map.put(position, true);
         }
-
         count = 0;
-
         for (int i = 0; i < map.size(); i++) {
-
             if (map.get(i)) {
                 count++;
             }
         }
-
         mItemCheckListener.itemChecked(null, count);
-
         notifyItemChanged(position);
     }
 
@@ -274,24 +220,15 @@ public class FlyStringAdapter extends MyBaseRvAdapter<FlyStringAdapter.MyPigeonH
     }
 
     class MyPigeonHolder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.item_rv_route_cb)
         public CheckBox mCheckBox;
-
         @BindView(R.id.item_rv_route_title)
         public TextView mTitle;
-
-
         public View root;
-
-
         public MyPigeonHolder(View itemView) {
-
             super(itemView);
-
             ButterKnife.bind(this, itemView);
             this.root = itemView;
-
         }
     }
 
@@ -299,7 +236,6 @@ public class FlyStringAdapter extends MyBaseRvAdapter<FlyStringAdapter.MyPigeonH
     public interface RecyclerViewOnItemClickListener {
         //点击事件
         void onItemClickListener(View view, int position, boolean longClickTag);
-
         //长按事件
         boolean onItemLongClickListener(View view, int position, boolean longClickTag);
     }

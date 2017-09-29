@@ -29,37 +29,19 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-/**
- * Created by lifei on 2017/1/6.
- */
-
 public class MyPigeonAdapter extends MyBaseRvAdapter<MyPigeonAdapter.MyPigeonHolder> implements View.OnClickListener, View.OnLongClickListener {
-
     private static final String TAG = "MyPigeonAdapter";
-
     private List<InnerDoveData> datas = new ArrayList<>();
-
     private Context mContext;
-
     private MyPigeonHolder holder;
-
     private Map<Integer, Boolean> map = new HashMap<>();
-
     //是否显示单选框,默认false
     private boolean isshowBox = false;
-
     //接口实例
     private RecyclerViewOnItemClickListener onItemClickListener;
-
     private Boolean longClickTag = false;
-
     private int count;
-
-
     private final List<String> mPigeonCodes;
-//    private final DBManager    mManager;
-
     private List<Integer> checkPosList = new ArrayList<>();
     private List<Integer> unCheckPosList = new ArrayList<>();
 
@@ -67,21 +49,15 @@ public class MyPigeonAdapter extends MyBaseRvAdapter<MyPigeonAdapter.MyPigeonHol
     public MyPigeonHolder getHolder() {
         return holder;
     }
-
     private MyItemCheckListener mItemCheckListener;
-
     public MyItemCheckListener getItemCheckListener() {
         return mItemCheckListener;
     }
-
     public Boolean getLongClickTag() {
         return longClickTag;
     }
-
     public interface MyItemCheckListener {
-
         void itemChecked(View view, int count);
-
     }
 
     public void setItemCheckListener(MyItemCheckListener itemCheckListener) {
@@ -90,21 +66,15 @@ public class MyPigeonAdapter extends MyBaseRvAdapter<MyPigeonAdapter.MyPigeonHol
 
     public MyPigeonAdapter(Context mContext) {
         this.mContext = mContext;
-
         MyApplication application = MyApplication.getMyBaseApplication();
         mPigeonCodes = application.getmPigeonCodes();
-
-//        mManager = new DBManager(mContext);
-
         initMap();
 
     }
 
     public void addData(List<InnerDoveData> datas) {
         this.datas = datas;
-
         initMap();
-
         notifyDataSetChanged();
     }
 
@@ -118,7 +88,6 @@ public class MyPigeonAdapter extends MyBaseRvAdapter<MyPigeonAdapter.MyPigeonHol
 
 
     public void addDatas(List<InnerDoveData> datas) {
-        //this.datas = datas;
         this.datas.clear();
         this.datas.addAll(datas);
         mPigeonCodes.clear();
@@ -149,7 +118,7 @@ public class MyPigeonAdapter extends MyBaseRvAdapter<MyPigeonAdapter.MyPigeonHol
     public void setOpen(boolean isopen) {
         if (datas != null) {
             for (int i = 0; i < datas.size(); i++) {
-                ((InnerDoveData) datas.get(i)).setOpen(isopen);
+                datas.get(i).setOpen(isopen);
             }
             notifyDataSetChanged();
         }
@@ -165,40 +134,30 @@ public class MyPigeonAdapter extends MyBaseRvAdapter<MyPigeonAdapter.MyPigeonHol
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.itme_mypigeon, null);
         MyPigeonHolder viewHolder = new MyPigeonHolder(view);
-
         this.holder = viewHolder;
-
         view.setOnClickListener(this);
         view.setOnLongClickListener(this);
-
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(final MyPigeonHolder holder, final int position) {
-
-        final InnerDoveData innerDoveData = (InnerDoveData) datas.get(position);
-
-
+        final InnerDoveData innerDoveData =datas.get(position);
         //长按显示/隐藏
         if (isshowBox) {
             holder.mCheckBox.setVisibility(View.VISIBLE);
         } else {
             holder.mCheckBox.setVisibility(View.GONE);
         }
-
         //设置Tag
         holder.root.setTag(position);
-
         holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //用map集合保存
                 map.put(position, isChecked);
                 count = 0;
-
                 for (int i = 0; i < map.size(); i++) {
-
                     if (map.get(i)) {
                         count++;
                     }
@@ -207,26 +166,13 @@ public class MyPigeonAdapter extends MyBaseRvAdapter<MyPigeonAdapter.MyPigeonHol
             }
         });
 
-        // 设置CheckBox的状态
-//        if (map.get(position) == null) {
-//            map.put(position, false);
-//        }
-
         if (!map.containsKey(position)) {
             map.put(position, false);
         }
 
         holder.mCheckBox.setChecked(map.get(position));
 
-//        if ("".equals(innerDoveData.getPIGEON_STATUS()) || innerDoveData.getPIGEON_STATUS() == null) {
-//            holder.mIsMate.setText(mContext.getString(R.string.pigeon_mate_no));
-//        } else {
-//            holder.mIsMate.setText(innerDoveData.getPIGEON_STATUS());
-//        }
-
-
         if (innerDoveData.getGender() != null) {
-
             if ("".equals(innerDoveData.getGender()))
                 innerDoveData.setGender("1");
 
@@ -249,29 +195,20 @@ public class MyPigeonAdapter extends MyBaseRvAdapter<MyPigeonAdapter.MyPigeonHol
             holder.mIsMate.setVisibility(View.GONE);
             holder.mPegionColor.setVisibility(View.GONE);
             holder.mPegionOld.setText("匹配：" + innerDoveData.getRing_code());
-            //holder.mPegionOld.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
-
         } else {
             holder.mPegionColor.setVisibility(View.VISIBLE);
             holder.mPegionColor.setText(innerDoveData.getColor());
 
             if (!"".equals(innerDoveData.getCreate_time()) && innerDoveData.getCreate_time() != null) {
-//
                 String pigeonBirthday = innerDoveData.getCreate_time();
-
-                Calendar calendar = Calendar.getInstance();
 
                 Date date = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String dateNowStr = sdf.format(date);
-
                 int getMonth = ApiUtils.getMonth(dateNowStr, pigeonBirthday.split(" ")[0]);
-
                 int year = getMonth / 12;
                 int month = getMonth % 12;
-
                 holder.mPegionOld.setText(year == 0 ? (month == 0 ? "1个月" : month + "个月") : (month == 0 ? year + "年" : year + "年" + month + "个月"));
-
             } else {
                 holder.mPegionOld.setText("1个月");
             }
@@ -282,34 +219,25 @@ public class MyPigeonAdapter extends MyBaseRvAdapter<MyPigeonAdapter.MyPigeonHol
     @Override
     public void onClick(View v) {
         if (onItemClickListener != null) {
-
             //注意这里使用getTag方法获取数据
             onItemClickListener.onItemClickListener(v, (Integer) v.getTag(), longClickTag);
         }
-
     }
 
     private int longIntTag = 0;
-
     public void setLongIntTag(int longIntTag) {
         this.longIntTag = longIntTag;
     }
-
     @Override
     public boolean onLongClick(View v) {
-
-        Log.e("longClickTag", longClickTag + "-----onLongClick");
         if (longClickTag) {
             longIntTag = 1;
         }
-
         if (longIntTag == 1) {
             return false;
         }
-
         //不管显示隐藏，清空状态
         initMap();
-        //longClickTag = true;
         return longClickTag ? false : onItemClickListener != null && onItemClickListener.onItemLongClickListener(v, (Integer) v.getTag(), longClickTag);
     }
 
@@ -330,27 +258,19 @@ public class MyPigeonAdapter extends MyBaseRvAdapter<MyPigeonAdapter.MyPigeonHol
 
     //点击item选中CheckBox
     public void setSelectItem(int position) {
-
-        Log.e("longClickTag", map.get(position) + "-----map.get(position)");
-
         //对当前状态取反
         if (map.get(position)) {
             map.put(position, false);
         } else {
             map.put(position, true);
         }
-
         count = 0;
-
         for (int i = 0; i < map.size(); i++) {
-
             if (map.get(i)) {
                 count++;
             }
         }
-
         mItemCheckListener.itemChecked(null, count);
-
         notifyItemChanged(position);
     }
 
@@ -382,14 +302,10 @@ public class MyPigeonAdapter extends MyBaseRvAdapter<MyPigeonAdapter.MyPigeonHol
         public LinearLayout ll;
         @BindView(R.id.item_rv_mypigeon_cb)
         public CheckBox mCheckBox;
-
         public View root;
 
-
         public MyPigeonHolder(View itemView) {
-
             super(itemView);
-
             ButterKnife.bind(this, itemView);
             this.root = itemView;
 

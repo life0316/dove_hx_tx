@@ -128,7 +128,6 @@ public class RouteSelectActivity extends BaseActivity implements View.OnClickLis
                     if (mPopupWindow != null) {
                         mPopupWindow.dismiss();
                     }
-
                 }
             });
             addCirle.setOnClickListener(new View.OnClickListener() {

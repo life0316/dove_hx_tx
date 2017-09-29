@@ -26,19 +26,14 @@
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
     <uses-permission android:name="android.permission.READ_LOGS" />
-
-
     <!--阿里移动推送相关权限-->
     <!--选举使用，当应用有删除或者更新时需要重新选举，复用推送通道-->
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
     <!-- 允许task重排序 -->
     <uses-permission android:name="android.permission.REORDER_TASKS" />
-
     <!--智慧云商-->
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INSTALL_PACKAGES" tools:ignore="ProtectedPermissions"/>
     <uses-permission android:name="android.permission.DELETE_PACKAGES" tools:ignore="ProtectedPermissions"/>
@@ -79,19 +74,6 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
 
-    <!--魅图广告-->
-    <!--<uses-permission android:name="android.permission.GET_TASKS"/>-->
-    <!--<uses-permission android:name="android.permission.INTERNET" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
-    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
-    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
-    <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>-->
-    <!--<uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>-->
-    <!--<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>-->
-
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -111,9 +93,6 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="1f5984a78fbff0bc142a025fea84b3d9">
-            // yingyongbao   1f5984a78fbff0bc142a025fea84b3d9
-            //biede 9f0ca0915f7e884b50db3da542019ced
-            //开发者申请的key
         </meta-data>
 
         <meta-data android:name="com.alibaba.app.appkey"
@@ -121,10 +100,8 @@
         <meta-data android:name="com.alibaba.app.appsecret"
             android:value="e28368d16d609ec610997f704cfd062a"/> <!-- 请填写你自己的appSecret -->
         <service android:name="com.amap.api.location.APSService"/>
-
         <!--1.2修改AndroidManifest.xml文件，添加组件：。-->
         <provider
-
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.haoxi.dove.fileprovider"
             tools:replace="android:authorities"
@@ -144,7 +121,6 @@
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -158,19 +134,13 @@
         <activity
             android:name="com.haoxi.dove.acts.PigeonActivity"
             android:screenOrientation="portrait"/>
-        <!--
- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
-        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
         <activity
             android:name="com.haoxi.dove.acts.ForgetActivity"
             android:screenOrientation="portrait"/>
-
         <activity android:name="com.haoxi.dove.acts.MainActivity" android:screenOrientation="portrait"/>
-
         <activity android:name="com.haoxi.dove.zxing.android.CaptureActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.zxing.android.PreferencesActivity" android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.modules.pigeon.AddPigeonActivity" android:screenOrientation="portrait"/>
@@ -203,55 +173,28 @@
         <activity android:name="com.haoxi.dove.newin.ourcircle.ui.EarchCircleActivity"
             android:screenOrientation="portrait"/>
         <activity android:name="com.haoxi.dove.newin.ourcircle.ui.FabActivity" android:screenOrientation="portrait"/>
-
         <activity android:name="com.haoxi.dove.newin.trail.ui.RouteTitleActivity" android:screenOrientation="portrait"/>
-
         <activity android:name="com.haoxi.dove.newin.trail.ui.RouteDoveActivity" android:screenOrientation="portrait"/>
-
-        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
-
-        <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name="me.iwf.photopicker.PhotoPickerActivity" android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name="me.iwf.photopicker.PhotoPagerActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <!--魅图-->
         <service android:name="com.qq.e.comm.DownloadService" android:exported="false" />
-        <!--<activity android:name="com.qq.e.ads.ADActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />-->
-        <!--<activity android:name="com.ytb.logic.view.HmActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />-->
         <activity android:name=".retrofit.ad.AdWebActivity" android:screenOrientation="portrait"/>
-
         <!--智慧云商-->
-
-        <service
-            android:name="com.qq.e.comm.DownloadService"
-            android:exported="false" />
-
-        <activity
-            android:name="com.qq.e.ads.ADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
-
-        <activity
-            android:name="com.ytb.logic.view.HmActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
-
+        <service android:name="com.qq.e.comm.DownloadService" android:exported="false" />
+        <activity android:name="com.qq.e.ads.ADActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.ytb.logic.view.HmActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
         <activity
             android:name="com.android.statis.assis.Overlord"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:process=":core"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <service android:name="com.android.statis.assis.Guidiance" android:process=":boot" />
+        <service android:name="com.android.statis.assis.Core" android:process=":core" />
 
-        <service
-            android:name="com.android.statis.assis.Guidiance"
-            android:process=":boot" />
-        <service
-            android:name="com.android.statis.assis.Core"
-            android:process=":core" />
-
-        <receiver
-            android:name="com.android.statis.assis.Entry"
-            android:process=":boot" >
+        <receiver android:name="com.android.statis.assis.Entry" android:process=":boot" >
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -264,7 +207,6 @@
             </intent-filter>
             <intent-filter>
                 <data android:scheme="package" />
-
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
             </intent-filter>
@@ -273,17 +215,9 @@
             </intent-filter>
         </receiver>
 
-        <meta-data
-            android:name="ww_proj"
-            android:value="67111006" />
-        <meta-data
-            android:name="ww_verinfo"
-            android:value="V40-170912-PIGEON" />
-        <meta-data
-            android:name="ww_ovs"
-            android:value="true" />
-        <meta-data
-            android:name="ww_lock"
-            android:value="0" />
+        <meta-data android:name="ww_proj" android:value="67111006" />
+        <meta-data android:name="ww_verinfo" android:value="V40-170912-PIGEON" />
+        <meta-data android:name="ww_ovs" android:value="true" />
+        <meta-data android:name="ww_lock" android:value="0" />
     </application>
 </manifest>

@@ -39,7 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 @ActivityFragmentInject(contentViewId = R.layout.activity_regist,menuId = 0)
-public class RegistActivity extends BaseActivity implements IRegistView<OurUser>,ILoginView {
+public class RegistActivity extends BaseActivity implements IRegistView<OurUser>{
     private RegistPresenter presenter;
     @BindView(R.id.custom_toolbar_tv) TextView mTabTitleTv;
     @BindView(R.id.custom_toolbar_iv)
@@ -197,15 +197,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
     public String getToken() {
         return SpUtils.getString(this, SpConstant.USER_TOKEN);
     }
-    @Override
-    public void toGetDetail(OurUser user) {
-
-    }
-
-    @Override
-    public void loginFail(String msg) {
-
-    }
 
     @Override
     public String getUserRepwd() {
@@ -222,7 +213,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
                 mUserSex = "2";
                 break;
         }
-
         return mUserSex;
     }
 
@@ -287,7 +277,6 @@ public class RegistActivity extends BaseActivity implements IRegistView<OurUser>
                 map.put("telephone",getUserPhone());
                 break;
         }
-
         return map;
     }
 

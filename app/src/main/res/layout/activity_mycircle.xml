@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-
     <include layout="@layout/custom_toolbar"/>
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/app_background"
+        app:srlPrimaryColor="@color/app_background"
+        app:srlAccentColor="#868484"
+        app:srlEnablePreviewInEditMode="true"
+        >
+    <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
+    <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
+    <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,6 +32,7 @@
             android:layout_height="wrap_content"/>
 
     </RelativeLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     <LinearLayout
         android:id="@+id/fragment_mypigeon_ll_refrash"

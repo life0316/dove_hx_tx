@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -259,6 +260,12 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
         }else {
 
             if (pointBeanArrayList != null && pointBeanArrayList.size() != 0) {
+                test();
+
+                for (PointBean pointBean : pointBeanArrayList) {
+                    Log.e("fasdfppsapfpapf",pointBean.getLat() +"--------1--------lng---"+pointBean.getLng());
+                }
+
                 toDrawTril(pointBeanArrayList);
             }else {
                 mLocationClient.startLocation();
@@ -290,9 +297,18 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
         if (pointBeanArrayList != null && pointBeanArrayList.size() != 0) {
+            //test();
             toDrawTril(pointBeanArrayList);
         }else {
             mLocationClient.startLocation();
+        }
+    }
+
+    private void test(){
+        for (PointBean pointBean : pointBeanArrayList) {
+            double templat = pointBean.getLat();
+            pointBean.setLat(pointBean.getLng());
+            pointBean.setLng(templat);
         }
     }
 
@@ -307,18 +323,7 @@ public class RouteDetailActivity extends BaseActivity implements LocationSource,
             return;
         }
 
-//        ArrayList<LatLng> latLngs = new ArrayList<>();
-//        for (int i = 0; i < list.size(); i++) {
-//            PointBean pointBean = list.get(i);
-////            latLngs.add(ApiUtils.transform(Double.parseDouble(pointBean.getLat()), Double.parseDouble(pointBean.getLat())));
-//            //经纬度反了
-////            latLngs.add(ApiUtils.transform(pointBean.getLng(),pointBean.getLat()));
-//            latLngs.add(ApiUtils.transform(pointBean.getLat(),pointBean.getLng()));
-//        }
-//        TraUtils.drawHistoryFromList(mAMap, latLngs, trailPic, Color.parseColor(trailColor), trailWidth);
-
-        TraUtils.drawHistoryFromPointBean(mAMap,list, trailPic, Color.parseColor(trailColor), trailWidth);
+//       TraUtils.drawHistoryFromPointBean(mAMap,list, trailPic, Color.parseColor(trailColor), trailWidth);
+        TraUtils.drawHistoryFromPointBean1(mAMap,list, trailPic, Color.parseColor(trailColor), trailWidth);
     }
-
-
 }

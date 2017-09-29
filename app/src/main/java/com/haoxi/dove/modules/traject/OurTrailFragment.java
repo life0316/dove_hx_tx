@@ -380,67 +380,11 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         AMap.OnMarkerClickListener listener = new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                showPop(marker);
+                TraUtils.showPop2(getActivity(),marker);
                 return true;
             }
         };
         mAMap.setOnMarkerClickListener(listener);
-    }
-
-    private void showPop(Marker marker) {
-
-        String markerTitle = marker.getTitle();
-        String[] eachTitle = markerTitle.split("#");
-
-        String createTime = eachTitle[0];
-        String eachSpeed = eachTitle[1];
-        String eachDirection = eachTitle[2];
-        String eachLongitude = eachTitle[3];
-        String eachLatitude = eachTitle[4];
-        String eachHeight = eachTitle[5];
-        String eachDistance = eachTitle[6];
-
-        final Dialog popDialog = new Dialog(getActivity(), R.style.DialogTheme2);
-        View view = View.inflate(getContext(), R.layout.layout_show_marker2, null);
-        popDialog.setCancelable(false);
-        popDialog.setContentView(view);
-        LinearLayout layout = (LinearLayout) view.findViewById(R.id.show_marker_ll);
-        @SuppressWarnings("deprecation")
-        int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-
-        ViewGroup.LayoutParams params = layout.getLayoutParams();
-        params.width = (width * 62) / 72;
-        params.height =(width * 42) / 72;
-        layout.setLayoutParams(params);
-        //时间
-        TextView mCreateTimeTv = (TextView) view.findViewById(R.id.show_marker_time);
-        TextView mSpeedTv = (TextView) view.findViewById(R.id.show_marker_speed);
-        TextView mHeightTv = (TextView) view.findViewById(R.id.show_marker_height);
-        //纬经度
-        TextView mLatlngTv = (TextView) view.findViewById(R.id.show_marker_latlng);
-        //方向
-        TextView mDirectionTv = (TextView) view.findViewById(R.id.show_marker_direction);
-        //总飞行
-        TextView mMileageTv = (TextView) view.findViewById(R.id.show_marker_mileage);
-        ImageView mDismissIv = (ImageView) view.findViewById(R.id.show_marker_dismiss);
-        mCreateTimeTv.setText(createTime);
-        mSpeedTv.setText(eachSpeed);
-        mHeightTv.setText(String.valueOf(Double.valueOf(eachHeight) - 20));
-//        DecimalFormat    df   = new DecimalFormat("######0.000");
-//        mLatlngTv.setText("东经" + df.format(Double.valueOf(eachLongitude)) + " 北纬" + df.format(Math.rint(Double.valueOf(eachLatitude))));
-
-        String resultLng = StringUtils.format3(Double.valueOf(eachLongitude));
-        String resultLat =  StringUtils.format3(Double.valueOf(eachLatitude));
-        mLatlngTv.setText("东经" + resultLng + " 北纬" + resultLat);
-        mMileageTv.setText(eachDistance);
-        mDirectionTv.setText("方向：" + eachDirection);
-        mDismissIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popDialog.dismiss();
-            }
-        });
-        popDialog.show();
     }
 
     //声明定位回调监听
@@ -452,12 +396,9 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
                 case 0:
                     if (mChangedListener != null) {
                         mChangedListener.onLocationChanged(aMapLocation);
-
                         firstLatLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
-
                         CameraUpdate cu = CameraUpdateFactory.zoomTo(15);
                         mAMap.moveCamera(cu);
-
                     }
                     break;
                 case 4:
@@ -477,11 +418,8 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         //初始化定位参数
 
         mLocationClientOption = new AMapLocationClientOption();
-
         mLocationClientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
-
         mLocationClientOption.setNeedAddress(true);
-
         //设置是否只定位一次，
         mLocationClientOption.setOnceLocation(true);
         mLocationClientOption.setInterval(2000);
@@ -553,12 +491,9 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         });
         int num = SpUtils.getInt(getActivity(), SpConstant.CLICK_NUM,1);
         if (isLoad && num == 1) {
-
             mAMap.clear(true);
             setTriPresenter.getDaoWithObjId(getUserObjId());
-
             mLastTime = "";
-
         } else {
 //            if (hasFlybeans && clickPos == 1) {
 //                mAMap.clear(true);
@@ -614,15 +549,15 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     }
 
 
-    @OnClick(R.id.fg_trajectory_start)
-    void startOnCli() {
-        if ("开始飞行".equals(mBtnStart.getText().toString())) {
-            toStartFly();
-        } else {
-            toEndFly();
-        }
-        mDrawerLayout.closeDrawers();
-    }
+//    @OnClick(R.id.fg_trajectory_start)
+//    void startOnCli() {
+//        if ("开始飞行".equals(mBtnStart.getText().toString())) {
+//            toStartFly();
+//        } else {
+//            toEndFly();
+//        }
+//        mDrawerLayout.closeDrawers();
+//    }
 
     @Override
     public void toStartFly() {
@@ -647,7 +582,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < isFlyingPigeonObjs.size(); i++) {
             String ids = isFlyingPigeonObjs.get(i);
-
             if (i == isFlyingPigeonObjs.size() - 1){
                 sb.append(ids);
             }else {
@@ -663,7 +597,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
     }
 
 
-
     @Override
     public void toSetStartFly(StartFlyBean startFlyBean) {
         isFlying = true;
@@ -675,9 +608,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
     @Override
     public void toSetEndFly() {
-
         isFlying = false;
-
         mHandler.removeMessages(1);
         mRefrashTv.setVisibility(View.GONE);
         mRxBus.post("isLoadData", true);
@@ -727,11 +658,8 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
             mHandler.sendEmptyMessageDelayed(1, 1000 * 60 * mLastLocationTime);
             return;
         } else {
-
             flyBeanMap.clear();
-
             for (int i = 0; i < innerRouteBeanList.size(); i++) {
-
                 InnerRouteBean innerRouteBean = innerRouteBeanList.get(i);
                 if (flyBeanMap.containsKey(innerRouteBean.getDoveid())) {
                     flyBeanMap.put(innerRouteBean.getDoveid(),innerRouteBean);
@@ -895,20 +823,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         }
     }
 
-    private void showPop() {
-        Dialog popDialog = new Dialog(getContext(), R.style.DialogTheme2);
-        View view = View.inflate(getContext(), R.layout.layout_show_marker2, null);
-        popDialog.setCancelable(false);
-        popDialog.setContentView(view);
-        LinearLayout layout = (LinearLayout) view.findViewById(R.id.show_marker_ll);
-        int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-        ViewGroup.LayoutParams params = layout.getLayoutParams();
-        params.width = (width * 62) / 72;
-        params.height = (width * 42) / 72;
-        layout.setLayoutParams(params);
-        popDialog.show();
-    }
-
     @Override
     public void setPigeonData(List<InnerDoveData> list) {
         if (list == null) {
@@ -1009,10 +923,10 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         mAdapter.setOnItemClickListener(this);
     }
 
-    @Override
-    public void setRefrash(boolean isRefrash) {
-
-    }
+//    @Override
+//    public void setRefrash(boolean isRefrash) {
+//
+//    }
 
     private void setDialogWindow(Dialog mDialog) {
         Window window = mDialog.getWindow();
@@ -1213,9 +1127,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
             methodType = MethodType.METHOD_TYPE_FLY_STOP;
             flyRecordId = SpUtils.getString(getActivity(),"fly_recordid");
             ourCodePresenter.stopFly(getParaMap(getPigeonObjId(),flyRecordId));
-
         } else {
-
             if (mTriPicMap.size() > 15) {
                 ApiUtils.showToast(getContext(), "最多只能十五只一起飞行");
             } else {

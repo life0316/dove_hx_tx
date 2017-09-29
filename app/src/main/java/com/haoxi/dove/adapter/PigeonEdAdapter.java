@@ -16,19 +16,13 @@ import com.haoxi.dove.newin.bean.InnerDoveData;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by lifei on 2017/1/14.
- */
 public class PigeonEdAdapter extends BaseExpandableListAdapter {
-
     class ExpandableChildHolder{
-
         ImageView pigeonHead;
         ImageView pigeonSix;
         TextView pigeonOld;
         TextView pigeonColor;
         TextView circleNumber;
-
     }
 
     class ExpandableGroupHolder{
@@ -45,7 +39,6 @@ public class PigeonEdAdapter extends BaseExpandableListAdapter {
 
     public PigeonEdAdapter(Context mContext){
         this.mContext = mContext;
-
         mGroupInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mChildInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -59,12 +52,10 @@ public class PigeonEdAdapter extends BaseExpandableListAdapter {
     @Override
     public void onGroupCollapsed(int groupPosition) {
         super.onGroupCollapsed(groupPosition);
-
         if (getChildrenCount(groupPosition) != 0) {
             groupData.get(groupPosition).setIconUp(false);
             notifyDataSetChanged();
         }
-
     }
 
     @Override
@@ -119,7 +110,6 @@ public class PigeonEdAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, final ViewGroup parent) {
-
         ExpandableGroupHolder holder = null;
         if (convertView == null){
             convertView = mGroupInflater.inflate(R.layout.item_rv_friend_pigeon_1,null);
@@ -131,9 +121,7 @@ public class PigeonEdAdapter extends BaseExpandableListAdapter {
         }else{
             holder = (ExpandableGroupHolder)convertView.getTag();
         }
-
         mHolder = holder;
-
         if (groupData.get(groupPosition).isIconUp()) {
             holder.jianTou.setImageResource(R.mipmap.icon_up);
         }else {
@@ -162,40 +150,9 @@ public class PigeonEdAdapter extends BaseExpandableListAdapter {
         }else {
             holder = (ExpandableChildHolder)convertView.getTag();
         }
-
         final InnerDoveData pigeonBean = this.childData.get(groupPosition).get(childPosition);
-
-
         holder.circleNumber.setText(pigeonBean.getDoveid());
-
-//
-//        if (!"".equals(pigeonBean.getPIGEON_BIRTHDAY()) && pigeonBean.getPIGEON_BIRTHDAY() != null) {
-//
-//            String pigeonBirthday = pigeonBean.getPIGEON_BIRTHDAY();
-//
-//            Calendar calendar = Calendar.getInstance();
-//
-//            Date date = new Date();
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//            String dateNowStr = sdf.format(date);
-//
-//            int getMonth = ApiUtils.getMonth(dateNowStr, pigeonBirthday.split(" ")[0]);
-//
-//            int year = getMonth / 12;
-//            int month = getMonth % 12;
-//
-//            holder.pigeonOld.setText(year == 0 ? (month == 0? "1个月":month + "月") : (month == 0?year + "年":year + "年" + month + "月"));
-//
-//        }else {
-//            holder.pigeonOld.setText("1个月");
-//        }
-
-
-
         holder.pigeonColor.setText(pigeonBean.getColor());
-
-
-
         String sex = pigeonBean.getGender();
         if (!"".equals(sex)&&sex != null){
             switch (sex){
@@ -209,13 +166,10 @@ public class PigeonEdAdapter extends BaseExpandableListAdapter {
                     break;
             }
         }
-
-
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (groupPosition == 0){
-
                     expandItemClickListener.itemClick(pigeonBean,childPosition,pigeonBean.getFoot_ring(),pigeonBean.getDoveid(),pigeonBean.getRingid(),pigeonBean.getRing_code());
                 }
             }

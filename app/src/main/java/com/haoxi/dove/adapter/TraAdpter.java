@@ -89,7 +89,7 @@ public class TraAdpter extends RecyclerView.Adapter<TraAdpter.MyHolder> implemen
 
     @Override
     public void onBindViewHolder(final MyHolder holder, final int position) {
-        final InnerDoveData bean = (InnerDoveData) pigeonDatas.get(position);
+        final InnerDoveData bean = pigeonDatas.get(position);
 
         holder.mPigeonName.setText("信鸽:" + bean.getDoveid());
 
@@ -100,7 +100,6 @@ public class TraAdpter extends RecyclerView.Adapter<TraAdpter.MyHolder> implemen
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 map.put(position, isChecked);
                 count = 0;
-
                 for (int i = 0; i < map.size(); i++) {
                     if (map.get(i)) {
                         count++;
@@ -108,26 +107,21 @@ public class TraAdpter extends RecyclerView.Adapter<TraAdpter.MyHolder> implemen
                 }
             }
         });
-
-
         //设置checkbox的状态
         if (map.get(position) == null) {
             map.put(position, false);
         }
-
         holder.mCheckBox.setChecked(map.get(position));
         if (map.get(position)) {
             holder.mPigeonName.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
         }else {
             holder.mPigeonName.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
         }
-
     }
 
     public void setShowBox() {
         isShowBox = !isShowBox;
     }
-
     public void setShowBox(boolean isShowBox){
         this.isShowBox = isShowBox;
         notifyDataSetChanged();
@@ -139,36 +133,25 @@ public class TraAdpter extends RecyclerView.Adapter<TraAdpter.MyHolder> implemen
 
     //点击item选中checkbox
     public void setSelectItem(int position) {
-
         if (map.get(position)) {
             map.put(position, false);
         } else {
             map.put(position, true);
         }
-
         count = 0;
-
         for (int i = 0; i < map.size(); i++) {
             if (map.get(i)) {
                 count++;
             }
         }
-
         notifyItemChanged(position);
-
     }
-
-
 
     //点击item选中checkbox
     public void setFlyItem(int position) {
-
         map.put(position, true);
-
         notifyItemChanged(position);
-
     }
-
 
     public Map<Integer, Boolean> getMap() {
         return map;
@@ -176,33 +159,25 @@ public class TraAdpter extends RecyclerView.Adapter<TraAdpter.MyHolder> implemen
 
     @Override
     public int getItemCount() {
-
         return pigeonDatas == null || pigeonDatas.size() == 0 ? 0 : pigeonDatas.size();
     }
 
     @Override
     public void onClick(View v) {
-
         if (onItemClickListener != null) {
             onItemClickListener.onItemClick(v, (Integer) v.getTag(),isShowBox,pigeonDatas.get((int)v.getTag()));
         }
-
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
         TextView mPigeonName;
         CheckBox mCheckBox;
-
         View root;
-
         public MyHolder(View itemView) {
             super(itemView);
-
             mPigeonName = (TextView) itemView.findViewById(R.id.item_rv_tra_tv);
             mCheckBox = (CheckBox) itemView.findViewById(R.id.item_rv_tra_cb);
-
             this.root = itemView;
-
         }
     }
 }

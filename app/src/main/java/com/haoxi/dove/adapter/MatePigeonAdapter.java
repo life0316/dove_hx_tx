@@ -20,18 +20,12 @@ public class MatePigeonAdapter extends RecyclerView.Adapter<MatePigeonAdapter.Ma
 
     //条目点击监听
     private MyItemClickListener mItemClickListener;
-
     //长按条目监听
     private MyItemLongClickListener mItemLongClickListener;
-
     private List<InnerDoveData> mPigeonLists = new ArrayList<>();
-
     private Context mContext;
-
     private int tag = 0;
-
     private AddItemClickListener addItemClickListener;
-
 
     public interface AddItemClickListener{
         void addItemClick(String msg, int position, InnerDoveData bean);
@@ -42,7 +36,6 @@ public class MatePigeonAdapter extends RecyclerView.Adapter<MatePigeonAdapter.Ma
     }
 
     public MatePigeonAdapter(Context mContext) {
-
         this.mContext = mContext;
     }
 
@@ -58,21 +51,17 @@ public class MatePigeonAdapter extends RecyclerView.Adapter<MatePigeonAdapter.Ma
 
     @Override
     public MateHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_rv_mate_pigeon, null);
-
         return new MateHolder(mContext, view, mItemClickListener, mItemLongClickListener);
     }
 
     @Override
     public void onBindViewHolder(final MateHolder holder, @SuppressLint("RecyclerView") final int position) {
-
         final InnerDoveData bean = mPigeonLists.get(position);
         holder.pegionName.setText("环号: "+mPigeonLists.get(position).getFoot_ring());
         if (tag == 1) {
             holder.pegionMate.setVisibility(View.VISIBLE);
                 holder.pegionMate.setText(bean.isSetMate()?"取消":"添加");
-
             holder.pegionMate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
