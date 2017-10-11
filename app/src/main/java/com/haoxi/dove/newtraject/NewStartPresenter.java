@@ -1,4 +1,4 @@
-package com.haoxi.dove.newin.ourcircle.presenter;
+package com.haoxi.dove.newtraject;
 
 import com.haoxi.dove.base.BasePresenter;
 import com.haoxi.dove.modules.mvp.models.IGetModel;
@@ -9,14 +9,12 @@ import com.haoxi.dove.newin.ourcircle.model.StartFlyModel;
 
 import java.util.Map;
 
-
-public class StartFlyPresenter extends BasePresenter<ITraFragView, StartFlyBean> implements IGetPresenter {
-
+public class NewStartPresenter extends BasePresenter<INewTrailView, StartFlyBean> implements IGetPresenter {
     private IGetModel attentionModel;
 
     private boolean isRefrash = true;
 
-    public StartFlyPresenter(ITraFragView mView) {
+    public NewStartPresenter(INewTrailView mView) {
         attachView(mView);
         attentionModel = new StartFlyModel();
     }

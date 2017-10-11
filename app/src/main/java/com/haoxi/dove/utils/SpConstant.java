@@ -28,4 +28,6 @@ public class SpConstant {
     public static String CLICK_NUM = "cur_num";
     public static String USER_INFO_CHANGE = "user_info_change";
 
+    public static String CURRENT_DOVE_ID = "cur_dove_id";
+
 }

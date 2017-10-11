@@ -624,7 +624,6 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
                 setTriPresenter.getDaoWithObjId(getUserObjId());
             }
             dialog.dismiss();
-
         } else {
             //清除所有
             mTriColorMap.clear();
@@ -656,7 +655,7 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
         }
         if (innerRouteBeanList.size() == 0) {
             mHandler.sendEmptyMessageDelayed(1, 1000 * 60 * mLastLocationTime);
-            return;
+           // return;
         } else {
             flyBeanMap.clear();
             for (int i = 0; i < innerRouteBeanList.size(); i++) {
@@ -930,10 +929,12 @@ public class OurTrailFragment extends BaseFragment implements ITraFragView, Loca
 
     private void setDialogWindow(Dialog mDialog) {
         Window window = mDialog.getWindow();
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.gravity = Gravity.BOTTOM;
-        params.width = (int) getResources().getDimension(R.dimen.DIP_340_DP);
-        window.setAttributes(params);
+        if (window != null) {
+            WindowManager.LayoutParams params = window.getAttributes();
+            params.gravity = Gravity.BOTTOM;
+            params.width = (int) getResources().getDimension(R.dimen.DIP_340_DP);
+            window.setAttributes(params);
+        }
     }
 
     @Override

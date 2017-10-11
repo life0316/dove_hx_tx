@@ -36,13 +36,22 @@ public class NewTrailMoudle {
         return new MyPigeonPresenter(mView);
     }
 
+    @PerFragment
+    @Provides
+    public NewTraPresenter provideTraPresenter(){
+        return new NewTraPresenter(mView);
+    }
 
-//    @PerFragment
-//    @Provides
-//    public StartFlyPresenter provideStartFlyPresenter(){
-//        return new StartFlyPresenter(mView);
-//    }
-
+    @PerFragment
+    @Provides
+    public NewSetTriPresenter provideSetTriPresenter(){
+        return new NewSetTriPresenter(mView);
+    }
+    @PerFragment
+    @Provides
+    public NewStartPresenter provideStartFlyPresenter(){
+        return new NewStartPresenter(mView);
+    }
 
     @PerFragment
     @Provides

@@ -114,6 +114,5 @@ public class MyPigeonPresenter extends BasePresenter<IGetPigeonView,OurDoveBean>
         type = "nets";
         isRefrash = true;
         pigeonModel.getDatasFromNets(map,this);
-
     }
 }

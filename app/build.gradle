@@ -69,42 +69,24 @@ dependencies {
     })
     compile 'com.yysauce:easyrecyclerview:1.0.0'
     testCompile 'junit:junit:4.12'
-    compile 'io.reactivex:rxjava:x.y.z'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
     compile 'com.trello:rxlifecycle:1.0'
     compile 'com.trello:rxlifecycle-components:1.0'
     compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.4.0'
     compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
-    compile 'io.reactivex:rxandroid:1.0.1'
-    compile 'com.squareup.retrofit2:retrofit:2.0.2'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
     compile 'com.google.dagger:dagger:2.6'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.6'
-    compile 'com.android.support:support-annotations:25.1.0'
-    // compile 'com.jakewharton:butterknife:8.0.1'
-    compile 'com.alibaba:fastjson:1.2.8'
-    //apt 'com.jakewharton:butterknife-compiler:8.0.1'
     compile 'com.jakewharton:butterknife:8.6.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'me.xiaopan:switchbutton:1.2.0'
     compile files('libs/AMap3DMap_3.3.2_AMapNavi_1.9.0_AMapSearch_3.3.0_AMapLocation_2.6.0_20160713.jar')
-    //compile files('libs/core-3.0.0.jar')
     compile 'com.github.clans:fab:1.6.4'
-    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile 'com.ashokvarma.android:bottom-navigation-bar:1.2.0'
     compile 'org.greenrobot:greendao:3.2.0'
-    compile 'com.google.code.gson:gson:2.2.4'
-    //    compile 'com.tencent.bugly:crashreport:latest.release'
-    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
-    //    compile 'com.tencent.bugly:nativecrashreport:latest.release'
-    //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
-    compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'me.iwf.photopicker:PhotoPicker:0.9.5@aar'
-    compile 'com.android.support:multidex:1.0.1'
     compile 'com.sch.rfview:AnimRefreshRecyclerView:1.0.6@aar'
     compile 'com.aliyun.ams:alicloud-android-push:2.3.7'
     compile 'pub.devrel:easypermissions:0.1.7'
@@ -113,13 +95,23 @@ dependencies {
     compile 'com.google.zxing:core:3.2.1'
     compile 'cn.bingoogolapple:bga-qrcodecore:1.1.7@aar'
     compile 'cn.bingoogolapple:bga-zxing:1.1.7@aar'
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.2-alpha-7'
+    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.2-alpha-7'
+    compile files('libs/sdk_v1.1.11.jar')
+
+    compile 'io.reactivex:rxjava:x.y.z'
+    compile 'io.reactivex:rxandroid:1.0.1'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
+    compile 'com.android.support:support-annotations:25.1.0'
+    compile 'com.alibaba:fastjson:1.2.8'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.github.bumptech.glide:glide:3.5.2'
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:25.+'
     compile 'com.android.support:recyclerview-v7:25.+'
     compile 'com.android.support:design:25.+'
-    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.2-alpha-7'
-    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.2-alpha-7'
-    //    compile files('libs/stats_assis_sdk_4pigeon.jar')
-//    compile files('libs/zhys_sdk_4gequan_67111001_170221.jar')
-    //    compile files('libs/sdk_v1.1.11.jar')
-    compile files('libs/sdk_v1.1.11.jar')
+
 }

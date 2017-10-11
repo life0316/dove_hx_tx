@@ -1,5 +1,4 @@
-package com.haoxi.dove.modules.mvp.presenters;
-
+package com.haoxi.dove.newtraject;
 
 import android.util.Log;
 
@@ -9,8 +8,7 @@ import com.haoxi.dove.base.BaseSubscriber;
 import com.haoxi.dove.base.MyApplication;
 import com.haoxi.dove.bean.SetTriBean;
 import com.haoxi.dove.bean.SetTriBeanDao;
-import com.haoxi.dove.modules.mvp.views.ITraFragView;
-import com.haoxi.dove.modules.traject.OurTrailFragment;
+import com.haoxi.dove.modules.mvp.presenters.ISetTriPresenter2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +17,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class SetTriPresenter2 extends BasePresenter<ITraFragView, List<SetTriBean>> implements ISetTriPresenter2 {
+public class NewSetTriPresenter extends BasePresenter<INewTrailView, List<SetTriBean>> implements ISetTriPresenter2 {
 
     private static final String TYPE_USERID = "USER_OBJ_ID";
     private static final String TYPE_PIGEON_ID = "PIGEON_ID";
@@ -39,7 +37,7 @@ public class SetTriPresenter2 extends BasePresenter<ITraFragView, List<SetTriBea
 
     private boolean isOver;
 
-    public SetTriPresenter2(OurTrailFragment mView) {
+    public NewSetTriPresenter(INewTrailView mView) {
         attachView(mView);
     }
 
@@ -93,27 +91,19 @@ public class SetTriPresenter2 extends BasePresenter<ITraFragView, List<SetTriBea
 
                 int isFly = setTriBean.getIsFlying();
 
-                getMvpView().setTri(setTriBean);
-
+                //getMvpView().setTri(setTriBean);
             }
         } else {
-
             setTriBean = new SetTriBean();
-
             setTriBean.setUSER_OBJ_ID(userObjID);
-
             setTriBean.setOBJ_ID(pigeonObj);
             setTriBean.setIsFlying(isFly);
             setTriBean.setTrilPic(mTrailPic);
             setTriBean.setTrilColor(mTrailColor);
             setTriBean.setTrilWidth(mTrailWidth);
-
-
             Log.e("TYPE_START_FLY",setTriBean.getOBJ_ID()+"-----0--hehe");
             MyApplication.getDaoSession().getSetTriBeanDao().insertOrReplace(setTriBean);
-
-            getMvpView().setTri(setTriBean);
-
+            //getMvpView().setTri(setTriBean);
         }
     }
 
@@ -134,7 +124,7 @@ public class SetTriPresenter2 extends BasePresenter<ITraFragView, List<SetTriBea
 
                 int isFly = setTriBean.getIsFlying();
 
-                getMvpView().setTri(setTriBean);
+                //getMvpView().setTri(setTriBean);
             }
         } else {
 
@@ -150,71 +140,56 @@ public class SetTriPresenter2 extends BasePresenter<ITraFragView, List<SetTriBea
 
             MyApplication.getDaoSession().getSetTriBeanDao().insertOrReplace(setTriBean);
 
-            getMvpView().setTri(setTriBean);
+            //getMvpView().setTri(setTriBean);
         }
     }
 
     private void typeUserID(List<SetTriBean> setTriBeen) {
-
-
         Log.e("----setTriBeen",setTriBeen.size()+"----cao");
         getMvpView().setTriMap(setTriBeen);
-
     }
 
 
     @Override
     public void getTriSetFromDao(String userObjId, String pigeonObj, int isFly, int mTrailPic, String mTrailColor, int mTrailWidth) {
-
         type = TYPE_PIGEON_ID;
-
         this.isFly = isFly;
         this.mTrailColor = mTrailColor;
         this.mTrailPic = mTrailPic;
         this.mTrailWidth = mTrailWidth;
         this.pigeonObj = pigeonObj;
         this.userObjID = userObjId;
-
-
         MyApplication.getDaoSession().getSetTriBeanDao().queryBuilder()
                 .where(SetTriBeanDao.Properties.OBJ_ID.eq(pigeonObj))
                 .rx().list()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseSubscriber<List<SetTriBean>>(this));
-
+                .subscribe(new BaseSubscriber<>(this));
     }
 
     @Override
     public void getTriSetFromDao2(String userObjId, String pigeonObj, int isFly, int mTrailPic, String mTrailColor, int mTrailWidth, boolean isOver) {
-
         type = TYPE_OVER;
-
         this.isFly = isFly;
         this.mTrailColor = mTrailColor;
         this.mTrailPic = mTrailPic;
         this.mTrailWidth = mTrailWidth;
         this.pigeonObj = pigeonObj;
         this.userObjID = userObjId;
-
         this.isOver = isOver;
-
         MyApplication.getDaoSession().getSetTriBeanDao().queryBuilder()
                 .where(SetTriBeanDao.Properties.OBJ_ID.eq(pigeonObj))
                 .rx().list()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseSubscriber<List<SetTriBean>>(this));
+                .subscribe(new BaseSubscriber<>(this));
 
     }
 
     @Override
     public void getDaoWithObjId(String userObjId) {
-
         Log.e("----setTriBeen",userObjId+"-----sett");
-
         type = TYPE_USERID;
-
         MyApplication.getDaoSession().getSetTriBeanDao().queryBuilder()
                 .where(SetTriBeanDao.Properties.USER_OBJ_ID.eq(userObjId))
                 .rx().list()
@@ -250,3 +225,4 @@ public class SetTriPresenter2 extends BasePresenter<ITraFragView, List<SetTriBea
 
 
 }
+
